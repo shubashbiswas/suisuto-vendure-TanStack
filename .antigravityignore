@@ -1,0 +1,47 @@
+# Dependencies & Package Stores
+**/node_modules/**
+**/.pnpm-store/**
+
+# Build Outputs, Framework Artifacts & Bundles
+**/dist/**
+**/dist-ssr/**
+**/build/**
+**/out/**
+**/.output/**
+**/.nitro/**
+**/.tanstack/**
+**/.wrangler/**
+**/.vinxi/**
+**/dev-dist/**
+**/.turbo/**
+**/.cache/**
+**/*.tsbuildinfo
+
+# Large Monorepo Lockfiles (avoids polluting search results with hundreds of thousands of lines)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Vendure Static Media & Email Dumps
+apps/server/static/assets/**
+apps/server/static/email/test-emails/**
+**/.vendure/**
+
+# Compiled i18n Output
+**/src/paraglide/**
+
+# Testing Reports & Traces
+**/playwright-report/**
+**/test-results/**
+**/.playwright/**
+**/blob-report/**
+
+# Minified & Source Map Files
+**/*.min.js
+**/*.min.css
+**/*.map
+
+# Logs & Temporary OS Files
+**/*.log
+**/.DS_Store
+**/Thumbs.db
