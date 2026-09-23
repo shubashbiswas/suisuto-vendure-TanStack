@@ -1,4 +1,4 @@
-# Multi-Campaign Vendure Plugin (`@suisuto/vendure-plugin-multi-campaign`)
+# Multi-Campaign Vendure Plugin (`@suisuto/vendure-multi-campaign-plugin`)
 
 A production-grade, multi-market campaign management and dynamic merchandising plugin for Vendure. It enables marketing and merchandising teams to create seasonal drops, urgency countdown windows, regional promotional codes, sub-slug landing pages, and dynamic homepage layouts with zero code deployments.
 
@@ -22,7 +22,7 @@ A production-grade, multi-market campaign management and dynamic merchandising p
 ### In `vendure-config.ts`
 
 ```ts
-import { MultiCampaignPlugin } from '@suisuto/vendure-plugin-multi-campaign';
+import { MultiCampaignPlugin } from '@suisuto/vendure-multi-campaign-plugin';
 
 export const config: VendureConfig = {
     // ...
@@ -156,5 +156,5 @@ pnpm run test:multi-campaign
 Or within the package directory:
 
 ```bash
-pnpm --filter @suisuto/vendure-plugin-multi-campaign test
+pnpm --filter @suisuto/vendure-multi-campaign-plugin test
 ```

@@ -4,8 +4,8 @@
 
 ---
 
-## 1. Architectural Highlights- **Dual-Hub Merchandising & Routing**: Symmetrically routes domestic orders within Bangladesh (`BDT ৳`) and India (`INR ₹`) while dispatching cross-border orders globally (`USD $`) from origin artisan clusters (Narayanganj muslins, Varanasi silks) via `@suisuto/vendure-plugin-multi-hub`.
-- **Multi-Market Dynamic Campaigns**: Data-driven campaigns managed in Vendure via `MultiCampaignPlugin` (`@suisuto/vendure-plugin-multi-campaign`). Each market (`/`, `/in/`, `/bd/`) renders market-isolated hero banners, countdown timers, custom section sequences, promotional codes, and sub-slug landing pages without cross-market interference.
+## 1. Architectural Highlights- **Dual-Hub Merchandising & Routing**: Symmetrically routes domestic orders within Bangladesh (`BDT ৳`) and India (`INR ₹`) while dispatching cross-border orders globally (`USD $`) from origin artisan clusters (Narayanganj muslins, Varanasi silks) via `@suisuto/vendure-multi-hub-plugin`.
+- **Multi-Market Dynamic Campaigns**: Data-driven campaigns managed in Vendure via `MultiCampaignPlugin` (`@suisuto/vendure-multi-campaign-plugin`). Each market (`/`, `/in/`, `/bd/`) renders market-isolated hero banners, countdown timers, custom section sequences, promotional codes, and sub-slug landing pages without cross-market interference.
 - **Dynamic Section Composition Engine**: Storefront homepages are dynamically constructed via `HomepageSectionRenderer` based on campaign configurations or market defaults—eliminating hardcoded market conditional logic in UI components.
 - **SSR & Edge Performance**: Full-stack server-side rendering with TanStack Start, Nitro, client-side hydration-safe countdown timers, Vendure asset optimization (`format=webp`, `srcset`), and an automated on-demand cache revalidation webhook (`/api/revalidate`) triggered via Vendure `EventBus`.
 - **Edge Geo-Detection**: Non-intrusive soft suggestion banner detects visitor country via proxy headers (`CF-IPCountry`, `X-Vercel-IP-Country`, `CloudFront-Viewer-Country`) and guides visitors to their domestic atelier without intrusive redirects.
@@ -56,9 +56,9 @@
 suisuto-vendure-v2/
 ├── apps/
 │   ├── packages/             # Modular Vendure domain plugins
-│   │   ├── multi-market/     # Market routing, GeoIP & regional channels (@suisuto/vendure-plugin-multi-market)
-│   │   ├── multi-hub/        # Dual-hub inventory allocation & split-shipping (@suisuto/vendure-plugin-multi-hub)
-│   │   └── multi-campaign/   # Dynamic campaigns & editorial merchandising (@suisuto/vendure-plugin-multi-campaign)
+│   │   ├── multi-market/     # Market routing, GeoIP & regional channels (@suisuto/vendure-multi-market-plugin)
+│   │   ├── multi-hub/        # Dual-hub inventory allocation & split-shipping (@suisuto/vendure-multi-hub-plugin)
+│   │   └── multi-campaign/   # Dynamic campaigns & editorial merchandising (@suisuto/vendure-multi-campaign-plugin)
 │   ├── server/               # Vendure backend (NestJS, TypeORM, PostgreSQL, GraphQL APIs)
 │   │   ├── src/
 │   │   │   ├── migrations/   # TypeORM database migrations

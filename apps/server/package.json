@@ -14,17 +14,15 @@
     "start:server": "node ./dist/index.js",
     "start:worker": "node ./dist/index-worker.js",
     "start": "vendure start all",
-    "test:multi-market": "pnpm --filter @suisuto/vendure-plugin-multi-market test"
+    "test:multi-market": "pnpm --filter @suisuto/vendure-multi-market-plugin test"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^9.5.1",
     "@nestjs/common": "11.2.5",
     "@nestjs/graphql": "13.1.0",
-    "@nestjs/terminus": "^10.2.3",
-    "@suisuto/vendure-plugin-multi-campaign": "workspace:*",
-    "@suisuto/vendure-plugin-multi-hub": "workspace:*",
-    "@suisuto/vendure-plugin-multi-market": "workspace:*",
-    "@vendure-community/elasticsearch-plugin": "^2.0.0",
+    "@nestjs/terminus": "^10.3.0",
+    "@suisuto/vendure-multi-campaign-plugin": "workspace:*",
+    "@suisuto/vendure-multi-hub-plugin": "workspace:*",
+    "@suisuto/vendure-multi-market-plugin": "workspace:*",
     "@vendure/asset-server-plugin": "3.7.3",
     "@vendure/core": "3.7.3",
     "@vendure/dashboard": "3.7.3",

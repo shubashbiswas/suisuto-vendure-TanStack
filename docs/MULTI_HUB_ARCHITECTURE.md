@@ -161,7 +161,7 @@ Every cross-border package must automatically generate a Commercial Export Invoi
 
 ### 6.1 Custom Field Extensions & Database Schema
 
-Configured in `apps/server/src/vendure-config.ts` and managed by `@suisuto/vendure-plugin-multi-hub`:
+Configured in `apps/server/src/vendure-config.ts` and managed by `@suisuto/vendure-multi-hub-plugin`:
 
 ```typescript
 customFields: {
@@ -278,7 +278,7 @@ Applied via TypeORM migrations in `apps/server/src/migrations/`:
 
 ---
 
-### 6.3 Domain Plugin Package: `@suisuto/vendure-plugin-multi-hub`
+### 6.3 Domain Plugin Package: `@suisuto/vendure-multi-hub-plugin`
 
 Implemented as a modular domain package located in [`apps/packages/multi-hub`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub):
 

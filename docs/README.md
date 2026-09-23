@@ -15,15 +15,15 @@ Welcome to the complete architectural and operational documentation suite for th
 | **[07. Payments & Shipping](./07_PAYMENTS_AND_SHIPPING_INTEGRATIONS.md)** | Gateway & logistics topology | SSLCOMMERZ, Razorpay, Stripe, Pathao, Delhivery, DHL Express, rate formulas |
 | **[08. Standard Operating Procedures](./08_STANDARD_OPERATING_PROCEDURES_SOPS.md)** | Operational runbooks for teams | Merchandising product creation, daily agent dispatch, restocking protocol |
 | **[09. Multi-Market Campaign Architecture](./09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Campaign-aware merchandising & regional architecture | Vendure `MultiCampaignPlugin`, dynamic section engine, countdown timers, sub-slug landing pages, SOPs |
-| **[Multi-Hub Architecture](./MULTI_HUB_ARCHITECTURE.md)** | Dual-hub fulfillment & split shipping | `@suisuto/vendure-plugin-multi-hub`, stock locations, per-origin split-shipping calculator, multi-fulfillment |
+| **[Multi-Hub Architecture](./MULTI_HUB_ARCHITECTURE.md)** | Dual-hub fulfillment & split shipping | `@suisuto/vendure-multi-hub-plugin`, stock locations, per-origin split-shipping calculator, multi-fulfillment |
 
 ---
 
 ## Domain Plugin Packages (`apps/packages/`)
 
-- **`@suisuto/vendure-plugin-multi-market`** (`apps/packages/multi-market`): Regional market routing, edge Geo-IP detection, channel isolation, currency management.
-- **`@suisuto/vendure-plugin-multi-hub`** (`apps/packages/multi-hub`): Dual-hub stock allocation, split-shipping calculation, and multi-fulfillment generation.
-- **`@suisuto/vendure-plugin-multi-campaign`** (`apps/packages/multi-campaign`): Dynamic seasonal drops, priority scheduling, and automated cache revalidation.
+- **`@suisuto/vendure-multi-market-plugin`** (`apps/packages/multi-market`): Regional market routing, edge Geo-IP detection, channel isolation, currency management.
+- **`@suisuto/vendure-multi-hub-plugin`** (`apps/packages/multi-hub`): Dual-hub stock allocation, split-shipping calculation, and multi-fulfillment generation.
+- **`@suisuto/vendure-multi-campaign-plugin`** (`apps/packages/multi-campaign`): Dynamic seasonal drops, priority scheduling, and automated cache revalidation.
 
 
 ## Quick Architecture Diagram

@@ -39,7 +39,7 @@ This document details the multi-market, campaign-aware architecture implemented 
 
 ---
 
-## 2. Backend Implementation (`@suisuto/vendure-plugin-multi-campaign`)
+## 2. Backend Implementation (`@suisuto/vendure-multi-campaign-plugin`)
 
 The campaign management subsystem is implemented as an autonomous Vendure plugin in [`apps/packages/multi-campaign/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-campaign):
 
@@ -281,7 +281,7 @@ The plugin includes a dedicated Jest test suite in [`tests/campaign.spec.ts`](fi
 pnpm run test:multi-campaign
 
 # Or run directly within package directory
-pnpm --filter @suisuto/vendure-plugin-multi-campaign test
+pnpm --filter @suisuto/vendure-multi-campaign-plugin test
 ```
 
 ### Coverage Assertions:

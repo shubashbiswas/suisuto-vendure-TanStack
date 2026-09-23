@@ -1,5 +1,5 @@
 {
-  "name": "@suisuto/vendure-plugin-multi-campaign",
+  "name": "@suisuto/vendure-multi-campaign-plugin",
   "version": "1.0.0",
   "description": "Multi-market campaign and dynamic merchandising plugin for Vendure",
   "author": "Suisuto",
@@ -34,13 +34,13 @@
   "devDependencies": {
     "@nestjs/common": "11.2.5",
     "@nestjs/graphql": "13.1.0",
-    "@types/node": "^22.0.0",
-    "@types/react": "^19.0.0",
+    "@types/node": "^24.13.6",
+    "@types/react": "^19.3.0",
     "@vendure/core": "3.7.3",
     "@vendure/dashboard": "3.7.3",
-    "react": "^19.0.0",
+    "react": "^19.3.0",
     "ts-node": "10.9.2",
     "typeorm": "^1.1.1",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.2"
   }
 }

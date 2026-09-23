@@ -1,18 +1,18 @@
 import {
     dummyPaymentHandler,
     DefaultJobQueuePlugin,
+    DefaultSearchPlugin,
     DefaultSchedulerPlugin,
     LanguageCode,
     VendureConfig,
 } from '@vendure/core';
-import { ElasticsearchPlugin, createElasticsearchAdapter } from '@vendure-community/elasticsearch-plugin';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
-import { MultiHubPlugin } from '@suisuto/vendure-plugin-multi-hub';
-import { MultiCampaignPlugin } from '@suisuto/vendure-plugin-multi-campaign';
-import { MultiMarketPlugin } from '@suisuto/vendure-plugin-multi-market';
+import { MultiHubPlugin } from '@suisuto/vendure-multi-hub-plugin';
+import { MultiCampaignPlugin } from '@suisuto/vendure-multi-campaign-plugin';
+import { MultiMarketPlugin } from '@suisuto/vendure-multi-market-plugin';
 import 'dotenv/config';
 import path from 'path';
 
@@ -170,25 +170,7 @@ export const config: VendureConfig = {
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
-        ElasticsearchPlugin.init({
-            adapter: () =>
-                createElasticsearchAdapter({
-                    host: process.env.ELASTICSEARCH_HOST || 'http://localhost',
-                    port: +(process.env.ELASTICSEARCH_PORT ?? 9200),
-                    ...(process.env.ELASTICSEARCH_USERNAME && process.env.ELASTICSEARCH_PASSWORD
-                        ? {
-                              clientOptions: {
-                                  auth: {
-                                      username: process.env.ELASTICSEARCH_USERNAME,
-                                      password: process.env.ELASTICSEARCH_PASSWORD,
-                                  },
-                              },
-                          }
-                        : {}),
-                }),
-            indexPrefix: process.env.ELASTICSEARCH_INDEX_PREFIX || 'suisuto-',
-            bufferUpdates: false,
-        }),
+        DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
             devMode: true,
             outputPath: path.join(__dirname, '../static/email/test-emails'),

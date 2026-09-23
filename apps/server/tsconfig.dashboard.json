@@ -5,13 +5,13 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "paths": {
-      "@suisuto/vendure-plugin-multi-hub": [
+      "@suisuto/vendure-multi-hub-plugin": [
         "../packages/multi-hub/multi-hub.plugin.ts"
       ],
-      "@suisuto/vendure-plugin-multi-campaign": [
+      "@suisuto/vendure-multi-campaign-plugin": [
         "../packages/multi-campaign/multi-campaign.plugin.ts"
       ],
-      "@suisuto/vendure-plugin-multi-market": [
+      "@suisuto/vendure-multi-market-plugin": [
         "../packages/multi-market/multi-market.plugin.ts"
       ],
       "@/gql": [

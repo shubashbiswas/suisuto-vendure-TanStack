@@ -12,11 +12,11 @@
     "start": "concurrently -n server,storefront -c blue,magenta \"pnpm --filter server start\" \"pnpm --filter storefront start\"",
     "start:server": "pnpm --filter server start",
     "start:storefront": "pnpm --filter storefront start",
-    "test:multi-hub": "pnpm --filter @suisuto/vendure-plugin-multi-hub test",
-    "test:multi-market": "pnpm --filter @suisuto/vendure-plugin-multi-market test",
-    "test:multi-campaign": "pnpm --filter @suisuto/vendure-plugin-multi-campaign test"
+    "test:multi-hub": "pnpm --filter @suisuto/vendure-multi-hub-plugin test",
+    "test:multi-market": "pnpm --filter @suisuto/vendure-multi-market-plugin test",
+    "test:multi-campaign": "pnpm --filter @suisuto/vendure-multi-campaign-plugin test"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "concurrently": "^9.2.4"
   }
 }

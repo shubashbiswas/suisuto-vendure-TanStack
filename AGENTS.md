@@ -8,17 +8,17 @@ This document is the primary operational and architectural guide for developers 
 
 - **Vendure Backend**: [`apps/server`](file:///c:/laragon/www/suisuto-vendure-v2/apps/server) (NestJS, TypeORM, PostgreSQL, GraphQL APIs).
 - **Domain Plugin Packages**: [`apps/packages/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages)
-  - [`multi-market`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-market) (`@suisuto/vendure-plugin-multi-market`): Regional market routing, detection, geo-IP, merchandising.
-  - [`multi-hub`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub) (`@suisuto/vendure-plugin-multi-hub`): Dual-hub inventory allocation, physical stock locations, split-hub shipping.
-  - [`multi-campaign`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-campaign) (`@suisuto/vendure-plugin-multi-campaign`): Dynamic seasonal/regional campaigns and editorial landing pages.
+  - [`multi-market`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-market) (`@suisuto/vendure-multi-market-plugin`): Regional market routing, detection, geo-IP, merchandising.
+  - [`multi-hub`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub) (`@suisuto/vendure-multi-hub-plugin`): Dual-hub inventory allocation, physical stock locations, split-hub shipping.
+  - [`multi-campaign`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-campaign) (`@suisuto/vendure-multi-campaign-plugin`): Dynamic seasonal/regional campaigns and editorial landing pages.
 - **TanStack Start Storefront**: [`apps/storefront`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront) (React 19, TanStack Router, Vite, Nitro on `:3001`).
 - **Documentation Suite**: [`docs/`](file:///c:/laragon/www/suisuto-vendure-v2/docs) (Complete architecture specifications, SOPs, and runbooks).
 - **Start server & TanStack storefront**: `pnpm run dev` (runs server on `:3000`, storefront on `:3001`).
 - **Start only server**: `pnpm run dev:server`.
 - **Start only TanStack storefront**: `pnpm run dev:storefront`.
-- **Test multi-market plugin**: `pnpm run test:multi-market` (or `pnpm --filter @suisuto/vendure-plugin-multi-market test`).
-- **Test multi-hub plugin**: `pnpm run test:multi-hub` (or `pnpm --filter @suisuto/vendure-plugin-multi-hub test`).
-- **Test multi-campaign plugin**: `pnpm run test:multi-campaign` (or `pnpm --filter @suisuto/vendure-plugin-multi-campaign test`).
+- **Test multi-market plugin**: `pnpm run test:multi-market` (or `pnpm --filter @suisuto/vendure-multi-market-plugin test`).
+- **Test multi-hub plugin**: `pnpm run test:multi-hub` (or `pnpm --filter @suisuto/vendure-multi-hub-plugin test`).
+- **Test multi-campaign plugin**: `pnpm run test:multi-campaign` (or `pnpm --filter @suisuto/vendure-multi-campaign-plugin test`).
 
 ---
 

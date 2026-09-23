@@ -8,9 +8,9 @@ The backend lives in `apps/server` and is powered by Vendure 3.x with TypeScript
 suisuto-vendure-v2/
 ├── apps/
 │   ├── packages/
-│   │   ├── multi-market/             <-- Regional routing & Geo-IP (@suisuto/vendure-plugin-multi-market)
-│   │   ├── multi-hub/                <-- Dual-hub stock allocation & split fulfillment (@suisuto/vendure-plugin-multi-hub)
-│   │   └── multi-campaign/           <-- Dynamic merchandising & cache invalidation (@suisuto/vendure-plugin-multi-campaign)
+│   │   ├── multi-market/             <-- Regional routing & Geo-IP (@suisuto/vendure-multi-market-plugin)
+│   │   ├── multi-hub/                <-- Dual-hub stock allocation & split fulfillment (@suisuto/vendure-multi-hub-plugin)
+│   │   └── multi-campaign/           <-- Dynamic merchandising & cache invalidation (@suisuto/vendure-multi-campaign-plugin)
 │   └── server/
 │       ├── src/
 │       │   ├── migrations/           <-- TypeORM database migrations
@@ -130,7 +130,7 @@ export const config: VendureConfig = {
 
 ### 2.3 Database Migrations
 Database schema updates are managed through TypeORM migrations located in [`apps/server/src/migrations/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/server/src/migrations):
-- `1790046009828-add_campaign_entity.ts`: Creates the `campaign` table for `@suisuto/vendure-plugin-multi-campaign`.
+- `1790046009828-add_campaign_entity.ts`: Creates the `campaign` table for `@suisuto/vendure-multi-campaign-plugin`.
 - `1790046009829-campaign_indexes_and_priority.ts`: Adds `priority` column and composite indexes (`[market, slug]`, `[market, status]`).
 - `1790100000003-add_stock_location_custom_fields.ts`: Adds `customFieldsHubcode`, `customFieldsCountrycode`, `customFieldsDomesticcarrier`, `customFieldsCrossbordercarrier`, `customFieldsStandardtransitdays` to `stock_location`.
 - `1790140748431-sync_schema.ts`: Final schema sync and index identifier reconciliation.

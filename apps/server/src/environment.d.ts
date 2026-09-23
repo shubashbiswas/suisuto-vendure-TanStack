@@ -18,11 +18,6 @@ declare global {
             DB_USERNAME: string;
             DB_PASSWORD: string;
             DB_SCHEMA: string;
-            ELASTICSEARCH_HOST?: string;
-            ELASTICSEARCH_PORT?: string | number;
-            ELASTICSEARCH_INDEX_PREFIX?: string;
-            ELASTICSEARCH_USERNAME?: string;
-            ELASTICSEARCH_PASSWORD?: string;
         }
     }
 }
