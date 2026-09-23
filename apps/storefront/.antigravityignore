@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build Outputs & Framework Caches
+dist/
+dist-ssr/
+build/
+.output/
+.nitro/
+.tanstack/
+.wrangler/
+.vinxi/
+dev-dist/
+*.tsbuildinfo
+
+# Compiled i18n Output
+src/paraglide/
+
+# Testing Reports
+playwright-report/
+test-results/
+.playwright/
+blob-report/
+
+# Logs & Temporary Files
+*.log
+.DS_Store
+Thumbs.db

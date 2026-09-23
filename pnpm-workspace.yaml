@@ -1,0 +1,25 @@
+packages:
+  - 'apps/*'
+  - 'apps/packages/*'
+
+# pnpm v10 build-script allowlist
+onlyBuiltDependencies:
+  - bcrypt
+  - esbuild
+  - sharp
+
+# pnpm v11 build-script allowlist
+allowBuilds:
+  '@apollo/protobufjs': set this to true or false
+  '@parcel/watcher': set this to true or false
+  '@swc/core': set this to true or false
+  bcrypt: true
+  esbuild: true
+  msw: set this to true or false
+  sharp: true
+  unrs-resolver: set this to true or false
+
+# pnpm v11 fails the install when a dependency has build scripts not covered by
+# allowBuilds. With this off, uncovered scripts are skipped with a warning instead
+# (as in pnpm v10); the packages concerned work without their build scripts.
+strictDepBuilds: false

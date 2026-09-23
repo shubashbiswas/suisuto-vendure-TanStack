@@ -1,0 +1,222 @@
+import {
+    dummyPaymentHandler,
+    DefaultJobQueuePlugin,
+    DefaultSchedulerPlugin,
+    LanguageCode,
+    VendureConfig,
+} from '@vendure/core';
+import { ElasticsearchPlugin, createElasticsearchAdapter } from '@vendure-community/elasticsearch-plugin';
+import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
+import { AssetServerPlugin } from '@vendure/asset-server-plugin';
+import { DashboardPlugin } from '@vendure/dashboard/plugin';
+import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
+import { MultiHubPlugin } from '@suisuto/vendure-plugin-multi-hub';
+import { MultiCampaignPlugin } from '@suisuto/vendure-plugin-multi-campaign';
+import { MultiMarketPlugin } from '@suisuto/vendure-plugin-multi-market';
+import 'dotenv/config';
+import path from 'path';
+
+const IS_DEV = process.env.APP_ENV === 'dev';
+// PORT wins because hosting platforms inject it into the environment at runtime, and that
+// must take precedence over any value baked into the .env file at scaffold time.
+const serverPort = +process.env.PORT || +process.env.VENDURE_SERVER_PORT || 3000;
+
+export const config: VendureConfig = {
+    apiOptions: {
+        port: serverPort,
+        adminApiPath: 'admin-api',
+        shopApiPath: 'shop-api',
+        trustProxy: IS_DEV ? false : 1,
+        // Which browser origins may make credentialed requests to the Shop and Admin APIs.
+        // In dev any origin is reflected, so a storefront on any port works. In production set
+        // CORS_ORIGINS to a comma-separated list of the origins you serve, for example
+        // "https://example.com,https://admin.example.com". An unset value blocks all
+        // cross-origin browser requests, which is the safe default.
+        cors: {
+            origin: IS_DEV ? true : (process.env.CORS_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean) ?? []),
+            credentials: true,
+        },
+        // The following options are useful in development mode,
+        // but are best turned off for production for security
+        // reasons.
+        ...(IS_DEV ? {
+            adminApiDebug: true,
+            shopApiDebug: true,
+        } : {}),
+    },
+    authOptions: {
+        tokenMethod: ['bearer', 'cookie'],
+        superadminCredentials: {
+            identifier: process.env.SUPERADMIN_USERNAME,
+            password: process.env.SUPERADMIN_PASSWORD,
+        },
+        cookieOptions: {
+          secret: process.env.COOKIE_SECRET,
+        },
+    },
+    dbConnectionOptions: {
+        type: 'postgres',
+        // See the README.md "Migrations" section for an explanation of
+        // the `synchronize` and `migrations` options.
+        synchronize: false,
+        migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
+        logging: false,
+        database: process.env.DB_NAME,
+        schema: process.env.DB_SCHEMA,
+        host: process.env.DB_HOST,
+        port: +process.env.DB_PORT,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+    },
+    paymentOptions: {
+        paymentMethodHandlers: [dummyPaymentHandler],
+    },
+    // When adding or altering custom field definitions, the database will
+    // need to be updated. See the "Migrations" section in README.md.
+    customFields: {
+        Product: [
+            {
+                name: 'originHub',
+                type: 'string',
+                public: true,
+                nullable: true,
+                defaultValue: '',
+                description: [{ languageCode: LanguageCode.en, value: 'Origin supply hub code or identifier (e.g. BD_HUB, IN_HUB, AE_HUB, etc.)' }],
+            },
+            {
+                name: 'fabricCareGuide',
+                type: 'text',
+                public: true,
+                nullable: true,
+            },
+            {
+                name: 'modelSpecs',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'e.g. Model is 5\'9" wearing size S' }],
+            },
+            {
+                name: 'hsCode',
+                type: 'string',
+                public: false,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'Apparel HS Code for Customs Export' }],
+            },
+        ],
+        Order: [
+            {
+                name: 'recipientKycId',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'Aadhaar / PAN / Passport for Indian Customs imports' }],
+            },
+            {
+                name: 'isMultiHubOrder',
+                type: 'boolean',
+                public: true,
+                defaultValue: false,
+            },
+        ],
+        StockLocation: [
+            {
+                name: 'hubCode',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'Hub identifier code (e.g. BD_HUB, IN_HUB, DUAL_HUB)' }],
+            },
+            {
+                name: 'countryCode',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: '2-letter ISO country code (e.g. BD, IN)' }],
+            },
+            {
+                name: 'domesticCarrier',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'Domestic courier (e.g. Pathao, Delhivery)' }],
+            },
+            {
+                name: 'crossBorderCarrier',
+                type: 'string',
+                public: true,
+                nullable: true,
+                description: [{ languageCode: LanguageCode.en, value: 'Cross-border courier (e.g. DHL Express)' }],
+            },
+            {
+                name: 'standardTransitDays',
+                type: 'int',
+                public: true,
+                nullable: true,
+                defaultValue: 3,
+                description: [{ languageCode: LanguageCode.en, value: 'Standard delivery timeframe in days' }],
+            },
+        ],
+    },
+    plugins: [
+        GraphiqlPlugin.init(),
+        AssetServerPlugin.init({
+            route: 'assets',
+            assetUploadDir: path.join(__dirname, '../static/assets'),
+            // For local dev, the correct value for assetUrlPrefix should
+            // be guessed correctly, but for production it will usually need
+            // to be set manually to match your production url.
+            assetUrlPrefix: IS_DEV ? undefined : 'https://www.my-shop.com/assets/',
+        }),
+        DefaultSchedulerPlugin.init(),
+        DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
+        ElasticsearchPlugin.init({
+            adapter: () =>
+                createElasticsearchAdapter({
+                    host: process.env.ELASTICSEARCH_HOST || 'http://localhost',
+                    port: +(process.env.ELASTICSEARCH_PORT ?? 9200),
+                    ...(process.env.ELASTICSEARCH_USERNAME && process.env.ELASTICSEARCH_PASSWORD
+                        ? {
+                              clientOptions: {
+                                  auth: {
+                                      username: process.env.ELASTICSEARCH_USERNAME,
+                                      password: process.env.ELASTICSEARCH_PASSWORD,
+                                  },
+                              },
+                          }
+                        : {}),
+                }),
+            indexPrefix: process.env.ELASTICSEARCH_INDEX_PREFIX || 'suisuto-',
+            bufferUpdates: false,
+        }),
+        EmailPlugin.init({
+            devMode: true,
+            outputPath: path.join(__dirname, '../static/email/test-emails'),
+            route: 'mailbox',
+            handlers: defaultEmailHandlers,
+            templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
+            globalTemplateVars: {
+                // The following variables will change depending on your storefront implementation.
+                // Here we are assuming a storefront running at http://localhost:8080.
+                fromAddress: '"example" <noreply@example.com>',
+                verifyEmailAddressUrl: 'http://localhost:8080/verify',
+                passwordResetUrl: 'http://localhost:8080/password-reset',
+                changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
+            },
+        }),
+        DashboardPlugin.init({
+            route: 'dashboard',
+            appDir: IS_DEV
+                ? path.join(__dirname, '../dist/dashboard')
+                : path.join(__dirname, 'dashboard'),
+        }),
+        MultiHubPlugin,
+        MultiCampaignPlugin.init({
+            storefrontRevalidateUrl: process.env.STOREFRONT_URL || 'http://localhost:3001',
+            revalidateSecret: process.env.REVALIDATION_SECRET,
+        }),
+        MultiMarketPlugin.init({
+            defaultMarketCode: 'global',
+        }),
+    ],
+};

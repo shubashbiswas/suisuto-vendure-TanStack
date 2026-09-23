@@ -1,0 +1,116 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { truncateDescription } from "@/config/metadata";
+import { GetCollectionProductsQuery } from "@/features/collections/graphql";
+import { getLocale } from "@/paraglide/runtime";
+import { cachedPublicData } from "@/platform/cache/public-cache";
+import {
+	getActiveRegionOnServer,
+	getChannelTokenForRegion,
+	getRegionConfig,
+} from "@/platform/region/region.server";
+import { queryOnServer } from "@/platform/vendure/api.server";
+import { readFragment } from "@/platform/vendure/graphql";
+import { GetProductDetailQuery, ProductCardFragment } from "./graphql";
+import { getDisplayOptionGroups } from "./product-options";
+
+export const getRelatedProducts = createServerFn({ method: "GET" })
+	.validator(
+		z.object({
+			collectionSlug: z.string().min(1),
+			currentProductId: z.string().min(1),
+			region: z.string().optional(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const locale = getLocale();
+		const regionCode = data.region || getActiveRegionOnServer();
+		const channelToken = getChannelTokenForRegion(regionCode);
+		const regionConfig = getRegionConfig(regionCode);
+		const currencyCode = regionConfig.currencyCode;
+
+		const items = await cachedPublicData({
+			key: `related-products:${data.collectionSlug}:${regionCode}:${locale}:${currencyCode}`,
+			tags: [
+				`related-products-${data.collectionSlug}-${regionCode}-${locale}-${currencyCode}`,
+			],
+			ttlMs: 60 * 60 * 1000,
+			load: async () => {
+				const result = await queryOnServer(
+					GetCollectionProductsQuery,
+					{
+						slug: data.collectionSlug,
+						input: {
+							collectionSlug: data.collectionSlug,
+							take: 13,
+							skip: 0,
+							groupByProduct: true,
+						},
+					},
+					{ languageCode: locale, currencyCode, channelToken },
+				);
+				return result.data.search.items;
+			},
+		});
+
+		const products = items
+			.filter(
+				(item) =>
+					readFragment(ProductCardFragment, item).productId !==
+					data.currentProductId,
+			)
+			.slice(0, 12);
+		return { products, currencyCode };
+	});
+
+export const getProductPageData = createServerFn({ method: "GET" })
+	.validator(
+		z.object({
+			slug: z.string().min(1),
+			region: z.string().optional(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const locale = getLocale();
+		const regionCode = data.region || getActiveRegionOnServer();
+		const channelToken = getChannelTokenForRegion(regionCode);
+		const regionConfig = getRegionConfig(regionCode);
+		const currencyCode = regionConfig.currencyCode;
+
+		const result = await cachedPublicData({
+			key: `product:detail:${data.slug}:${regionCode}:${locale}:${currencyCode}`,
+			tags: [`product-${data.slug}-${regionCode}-${locale}-${currencyCode}`],
+			ttlMs: 60 * 60 * 1000,
+			load: async () =>
+				(
+					await queryOnServer(
+						GetProductDetailQuery,
+						{ slug: data.slug },
+						{ languageCode: locale, currencyCode, channelToken },
+					)
+				).data,
+		});
+		const product = result.product;
+		if (!product) return null;
+
+		const primaryCollection =
+			product.collections?.find((collection) => collection.parent?.id) ??
+			product.collections?.[0];
+		return {
+			metadata: {
+				title: product.name,
+				description: truncateDescription(product.description),
+				path: `/products/${product.slug}`,
+				image: product.assets?.[0]?.preview ?? null,
+			},
+			data: {
+				product,
+				primaryCollection,
+				productForDisplay: {
+					...product,
+					optionGroups: getDisplayOptionGroups(product),
+				},
+				currencyCode,
+			},
+		};
+	});

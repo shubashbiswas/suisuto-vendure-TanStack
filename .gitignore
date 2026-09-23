@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production & Build Outputs (Vite, Nitro, TanStack)
+dist/
+dist-ssr/
+build/
+out/
+.output/
+.nitro/
+.tanstack/
+.wrangler/
+.vinxi/
+__unconfig*
+dev-dist/
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# App Specific Build Artifacts
+apps/server/dist/
+apps/storefront/.output/
+apps/storefront/.nitro/
+apps/storefront/.tanstack/
+apps/storefront/dist/
+apps/storefront/src/paraglide/
+
+# Vendure Generated & Local Runtime Data
+apps/server/static/assets/*
+!apps/server/static/assets/.gitkeep
+apps/server/static/email/test-emails/*
+!apps/server/static/email/test-emails/.gitkeep
+.vendure/
+apps/server/.vendure/
+apps/storefront/.vendure/
+
+# Environment Variables & Secrets
+.env
+.env.*
+*.local
+!.env.example
+!.env.*.example
+!.env.production.example
+!apps/server/.env.example
+!apps/storefront/.env.example
+
+# Local Docker Overrides
+docker-compose.override.yml
+docker-compose.*.override.yml
+
+# Testing & Quality Tools
+.playwright/
+playwright-report/
+test-results/
+blob-report/
+todos.json
+
+# Caches & Diagnostics
+.turbo/
+.cache/
+.swc/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

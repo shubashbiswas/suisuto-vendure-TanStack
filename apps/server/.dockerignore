@@ -1,0 +1,54 @@
+# Dependencies & Local Stores
+node_modules/
+.pnpm-store/
+
+# Git & CI/CD
+.git/
+.github/
+.gitignore
+.dockerignore
+.antigravityignore
+.vscode/
+.idea/
+
+# Build Outputs & Caches
+dist/
+build/
+admin-ui/
+*.tsbuildinfo
+.turbo/
+.cache/
+
+# Vendure Static Media & Email Test Outputs
+static/assets/*
+!static/assets/.gitkeep
+static/email/test-emails/*
+!static/email/test-emails/.gitkeep
+.vendure/
+.tanstack/
+
+# Environment Variables & Secrets
+.env
+.env.*
+*.local
+*.pem
+*.key
+!.env.example
+
+# Database Files
+*.sqlite
+*.sqlite3
+*.db
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Logs & Temporary Files
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db

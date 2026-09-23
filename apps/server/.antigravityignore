@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build Outputs & Bundles
+dist/
+build/
+admin-ui/
+*.tsbuildinfo
+
+# Vendure Static Media & Email Dumps
+static/assets/**
+static/email/test-emails/**
+.vendure/
+.tanstack/
+
+# Logs & Temporary Files
+logs/
+*.log
+.DS_Store
+Thumbs.db

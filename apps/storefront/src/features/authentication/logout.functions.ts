@@ -1,0 +1,14 @@
+import { LogoutMutation } from './graphql'
+import { removeAuthToken } from '@/platform/vendure/auth-token.server'
+import { mutateOnServer } from '@/platform/vendure/api.server'
+import { redirect } from '@tanstack/react-router'
+import { createServerFn } from '@tanstack/react-start'
+
+export const logoutAction = createServerFn({ method: 'POST' }).handler(async () => {
+  try {
+    await mutateOnServer(LogoutMutation, {}, { useAuthToken: true })
+  } finally {
+    removeAuthToken()
+  }
+  throw redirect({ href: '/' })
+})

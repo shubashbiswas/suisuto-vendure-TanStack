@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Git & IDE
+.git/
+.github/
+.gitignore
+.dockerignore
+.antigravityignore
+.vscode/
+.idea/
+
+# Local Builds & Caches
+dist/
+dist-ssr/
+build/
+.output/
+.nitro/
+.tanstack/
+.wrangler/
+.vinxi/
+__unconfig*
+dev-dist/
+*.tsbuildinfo
+.turbo/
+.cache/
+
+# Testing & E2E
+tests/
+.playwright/
+playwright-report/
+test-results/
+blob-report/
+todos.json
+
+# Environment Files
+.env
+.env.*
+*.local
+!.env.example
+
+# Documentation & Logs
+README.md
+docs/
+*.md
+*.log
+.DS_Store
+Thumbs.db

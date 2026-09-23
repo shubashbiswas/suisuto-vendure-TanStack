@@ -1,0 +1,72 @@
+# Dependencies & Local Package Store
+node_modules/
+.pnpm-store/
+
+# Git & CI/CD
+.git/
+.github/
+.gitignore
+.dockerignore
+.antigravityignore
+.agents/
+.vscode/
+.idea/
+
+# Build Outputs, Framework Artifacts & Caches
+dist/
+dist-ssr/
+build/
+out/
+.output/
+.nitro/
+.tanstack/
+.wrangler/
+.vinxi/
+__unconfig*
+dev-dist/
+.turbo/
+.cache/
+.swc/
+*.tsbuildinfo
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# Testing & E2E Artifacts
+tests/
+**/tests/
+.playwright/
+playwright-report/
+test-results/
+blob-report/
+todos.json
+
+# Vendure Runtime & Media Uploads
+apps/server/static/assets/*
+!apps/server/static/assets/.gitkeep
+apps/server/static/email/test-emails/*
+!apps/server/static/email/test-emails/.gitkeep
+.vendure/
+
+# Environment Variables & Secrets
+.env
+.env.*
+*.env
+*.local
+*.pem
+*.key
+!.env.example
+!.env.*.example
+!.env.production.example
+
+# Documentation & Markdown
+docs/
+*.md
+LICENSE
+
+# Logs & OS Dumps
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db

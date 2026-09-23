@@ -1,0 +1,64 @@
+# INFORMATION
+# We are not exposing the default ports for the services in this file.
+# This is to avoid conflicts with existing services on your machine.
+# In case you don't have any services running on the default ports, you can expose them by changing the
+# ports section in the services block. Please don't forget to update the ports in the .env file as well.
+
+# The explicit project name keeps this project's containers and volumes distinct from
+# those of other projects, even when this file lives in an identically-named directory
+# (e.g. apps/server in a monorepo). Quoted so that numeric-looking names (e.g. "123")
+# stay YAML strings — Compose rejects a non-string name.
+name: 'suisuto-vendure'
+
+services:
+    postgres_db:
+        image: postgres:16-alpine
+        volumes:
+            - postgres_db_data:/var/lib/postgresql/data
+        ports:
+            - "6543:5432"
+        environment:
+            POSTGRES_DB: vendure
+            POSTGRES_USER: vendure
+            POSTGRES_PASSWORD: MgZWQJAxFweYye-u-M1YOw
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"
+
+    # RECOMMENDED (especially for production)
+    # Want to use our BullMQ with Redis instead of our default database job queue?
+    # Checkout our BullMQ plugin: https://docs.vendure.io/reference/core-plugins/job-queue-plugin/bull-mqjob-queue-plugin/
+    redis:
+        image: redis:8-alpine
+        ports:
+            - "6479:6379"
+        volumes:
+            - redis_data:/data
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:9.1.0
+        ports:
+            - "9200:9200"
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        volumes:
+            - elasticsearch_data:/usr/share/elasticsearch/data
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"
+
+volumes:
+    postgres_db_data:
+        driver: local
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"
+    redis_data:
+        driver: local
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"
+    elasticsearch_data:
+        driver: local
+        labels:
+            - "io.vendure.create.name=suisuto-vendure"

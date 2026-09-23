@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "paths": {
+      "@suisuto/vendure-plugin-multi-hub": [
+        "../packages/multi-hub/multi-hub.plugin.ts"
+      ],
+      "@suisuto/vendure-plugin-multi-campaign": [
+        "../packages/multi-campaign/multi-campaign.plugin.ts"
+      ],
+      "@suisuto/vendure-plugin-multi-market": [
+        "../packages/multi-market/multi-market.plugin.ts"
+      ],
+      "@/gql": [
+        "./src/gql/graphql.ts"
+      ],
+      "@/vdb/*": [
+        "../.././node_modules/@vendure/dashboard/src/lib/*"
+      ]
+    }
+  },
+  "include": [
+    "../packages/**/dashboard/*",
+    "src/plugins/**/dashboard/*",
+    "src/gql/**/*.ts",
+    "vite.*.*ts"
+  ]
+}
