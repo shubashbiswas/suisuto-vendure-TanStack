@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Injectable, OnApplicationBootstrap, Optional } from '@nestjs/common';
 import {
     EventBus,
@@ -11,6 +13,7 @@ import { Campaign } from '../entities/campaign.entity';
 import { CampaignEvent } from '../events/campaign.event';
 import {
     CampaignFilterOptions,
+    CampaignPluginStatus,
     CreateCampaignInput,
     DeletionResponse,
     DeletionResult,
@@ -23,17 +26,72 @@ import {
 
 @Injectable()
 export class CampaignService implements OnApplicationBootstrap {
+    private isPluginEnabled = true;
+
     constructor(
         private connection: TransactionalConnection,
         @Optional() private eventBus?: EventBus,
     ) {}
 
     async onApplicationBootstrap() {
+        this.isPluginEnabled = this.loadPluginStatus();
         try {
             await this.seedInitialCampaigns();
         } catch (err: any) {
             Logger.warn(`Campaign initial seed skipped: ${err?.message}`, CAMPAIGN_PLUGIN_LOGGER_CONTEXT);
         }
+    }
+
+    private getSettingsFilePath(): string {
+        return path.join(process.cwd(), 'campaign-plugin-status.json');
+    }
+
+    private loadPluginStatus(): boolean {
+        try {
+            const filePath = this.getSettingsFilePath();
+            if (fs.existsSync(filePath)) {
+                const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+                if (typeof data.enabled === 'boolean') {
+                    return data.enabled;
+                }
+            }
+        } catch {
+            // default to true
+        }
+        return true;
+    }
+
+    private savePluginStatus(enabled: boolean): void {
+        try {
+            const filePath = this.getSettingsFilePath();
+            fs.writeFileSync(
+                filePath,
+                JSON.stringify({ enabled, updatedAt: new Date().toISOString() }, null, 2),
+                'utf-8'
+            );
+        } catch (err) {
+            Logger.warn(`Failed to persist campaign plugin status: ${err}`, CAMPAIGN_PLUGIN_LOGGER_CONTEXT);
+        }
+    }
+
+    getPluginStatus(): CampaignPluginStatus {
+        return { enabled: this.isPluginEnabled };
+    }
+
+    setPluginStatus(enabled: boolean): CampaignPluginStatus {
+        this.isPluginEnabled = enabled;
+        this.savePluginStatus(enabled);
+        Logger.info(
+            `Campaign plugin master switch set to: ${enabled ? 'ENABLED' : 'DISABLED'}`,
+            CAMPAIGN_PLUGIN_LOGGER_CONTEXT
+        );
+        if (this.eventBus) {
+            const dummyCampaign = new Campaign();
+            dummyCampaign.market = 'global';
+            dummyCampaign.slug = 'all';
+            this.eventBus.publish(new CampaignEvent(RequestContext.empty(), dummyCampaign, 'updated'));
+        }
+        return { enabled: this.isPluginEnabled };
     }
 
     private async seedInitialCampaigns() {
@@ -144,6 +202,9 @@ export class CampaignService implements OnApplicationBootstrap {
     }
 
     async findActive(ctx: RequestContext, market: string): Promise<Campaign[]> {
+        if (!this.isPluginEnabled) {
+            return [];
+        }
         const normalizedMarket = (market || 'global').toLowerCase().trim();
         const now = new Date();
 
@@ -160,6 +221,9 @@ export class CampaignService implements OnApplicationBootstrap {
     }
 
     async findBySlug(ctx: RequestContext, market: string, slug: string): Promise<Campaign | null> {
+        if (!this.isPluginEnabled) {
+            return null;
+        }
         const normalizedMarket = (market || 'global').toLowerCase().trim();
         const normalizedSlug = (slug || '').toLowerCase().trim();
 

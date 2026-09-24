@@ -121,21 +121,42 @@ export const campaignAdminApiSchema: any = gql`
         banners: [CampaignBannerInput!]
     }
 
+    type CampaignPluginStatus {
+        enabled: Boolean!
+    }
+
     extend type Query {
         campaigns(market: String, status: String): [Campaign!]!
         campaign(id: ID!): Campaign
+        campaignPluginStatus: CampaignPluginStatus!
     }
 
     extend type Mutation {
         createCampaign(input: CreateCampaignInput!): Campaign!
         updateCampaign(input: UpdateCampaignInput!): Campaign!
         deleteCampaign(id: ID!): DeletionResponse!
+        setCampaignPluginStatus(enabled: Boolean!): CampaignPluginStatus!
     }
 `;
 
 @Resolver()
 export class CampaignAdminResolver {
     constructor(private campaignService: CampaignService) {}
+
+    @Query()
+    @Allow(Permission.SuperAdmin, Permission.Authenticated)
+    async campaignPluginStatus(@Ctx() ctx: RequestContext) {
+        return this.campaignService.getPluginStatus();
+    }
+
+    @Mutation()
+    @Allow(Permission.SuperAdmin, Permission.Authenticated)
+    async setCampaignPluginStatus(
+        @Ctx() ctx: RequestContext,
+        @Args('enabled') enabled: boolean,
+    ) {
+        return this.campaignService.setPluginStatus(enabled);
+    }
 
     @Query()
     @Allow(Permission.SuperAdmin, Permission.Authenticated)

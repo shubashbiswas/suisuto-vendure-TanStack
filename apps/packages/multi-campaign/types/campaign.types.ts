@@ -82,3 +82,7 @@ export interface MultiCampaignPluginOptions {
      */
     defaultMarket?: string;
 }
+
+export interface CampaignPluginStatus {
+    enabled: boolean;
+}

@@ -17,6 +17,7 @@ import {
     AlertCircle,
     X,
     Eye,
+    Power,
 } from 'lucide-react';
 
 interface CampaignItem {
@@ -100,10 +101,39 @@ const CREATE_CAMPAIGN_MUTATION = `
     }
 `;
 
+const GET_PLUGIN_STATUS_QUERY = `
+    query GetCampaignPluginStatus {
+        campaignPluginStatus {
+            enabled
+        }
+    }
+`;
+
+const SET_PLUGIN_STATUS_MUTATION = `
+    mutation SetCampaignPluginStatus($enabled: Boolean!) {
+        setCampaignPluginStatus(enabled: $enabled) {
+            enabled
+        }
+    }
+`;
+
+function getAuthHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    try {
+        const token = localStorage.getItem('vendure-auth-token') || localStorage.getItem('vnd_session_token');
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+    } catch {}
+    return headers;
+}
+
 export function CampaignControlPage() {
     const [campaigns, setCampaigns] = useState<CampaignItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [pluginEnabled, setPluginEnabled] = useState<boolean>(true);
+    const [statusUpdating, setStatusUpdating] = useState<boolean>(false);
     const [selectedMarket, setSelectedMarket] = useState<string>('all');
     const [selectedStatus, setSelectedStatus] = useState<string>('all');
     const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -139,7 +169,7 @@ export function CampaignControlPage() {
             } else {
                 const res = await fetch('/admin-api', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     credentials: 'include',
                     body: JSON.stringify({ query: GET_CAMPAIGNS_QUERY, variables: vars }),
                 });
@@ -150,12 +180,63 @@ export function CampaignControlPage() {
             if (data?.campaigns) {
                 setCampaigns(data.campaigns);
             }
+
+            // Also load master plugin status
+            try {
+                let statusData: any;
+                if (api && typeof api.query === 'function') {
+                    statusData = await api.query(GET_PLUGIN_STATUS_QUERY, {});
+                } else {
+                    const statusRes = await fetch('/admin-api', {
+                        method: 'POST',
+                        headers: getAuthHeaders(),
+                        credentials: 'include',
+                        body: JSON.stringify({ query: GET_PLUGIN_STATUS_QUERY }),
+                    });
+                    const statusJson = await statusRes.json();
+                    statusData = statusJson.data;
+                }
+                if (statusData?.campaignPluginStatus) {
+                    setPluginEnabled(statusData.campaignPluginStatus.enabled);
+                }
+            } catch (statusErr) {
+                console.warn('Could not query campaignPluginStatus:', statusErr);
+            }
         } catch (err: any) {
             setError(err.message || 'Failed to load campaigns');
         } finally {
             setLoading(false);
         }
     }, [selectedMarket, selectedStatus]);
+
+    const handleTogglePluginStatus = async () => {
+        setStatusUpdating(true);
+        try {
+            const nextStatus = !pluginEnabled;
+            if (api && typeof api.mutate === 'function') {
+                await api.mutate(SET_PLUGIN_STATUS_MUTATION, { enabled: nextStatus });
+            } else {
+                const res = await fetch('/admin-api', {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        query: SET_PLUGIN_STATUS_MUTATION,
+                        variables: { enabled: nextStatus },
+                    }),
+                });
+                const json = await res.json();
+                if (json.errors?.length) {
+                    throw new Error(json.errors[0].message);
+                }
+            }
+            setPluginEnabled(nextStatus);
+        } catch (err: any) {
+            alert('Failed to update plugin master switch: ' + (err.message || err));
+        } finally {
+            setStatusUpdating(false);
+        }
+    };
 
     useEffect(() => {
         loadCampaigns();
@@ -357,6 +438,56 @@ export function CampaignControlPage() {
                     >
                         <Plus className="size-4" />
                         New Campaign
+                    </button>
+                </div>
+            </div>
+
+            {/* Master Switch Banner */}
+            <div className={`p-4 rounded-xl border transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm ${
+                pluginEnabled 
+                    ? 'bg-emerald-500/5 border-emerald-500/30 dark:bg-emerald-950/20' 
+                    : 'bg-amber-500/5 border-amber-500/30 dark:bg-amber-950/20'
+            }`}>
+                <div className="flex items-start md:items-center gap-3.5">
+                    <div className={`p-2.5 rounded-lg border ${
+                        pluginEnabled 
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
+                            : 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                    }`}>
+                        <Power className="size-5" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold tracking-tight text-foreground">Multi-Campaign Plugin Master Switch</span>
+                            <span className={`px-2 py-0.5 text-[11px] font-semibold tracking-wide uppercase rounded-full border ${
+                                pluginEnabled
+                                    ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20 dark:text-emerald-300'
+                                    : 'bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-300'
+                            }`}>
+                                {pluginEnabled ? '● Active & Serving' : '○ Disabled / Bypass Mode'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5 max-w-2xl leading-relaxed">
+                            {pluginEnabled 
+                                ? 'The Campaign Plugin is live. Storefronts dynamically render custom seasonal campaigns, countdowns, and collection heroes configured here.' 
+                                : 'Plugin bypass is enabled. Storefronts ignore all campaign overrides and gracefully fall back to default regional layouts and stock collections without deleting any data.'}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
+                    <button
+                        type="button"
+                        onClick={handleTogglePluginStatus}
+                        disabled={statusUpdating}
+                        className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg shadow-sm border transition-all cursor-pointer ${
+                            pluginEnabled
+                                ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 dark:text-amber-200 dark:border-amber-700/50'
+                                : 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent'
+                        } ${statusUpdating ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    >
+                        <Power className={`size-3.5 ${statusUpdating ? 'animate-spin' : ''}`} />
+                        {statusUpdating ? 'Updating...' : pluginEnabled ? 'Disable Plugin' : 'Enable Plugin'}
                     </button>
                 </div>
             </div>

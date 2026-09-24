@@ -50,15 +50,25 @@ export const campaignShopApiSchema: any = gql`
         banners: [CampaignBanner!]
     }
 
+    type CampaignPluginStatus {
+        enabled: Boolean!
+    }
+
     extend type Query {
         activeCampaigns(market: String!): [Campaign!]!
         campaignBySlug(market: String!, slug: String!): Campaign
+        campaignPluginStatus: CampaignPluginStatus!
     }
 `;
 
 @Resolver()
 export class CampaignShopResolver {
     constructor(private campaignService: CampaignService) {}
+
+    @Query()
+    async campaignPluginStatus(@Ctx() ctx: RequestContext) {
+        return this.campaignService.getPluginStatus();
+    }
 
     @Query()
     async activeCampaigns(
