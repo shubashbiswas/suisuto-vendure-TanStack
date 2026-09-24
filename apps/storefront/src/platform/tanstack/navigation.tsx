@@ -6,9 +6,19 @@ import {
 } from "@tanstack/react-router";
 import { type ComponentProps, useMemo } from "react";
 
-type LocalizedLinkProps = Omit<ComponentProps<"a">, "href"> & {
-	href: string;
+export type LocalizedLinkProps = Omit<ComponentProps<"a">, "href"> & {
+	href?: string;
+	to?: string;
+	search?: any;
+	params?: any;
+	hash?: string;
+	state?: any;
+	mask?: any;
 	locale?: string;
+	activeProps?: any;
+	inactiveProps?: any;
+	activeOptions?: any;
+	resetScroll?: boolean;
 };
 
 export function useActiveRegion(): string | null {
@@ -32,6 +42,8 @@ export function resolveRegionalHref(
 		href.startsWith("https://") ||
 		href.startsWith("//") ||
 		href.startsWith("#") ||
+		href.startsWith(".") ||
+		href === "." ||
 		href.startsWith("/api/") ||
 		href.startsWith("/_")
 	) {
@@ -55,10 +67,11 @@ export function resolveRegionalHref(
 	return `/${activeRegion}${clean}`;
 }
 
-export function Link({ href, locale: _locale, ...props }: LocalizedLinkProps) {
+export function Link({ href, to, locale: _locale, ...props }: LocalizedLinkProps) {
 	const activeRegion = useActiveRegion();
-	const targetHref = resolveRegionalHref(href, activeRegion);
-	return <RouterLink to={targetHref} {...props} />;
+	const rawTarget = href || to || "/";
+	const targetHref = resolveRegionalHref(rawTarget, activeRegion);
+	return <RouterLink to={targetHref as any} {...(props as any)} />;
 }
 
 export function usePathname() {
@@ -94,6 +107,7 @@ export function useRouter() {
 			return navigate({ href: targetHref, replace: true });
 		},
 		refresh: () => router.invalidate(),
+		invalidate: () => router.invalidate(),
 	};
 }
 

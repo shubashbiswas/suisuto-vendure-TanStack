@@ -11,6 +11,7 @@ import {
 	TransitionOrderToStateMutation,
 } from "@/features/checkout/graphql";
 import { noStoreMiddleware } from "@/platform/middleware";
+import { storefrontContextMiddleware } from "@/features/currency/storefront-context.middleware";
 import { mutateOnServer } from "@/platform/vendure/api.server";
 import { setAuthToken } from "@/platform/vendure/auth-token.server";
 
@@ -117,9 +118,9 @@ export const transitionToArrangingPayment = createServerFn({ method: "POST" })
 	});
 
 export const placeOrder = createServerFn({ method: "POST" })
-	.middleware([noStoreMiddleware])
+	.middleware([noStoreMiddleware, storefrontContextMiddleware])
 	.validator(z.object({ paymentMethodCode: z.string().min(1) }))
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		const rotatedToken = await transitionOrderToArrangingPayment();
 		const metadata: Record<string, unknown> =
 			data.paymentMethodCode === "standard-payment"
@@ -140,10 +141,11 @@ export const placeOrder = createServerFn({ method: "POST" })
 			console.error("Failed to place order", error.errorCode, error.message);
 			throw new Error("Failed to place order");
 		}
-		throw redirect({
-			to: "/order-confirmation/$code",
-			params: { code: result.data.addPaymentToOrder.code },
-		});
+		const confUrl =
+			context.region && context.region !== "global"
+				? `/${context.region}/order-confirmation/${encodeURIComponent(result.data.addPaymentToOrder.code)}`
+				: `/order-confirmation/${encodeURIComponent(result.data.addPaymentToOrder.code)}`;
+		throw redirect({ href: confUrl });
 	});
 
 export type SetCustomerForOrderResult =

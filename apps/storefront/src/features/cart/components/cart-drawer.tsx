@@ -259,7 +259,7 @@ export function CartDrawer() {
 								View Full Bag
 							</Button>
 							<Button
-								render={<Link href="/cart" />}
+								render={<Link href="/checkout" />}
 								onClick={closeCartDrawer}
 								className="h-11 font-sans text-xs tracking-wider uppercase font-semibold rounded-lg bg-primary text-primary-foreground flex items-center justify-center gap-1.5 group"
 							>

@@ -15,7 +15,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import {Link} from '@tanstack/react-router';
+import {Link} from '@/platform/tanstack/navigation';
 import {useTranslations} from '@/platform/i18n/paraglide';
 import {useServerFn} from '@tanstack/react-start';
 

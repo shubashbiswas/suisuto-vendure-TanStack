@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {Link, useRouter} from '@tanstack/react-router';
+import {Link, useRouter} from '@/platform/tanstack/navigation';
 import {useTranslations} from '@/platform/i18n/paraglide';
 import {useServerFn} from '@tanstack/react-start';
 

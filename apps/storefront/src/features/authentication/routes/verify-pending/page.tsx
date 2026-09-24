@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {Link} from '@tanstack/react-router';
+import {Link} from '@/platform/tanstack/navigation';
 import { CheckCircle } from 'lucide-react';
 import {useTranslations} from '@/platform/i18n/paraglide';
 

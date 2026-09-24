@@ -7,8 +7,12 @@ import { getCartRouteData } from "@/features/cart/cart.functions";
 
 export const Route = createFileRoute("/$region/cart")({
 	loader: () => getCartRouteData(),
-	head: () =>
-		storefrontHead({ title: m.Cart_title(), path: "/cart", noIndex: true }),
+	head: ({ params }) =>
+		storefrontHead({
+			title: m.Cart_title(),
+			path: `/${params.region}/cart`,
+			noIndex: true,
+		}),
 	component: RegionalCartRoute,
 	pendingComponent: Loading,
 });

@@ -1,5 +1,5 @@
 import Image from '@/components/storefront-image';
-import { Link } from '@tanstack/react-router';
+import { Link } from '@/platform/tanstack/navigation';
 import {Button} from '@/components/ui/button';
 import {Minus, Plus, X, Sparkles, ArrowRight} from 'lucide-react';
 import {Price} from '@/features/pricing/price';

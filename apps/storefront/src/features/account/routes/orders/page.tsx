@@ -13,7 +13,7 @@ import {Button} from "@/components/ui/button";
 import {Price} from '@/features/pricing/price';
 import {OrderStatusBadge} from '@/features/orders/order-status-badge';
 import {formatDate} from '@/platform/i18n/format';
-import { Link } from '@tanstack/react-router';
+import { Link } from '@/platform/tanstack/navigation';
 import {useLocale, useTranslations} from '@/platform/i18n/paraglide';
 import type {ResultOf} from '@/platform/vendure/graphql';
 import type {GetCustomerOrdersQuery} from '@/features/account/graphql';

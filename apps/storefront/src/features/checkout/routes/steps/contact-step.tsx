@@ -5,8 +5,7 @@ import { Field, FieldLabel, FieldError, FieldGroup } from '@/components/ui/field
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useForm } from 'react-hook-form';
 import { Loader2, AlertCircle } from 'lucide-react';
-import {useRouter} from '@/platform/tanstack/navigation';
-import {Link} from '@tanstack/react-router';
+import { Link, useRouter } from '@/platform/tanstack/navigation';
 import { setCustomerForOrder, type SetCustomerForOrderResult } from '../actions';
 import {useTranslations} from '@/platform/i18n/paraglide';
 import {useServerFn} from '@tanstack/react-start';

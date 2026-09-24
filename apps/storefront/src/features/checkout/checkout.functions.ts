@@ -54,16 +54,19 @@ export const getCheckoutRouteData = createServerFn({ method: "GET" })
 
 		const activeOrder = orderResult.data.activeOrder;
 		if (!activeOrder || activeOrder.lines.length === 0) {
-			throw redirect({ to: "/cart" });
+			const targetCart = context.region && context.region !== "global"
+				? `/${context.region}/cart`
+				: "/cart";
+			throw redirect({ href: targetCart });
 		}
 		if (
 			activeOrder.state !== "AddingItems" &&
 			activeOrder.state !== "ArrangingPayment"
 		) {
-			throw redirect({
-				to: "/order-confirmation/$code",
-				params: { code: activeOrder.code },
-			});
+			const targetConf = context.region && context.region !== "global"
+				? `/${context.region}/order-confirmation/${encodeURIComponent(activeOrder.code)}`
+				: `/order-confirmation/${encodeURIComponent(activeOrder.code)}`;
+			throw redirect({ href: targetConf });
 		}
 
 		return {

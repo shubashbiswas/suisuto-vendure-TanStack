@@ -1,7 +1,7 @@
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Check, ShoppingBag, ClipboardList} from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Link } from '@/platform/tanstack/navigation';
 import Image from '@/components/storefront-image';
 import {Separator} from '@/components/ui/separator';
 import {Price} from '@/features/pricing/price';

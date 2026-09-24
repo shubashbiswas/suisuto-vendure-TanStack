@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "@/platform/tanstack/navigation";
 import { MapPin, Package, User } from "lucide-react";
 import { useTranslations } from "@/platform/i18n/paraglide";
 

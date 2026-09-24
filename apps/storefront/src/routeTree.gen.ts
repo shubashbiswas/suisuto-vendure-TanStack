@@ -28,11 +28,15 @@ import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as RegionIndexRouteImport } from './routes/$region.index'
 import { Route as RegionAccountRouteImport } from './routes/$region.account'
 import { Route as RegionCartRouteImport } from './routes/$region.cart'
+import { Route as RegionCheckoutRouteImport } from './routes/$region.checkout'
 import { Route as RegionForgotPasswordRouteImport } from './routes/$region.forgot-password'
 import { Route as RegionRegisterRouteImport } from './routes/$region.register'
+import { Route as RegionResetPasswordRouteImport } from './routes/$region.reset-password'
 import { Route as RegionSearchRouteImport } from './routes/$region.search'
 import { Route as RegionShopRouteImport } from './routes/$region.shop'
 import { Route as RegionSignInRouteImport } from './routes/$region.sign-in'
+import { Route as RegionVerifyRouteImport } from './routes/$region.verify'
+import { Route as RegionVerifyPendingRouteImport } from './routes/$region.verify-pending'
 import { Route as RegionWishlistRouteImport } from './routes/$region.wishlist'
 import { Route as AccountAddressesRouteImport } from './routes/account/addresses'
 import { Route as AccountOrdersRouteImport } from './routes/account/orders'
@@ -48,6 +52,7 @@ import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as RegionCampaignSlugRouteImport } from './routes/$region.campaign.$slug'
 import { Route as RegionCollectionSlugRouteImport } from './routes/$region.collection.$slug'
 import { Route as RegionCollectionsSlugRouteImport } from './routes/$region.collections.$slug'
+import { Route as RegionOrderConfirmationCodeRouteImport } from './routes/$region.order-confirmation.$code'
 import { Route as RegionProductSlugRouteImport } from './routes/$region.product.$slug'
 import { Route as RegionProductsSlugRouteImport } from './routes/$region.products.$slug'
 import { Route as AccountOrdersIndexRouteImport } from './routes/account/orders.index'
@@ -150,6 +155,11 @@ const RegionCartRoute = RegionCartRouteImport.update({
   path: '/cart',
   getParentRoute: () => RegionRoute,
 } as any)
+const RegionCheckoutRoute = RegionCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => RegionRoute,
+} as any)
 const RegionForgotPasswordRoute = RegionForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
@@ -158,6 +168,11 @@ const RegionForgotPasswordRoute = RegionForgotPasswordRouteImport.update({
 const RegionRegisterRoute = RegionRegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => RegionRoute,
+} as any)
+const RegionResetPasswordRoute = RegionResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => RegionRoute,
 } as any)
 const RegionSearchRoute = RegionSearchRouteImport.update({
@@ -173,6 +188,16 @@ const RegionShopRoute = RegionShopRouteImport.update({
 const RegionSignInRoute = RegionSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => RegionRoute,
+} as any)
+const RegionVerifyRoute = RegionVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => RegionRoute,
+} as any)
+const RegionVerifyPendingRoute = RegionVerifyPendingRouteImport.update({
+  id: '/verify-pending',
+  path: '/verify-pending',
   getParentRoute: () => RegionRoute,
 } as any)
 const RegionWishlistRoute = RegionWishlistRouteImport.update({
@@ -250,6 +275,12 @@ const RegionCollectionsSlugRoute = RegionCollectionsSlugRouteImport.update({
   path: '/collections/$slug',
   getParentRoute: () => RegionRoute,
 } as any)
+const RegionOrderConfirmationCodeRoute =
+  RegionOrderConfirmationCodeRouteImport.update({
+    id: '/order-confirmation/$code',
+    path: '/order-confirmation/$code',
+    getParentRoute: () => RegionRoute,
+  } as any)
 const RegionProductSlugRoute = RegionProductSlugRouteImport.update({
   id: '/product/$slug',
   path: '/product/$slug',
@@ -300,11 +331,15 @@ export interface FileRoutesByFullPath {
   '/wishlist': typeof WishlistRoute
   '/$region/account': typeof RegionAccountRoute
   '/$region/cart': typeof RegionCartRoute
+  '/$region/checkout': typeof RegionCheckoutRoute
   '/$region/forgot-password': typeof RegionForgotPasswordRoute
   '/$region/register': typeof RegionRegisterRoute
+  '/$region/reset-password': typeof RegionResetPasswordRoute
   '/$region/search': typeof RegionSearchRoute
   '/$region/shop': typeof RegionShopRoute
   '/$region/sign-in': typeof RegionSignInRoute
+  '/$region/verify': typeof RegionVerifyRoute
+  '/$region/verify-pending': typeof RegionVerifyPendingRoute
   '/$region/wishlist': typeof RegionWishlistRoute
   '/account/addresses': typeof AccountAddressesRoute
   '/account/orders': typeof AccountOrdersRouteWithChildren
@@ -321,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
+  '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
@@ -346,11 +382,15 @@ export interface FileRoutesByTo {
   '/wishlist': typeof WishlistRoute
   '/$region/account': typeof RegionAccountRoute
   '/$region/cart': typeof RegionCartRoute
+  '/$region/checkout': typeof RegionCheckoutRoute
   '/$region/forgot-password': typeof RegionForgotPasswordRoute
   '/$region/register': typeof RegionRegisterRoute
+  '/$region/reset-password': typeof RegionResetPasswordRoute
   '/$region/search': typeof RegionSearchRoute
   '/$region/shop': typeof RegionShopRoute
   '/$region/sign-in': typeof RegionSignInRoute
+  '/$region/verify': typeof RegionVerifyRoute
+  '/$region/verify-pending': typeof RegionVerifyPendingRoute
   '/$region/wishlist': typeof RegionWishlistRoute
   '/account/addresses': typeof AccountAddressesRoute
   '/account/profile': typeof AccountProfileRoute
@@ -366,6 +406,7 @@ export interface FileRoutesByTo {
   '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
+  '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
@@ -393,11 +434,15 @@ export interface FileRoutesById {
   '/wishlist': typeof WishlistRoute
   '/$region/account': typeof RegionAccountRoute
   '/$region/cart': typeof RegionCartRoute
+  '/$region/checkout': typeof RegionCheckoutRoute
   '/$region/forgot-password': typeof RegionForgotPasswordRoute
   '/$region/register': typeof RegionRegisterRoute
+  '/$region/reset-password': typeof RegionResetPasswordRoute
   '/$region/search': typeof RegionSearchRoute
   '/$region/shop': typeof RegionShopRoute
   '/$region/sign-in': typeof RegionSignInRoute
+  '/$region/verify': typeof RegionVerifyRoute
+  '/$region/verify-pending': typeof RegionVerifyPendingRoute
   '/$region/wishlist': typeof RegionWishlistRoute
   '/account/addresses': typeof AccountAddressesRoute
   '/account/orders': typeof AccountOrdersRouteWithChildren
@@ -414,6 +459,7 @@ export interface FileRoutesById {
   '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
+  '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
@@ -442,11 +488,15 @@ export interface FileRouteTypes {
     | '/wishlist'
     | '/$region/account'
     | '/$region/cart'
+    | '/$region/checkout'
     | '/$region/forgot-password'
     | '/$region/register'
+    | '/$region/reset-password'
     | '/$region/search'
     | '/$region/shop'
     | '/$region/sign-in'
+    | '/$region/verify'
+    | '/$region/verify-pending'
     | '/$region/wishlist'
     | '/account/addresses'
     | '/account/orders'
@@ -463,6 +513,7 @@ export interface FileRouteTypes {
     | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
+    | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
@@ -488,11 +539,15 @@ export interface FileRouteTypes {
     | '/wishlist'
     | '/$region/account'
     | '/$region/cart'
+    | '/$region/checkout'
     | '/$region/forgot-password'
     | '/$region/register'
+    | '/$region/reset-password'
     | '/$region/search'
     | '/$region/shop'
     | '/$region/sign-in'
+    | '/$region/verify'
+    | '/$region/verify-pending'
     | '/$region/wishlist'
     | '/account/addresses'
     | '/account/profile'
@@ -508,6 +563,7 @@ export interface FileRouteTypes {
     | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
+    | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
@@ -534,11 +590,15 @@ export interface FileRouteTypes {
     | '/wishlist'
     | '/$region/account'
     | '/$region/cart'
+    | '/$region/checkout'
     | '/$region/forgot-password'
     | '/$region/register'
+    | '/$region/reset-password'
     | '/$region/search'
     | '/$region/shop'
     | '/$region/sign-in'
+    | '/$region/verify'
+    | '/$region/verify-pending'
     | '/$region/wishlist'
     | '/account/addresses'
     | '/account/orders'
@@ -555,6 +615,7 @@ export interface FileRouteTypes {
     | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
+    | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
@@ -724,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegionCartRouteImport
       parentRoute: typeof RegionRoute
     }
+    '/$region/checkout': {
+      id: '/$region/checkout'
+      path: '/checkout'
+      fullPath: '/$region/checkout'
+      preLoaderRoute: typeof RegionCheckoutRouteImport
+      parentRoute: typeof RegionRoute
+    }
     '/$region/forgot-password': {
       id: '/$region/forgot-password'
       path: '/forgot-password'
@@ -736,6 +804,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/$region/register'
       preLoaderRoute: typeof RegionRegisterRouteImport
+      parentRoute: typeof RegionRoute
+    }
+    '/$region/reset-password': {
+      id: '/$region/reset-password'
+      path: '/reset-password'
+      fullPath: '/$region/reset-password'
+      preLoaderRoute: typeof RegionResetPasswordRouteImport
       parentRoute: typeof RegionRoute
     }
     '/$region/search': {
@@ -757,6 +832,20 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/$region/sign-in'
       preLoaderRoute: typeof RegionSignInRouteImport
+      parentRoute: typeof RegionRoute
+    }
+    '/$region/verify': {
+      id: '/$region/verify'
+      path: '/verify'
+      fullPath: '/$region/verify'
+      preLoaderRoute: typeof RegionVerifyRouteImport
+      parentRoute: typeof RegionRoute
+    }
+    '/$region/verify-pending': {
+      id: '/$region/verify-pending'
+      path: '/verify-pending'
+      fullPath: '/$region/verify-pending'
+      preLoaderRoute: typeof RegionVerifyPendingRouteImport
       parentRoute: typeof RegionRoute
     }
     '/$region/wishlist': {
@@ -864,6 +953,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegionCollectionsSlugRouteImport
       parentRoute: typeof RegionRoute
     }
+    '/$region/order-confirmation/$code': {
+      id: '/$region/order-confirmation/$code'
+      path: '/order-confirmation/$code'
+      fullPath: '/$region/order-confirmation/$code'
+      preLoaderRoute: typeof RegionOrderConfirmationCodeRouteImport
+      parentRoute: typeof RegionRoute
+    }
     '/$region/product/$slug': {
       id: '/$region/product/$slug'
       path: '/product/$slug'
@@ -923,16 +1019,21 @@ const RegionCampaignSlugRouteWithChildren =
 interface RegionRouteChildren {
   RegionAccountRoute: typeof RegionAccountRoute
   RegionCartRoute: typeof RegionCartRoute
+  RegionCheckoutRoute: typeof RegionCheckoutRoute
   RegionForgotPasswordRoute: typeof RegionForgotPasswordRoute
   RegionRegisterRoute: typeof RegionRegisterRoute
+  RegionResetPasswordRoute: typeof RegionResetPasswordRoute
   RegionSearchRoute: typeof RegionSearchRoute
   RegionShopRoute: typeof RegionShopRoute
   RegionSignInRoute: typeof RegionSignInRoute
+  RegionVerifyRoute: typeof RegionVerifyRoute
+  RegionVerifyPendingRoute: typeof RegionVerifyPendingRoute
   RegionWishlistRoute: typeof RegionWishlistRoute
   RegionIndexRoute: typeof RegionIndexRoute
   RegionCampaignSlugRoute: typeof RegionCampaignSlugRouteWithChildren
   RegionCollectionSlugRoute: typeof RegionCollectionSlugRoute
   RegionCollectionsSlugRoute: typeof RegionCollectionsSlugRoute
+  RegionOrderConfirmationCodeRoute: typeof RegionOrderConfirmationCodeRoute
   RegionProductSlugRoute: typeof RegionProductSlugRoute
   RegionProductsSlugRoute: typeof RegionProductsSlugRoute
 }
@@ -940,16 +1041,21 @@ interface RegionRouteChildren {
 const RegionRouteChildren: RegionRouteChildren = {
   RegionAccountRoute: RegionAccountRoute,
   RegionCartRoute: RegionCartRoute,
+  RegionCheckoutRoute: RegionCheckoutRoute,
   RegionForgotPasswordRoute: RegionForgotPasswordRoute,
   RegionRegisterRoute: RegionRegisterRoute,
+  RegionResetPasswordRoute: RegionResetPasswordRoute,
   RegionSearchRoute: RegionSearchRoute,
   RegionShopRoute: RegionShopRoute,
   RegionSignInRoute: RegionSignInRoute,
+  RegionVerifyRoute: RegionVerifyRoute,
+  RegionVerifyPendingRoute: RegionVerifyPendingRoute,
   RegionWishlistRoute: RegionWishlistRoute,
   RegionIndexRoute: RegionIndexRoute,
   RegionCampaignSlugRoute: RegionCampaignSlugRouteWithChildren,
   RegionCollectionSlugRoute: RegionCollectionSlugRoute,
   RegionCollectionsSlugRoute: RegionCollectionsSlugRoute,
+  RegionOrderConfirmationCodeRoute: RegionOrderConfirmationCodeRoute,
   RegionProductSlugRoute: RegionProductSlugRoute,
   RegionProductsSlugRoute: RegionProductsSlugRoute,
 }

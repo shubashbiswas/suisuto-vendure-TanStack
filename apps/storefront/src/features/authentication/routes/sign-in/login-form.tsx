@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@/platform/tanstack/navigation";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
