@@ -8,7 +8,15 @@ export type HomepageSectionType =
     | 'editorial'
     | 'artisan-story'
     | 'newsletter'
-    | 'countdown';
+    | 'countdown'
+    | 'video-banner'
+    | 'full-width-slides'
+    | 'seasonal-collection'
+    | 'category-grid-3x3'
+    | 'brand-grid-3x3'
+    | 'bestselling-slides'
+    | 'now-trending'
+    | 'shop-the-mood';
 
 export interface HomepageSectionConfig {
     type: HomepageSectionType;

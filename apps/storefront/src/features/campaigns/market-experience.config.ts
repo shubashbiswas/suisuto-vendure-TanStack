@@ -15,8 +15,14 @@ export const MARKET_EXPERIENCE: Record<string, HomepageSectionConfig[]> = {
         { type: 'newsletter' },
     ],
     bd: [
-        { type: 'hero' },
-        { type: 'featured-collection', props: { collectionSlug: 'atelier' } },
+        { type: 'video-banner' },
+        { type: 'full-width-slides' },
+        { type: 'seasonal-collection' },
+        { type: 'category-grid-3x3' },
+        { type: 'brand-grid-3x3' },
+        { type: 'bestselling-slides' },
+        { type: 'now-trending' },
+        { type: 'shop-the-mood' },
         { type: 'newsletter' },
     ],
     ae: [

@@ -8,6 +8,14 @@ import { HeroSection } from "@/site/home/hero-section";
 import { ArtisanStory } from "@/site/home/artisan-story";
 import { CountdownSection } from "@/site/campaigns/countdown-section";
 import { CampaignBannerSection } from "@/site/campaigns/campaign-banner-section";
+import { VideoBannerSection } from "@/site/home/video-banner-section";
+import { FullWidthSlidesSection } from "@/site/home/full-width-slides-section";
+import { SeasonalCollectionSection } from "@/site/home/seasonal-collection-section";
+import { ShopByCategoryGrid } from "@/site/home/shop-by-category-grid";
+import { ShopByBrandGrid } from "@/site/home/shop-by-brand-grid";
+import { BestsellingSlidesSection } from "@/site/home/bestselling-slides-section";
+import { NowTrendingSection } from "@/site/home/now-trending-section";
+import { ShopTheMoodSection } from "@/site/home/shop-the-mood-section";
 import type { Campaign, HomepageSectionConfig } from "@/features/campaigns/campaign.types";
 
 const luxuryPillars = [
@@ -232,6 +240,68 @@ export function HomepageSectionRenderer({
         }
         case "newsletter": {
             return <NewsletterSection />;
+        }
+        case "video-banner": {
+            return (
+                <VideoBannerSection
+                    videoUrl={props.videoUrl}
+                    title={props.title}
+                    subtitle={props.subtitle}
+                    ctaHref={props.ctaHref}
+                    ctaText={props.ctaText}
+                />
+            );
+        }
+        case "full-width-slides": {
+            return <FullWidthSlidesSection slides={props.slides} />;
+        }
+        case "seasonal-collection": {
+            return (
+                <SeasonalCollectionSection
+                    title={props.title}
+                    subtitle={props.subtitle}
+                    bannerUrl={props.bannerUrl}
+                    ctaHref={props.ctaHref}
+                    ctaText={props.ctaText}
+                />
+            );
+        }
+        case "category-grid-3x3": {
+            return <ShopByCategoryGrid categories={props.categories} />;
+        }
+        case "brand-grid-3x3": {
+            return <ShopByBrandGrid brands={props.brands} />;
+        }
+        case "bestselling-slides": {
+            return (
+                <BestsellingSlidesSection
+                    products={products}
+                    currencyCode={currencyCode}
+                    title={props.title}
+                    subtitle={props.subtitle}
+                />
+            );
+        }
+        case "now-trending": {
+            return (
+                <NowTrendingSection
+                    products={products}
+                    currencyCode={currencyCode}
+                    title={props.title}
+                    subtitle={props.subtitle}
+                />
+            );
+        }
+        case "shop-the-mood": {
+            return (
+                <ShopTheMoodSection
+                    moodTitle={props.moodTitle}
+                    moodSubtitle={props.moodSubtitle}
+                    moodCategory={props.moodCategory}
+                    moodImageUrl={props.moodImageUrl}
+                    ctaHref={props.ctaHref}
+                />
+            );
         }
         default:
             return null;
