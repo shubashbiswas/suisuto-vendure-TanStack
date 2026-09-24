@@ -11,7 +11,6 @@ import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import { MultiHubPlugin } from '@suisuto/vendure-multi-hub-plugin';
-import { MultiCampaignPlugin } from '@suisuto/vendure-multi-campaign-plugin';
 import { MultiMarketPlugin } from '@suisuto/vendure-multi-market-plugin';
 import 'dotenv/config';
 import path from 'path';
@@ -193,10 +192,6 @@ export const config: VendureConfig = {
                 : path.join(__dirname, 'dashboard'),
         }),
         MultiHubPlugin,
-        MultiCampaignPlugin.init({
-            storefrontRevalidateUrl: process.env.STOREFRONT_URL || 'http://localhost:3001',
-            revalidateSecret: process.env.REVALIDATION_SECRET,
-        }),
         MultiMarketPlugin.init({
             defaultMarketCode: 'global',
         }),

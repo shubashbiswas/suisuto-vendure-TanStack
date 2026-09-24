@@ -32,14 +32,15 @@ export const getHomeData = createServerFn({ method: "GET" })
 
 		// 2. Resolve market homepage sections adhering to hierarchy:
 		//    Priority 1: Active campaign sections (if campaign has custom sections)
-		//    Priority 2: Multi-Market plugin homepage sections configured in Vendure
-		//    Priority 3: Fallback default sections
+		//    Priority 2: Market experience layout defined for this market
+		//    Priority 3: Multi-Market plugin homepage sections configured in Vendure
+		const marketSections = getMarketHomepageSections(regionCode, campaign);
 		const homepageSections: HomepageSectionConfig[] =
 			campaign?.homepageSections && campaign.homepageSections.length > 0
 				? campaign.homepageSections
-				: marketConfig?.homepage?.sections && marketConfig.homepage.sections.length > 0
-				? (marketConfig.homepage.sections as HomepageSectionConfig[])
-				: getMarketHomepageSections(regionCode, campaign);
+				: marketSections && marketSections.length > 0
+				? marketSections
+				: (marketConfig?.homepage?.sections as HomepageSectionConfig[]) || [];
 
 		// 3. Determine collection to showcase
 		let targetCollectionSlug = "atelier";

@@ -16,6 +16,7 @@ import { ShopByBrandGrid } from "@/site/home/shop-by-brand-grid";
 import { BestsellingSlidesSection } from "@/site/home/bestselling-slides-section";
 import { NowTrendingSection } from "@/site/home/now-trending-section";
 import { ShopTheMoodSection } from "@/site/home/shop-the-mood-section";
+import { ScrollRevealSection } from "@/components/scroll-reveal-section";
 import type { Campaign, HomepageSectionConfig } from "@/features/campaigns/campaign.types";
 
 const luxuryPillars = [
@@ -210,11 +211,12 @@ export function HomepageSectionRenderer({
         }
         case "campaign-banner": {
             const banners = props.banners || campaign?.banners || [];
-            return <CampaignBannerSection banners={banners} />;
+            return <ScrollRevealSection><CampaignBannerSection banners={banners} /></ScrollRevealSection>;
         }
         case "featured-collection":
         case "product-carousel": {
             return (
+                <ScrollRevealSection>
                 <FeaturedCollectionSection
                     products={products}
                     currencyCode={currencyCode}
@@ -223,26 +225,30 @@ export function HomepageSectionRenderer({
                     ctaHref={props.ctaHref}
                     ctaLabel={props.ctaLabel}
                 />
+                </ScrollRevealSection>
             );
         }
         case "artisan-story": {
-            return <ArtisanStory />;
+            return <ScrollRevealSection><ArtisanStory /></ScrollRevealSection>;
         }
         case "countdown": {
             const targetDate = props.targetDate || campaign?.endAt;
             return (
+                <ScrollRevealSection>
                 <CountdownSection
                     targetDate={targetDate}
                     headline={props.headline}
                     subHeadline={props.subHeadline}
                 />
+                </ScrollRevealSection>
             );
         }
         case "newsletter": {
-            return <NewsletterSection />;
+            return <ScrollRevealSection><NewsletterSection /></ScrollRevealSection>;
         }
         case "video-banner": {
             return (
+                <ScrollRevealSection>
                 <VideoBannerSection
                     videoUrl={props.videoUrl}
                     title={props.title}
@@ -250,13 +256,15 @@ export function HomepageSectionRenderer({
                     ctaHref={props.ctaHref}
                     ctaText={props.ctaText}
                 />
+                </ScrollRevealSection>
             );
         }
         case "full-width-slides": {
-            return <FullWidthSlidesSection slides={props.slides} />;
+            return <ScrollRevealSection><FullWidthSlidesSection slides={props.slides} /></ScrollRevealSection>;
         }
         case "seasonal-collection": {
             return (
+                <ScrollRevealSection>
                 <SeasonalCollectionSection
                     title={props.title}
                     subtitle={props.subtitle}
@@ -264,36 +272,63 @@ export function HomepageSectionRenderer({
                     ctaHref={props.ctaHref}
                     ctaText={props.ctaText}
                 />
+                </ScrollRevealSection>
             );
         }
         case "category-grid-3x3": {
-            return <ShopByCategoryGrid categories={props.categories} />;
+            return (
+                <ScrollRevealSection>
+                <ShopByCategoryGrid
+                    categories={props.categories}
+                    badge={props.badge}
+                    title={props.title}
+                    subtitle={props.subtitle}
+                />
+                </ScrollRevealSection>
+            );
         }
         case "brand-grid-3x3": {
-            return <ShopByBrandGrid brands={props.brands} />;
+            return (
+                <ScrollRevealSection>
+                <ShopByBrandGrid
+                    brands={props.brands}
+                    badge={props.badge}
+                    title={props.title}
+                    subtitle={props.subtitle}
+                />
+                </ScrollRevealSection>
+            );
+        }
+        case "atelier-pillars": {
+            return <ScrollRevealSection><AtelierPillarsSection /></ScrollRevealSection>;
         }
         case "bestselling-slides": {
             return (
+                <ScrollRevealSection>
                 <BestsellingSlidesSection
                     products={products}
                     currencyCode={currencyCode}
                     title={props.title}
                     subtitle={props.subtitle}
                 />
+                </ScrollRevealSection>
             );
         }
         case "now-trending": {
             return (
+                <ScrollRevealSection>
                 <NowTrendingSection
                     products={products}
                     currencyCode={currencyCode}
                     title={props.title}
                     subtitle={props.subtitle}
                 />
+                </ScrollRevealSection>
             );
         }
         case "shop-the-mood": {
             return (
+                <ScrollRevealSection>
                 <ShopTheMoodSection
                     moodTitle={props.moodTitle}
                     moodSubtitle={props.moodSubtitle}
@@ -301,6 +336,7 @@ export function HomepageSectionRenderer({
                     moodImageUrl={props.moodImageUrl}
                     ctaHref={props.ctaHref}
                 />
+                </ScrollRevealSection>
             );
         }
         default:

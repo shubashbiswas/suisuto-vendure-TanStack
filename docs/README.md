@@ -15,6 +15,7 @@ Welcome to the complete architectural and operational documentation suite for th
 | **[07. Payments & Shipping](./07_PAYMENTS_AND_SHIPPING_INTEGRATIONS.md)** | Gateway & logistics topology | SSLCOMMERZ, Razorpay, Stripe, Pathao, Delhivery, DHL Express, rate formulas |
 | **[08. Standard Operating Procedures](./08_STANDARD_OPERATING_PROCEDURES_SOPS.md)** | Operational runbooks for teams | Merchandising product creation, daily agent dispatch, restocking protocol |
 | **[09. Multi-Market Campaign Architecture](./09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Campaign-aware merchandising & regional architecture | Vendure `MultiCampaignPlugin`, dynamic section engine, countdown timers, sub-slug landing pages, SOPs |
+| **[10. Modular Multi-Market & Animation Architecture](./10_MODULAR_MARKET_AND_ANIMATION_ARCHITECTURE.md)** | Strategy 1 modular market modules & luxury animations | Modular market folders (`src/markets/`), `MarketExperience` registry, CSS scroll-driven parallax, dual-shot hovers, hero unmasking |
 | **[Multi-Hub Architecture](./MULTI_HUB_ARCHITECTURE.md)** | Dual-hub fulfillment & split shipping | `@suisuto/vendure-multi-hub-plugin`, stock locations, per-origin split-shipping calculator, multi-fulfillment |
 
 ---

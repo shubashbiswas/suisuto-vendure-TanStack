@@ -13,8 +13,7 @@
     "start:server": "pnpm --filter server start",
     "start:storefront": "pnpm --filter storefront start",
     "test:multi-hub": "pnpm --filter @suisuto/vendure-multi-hub-plugin test",
-    "test:multi-market": "pnpm --filter @suisuto/vendure-multi-market-plugin test",
-    "test:multi-campaign": "pnpm --filter @suisuto/vendure-multi-campaign-plugin test"
+    "test:multi-market": "pnpm --filter @suisuto/vendure-multi-market-plugin test"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.5",

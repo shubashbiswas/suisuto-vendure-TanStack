@@ -1,5 +1,6 @@
-import { Link } from "@/platform/tanstack/navigation";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "@/platform/tanstack/navigation";
+import { useScrollReveal, useStaggeredReveal } from "@/hooks/use-scroll-reveal";
 
 interface CategoryItem {
 	name: string;
@@ -15,7 +16,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Men's Ethnic & Panjabi",
 		banglaName: "পাঞ্জাবি ও এথনিক",
 		tagline: "Royal Jacquard & Cotton",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/R4KUiGCjERrYo2b0TZaclu4BMxqqAEBr6rh0H99V.png",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/R4KUiGCjERrYo2b0TZaclu4BMxqqAEBr6rh0H99V.png",
 		href: "/shop?category=panjabi",
 		itemCount: "140+ Pieces",
 	},
@@ -23,7 +25,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Casual & Formal Shirts",
 		banglaName: "শার্ট কালেকশন",
 		tagline: "Solid, Printed & Checks",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/3oZi8w6S6IqWYMrVrFt5pTK9K8yYW9dX8okPo7Z6.jpg",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/3oZi8w6S6IqWYMrVrFt5pTK9K8yYW9dX8okPo7Z6.jpg",
 		href: "/shop?category=shirts",
 		itemCount: "210+ Pieces",
 	},
@@ -31,7 +34,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Dhakai Jamdani & Sarees",
 		banglaName: "জামদানি ও শাড়ি",
 		tagline: "Generational Loom Weaves",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/Zz8bqMREyksoM6KdKTJuBF76AHrKEan329vW8gAr.jpg",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/Zz8bqMREyksoM6KdKTJuBF76AHrKEan329vW8gAr.jpg",
 		href: "/shop?category=sarees",
 		itemCount: "95+ Pieces",
 	},
@@ -39,7 +43,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Salwar Suits & Kameez",
 		banglaName: "সালোয়ার কামিজ",
 		tagline: "Embroidered Three-Piece",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/fEXys0NnBaBtlqkUkdYVmwZbKuY7dBas1WzEBzVw.png",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/fEXys0NnBaBtlqkUkdYVmwZbKuY7dBas1WzEBzVw.png",
 		href: "/shop?category=kameez",
 		itemCount: "125+ Pieces",
 	},
@@ -47,7 +52,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Western Tops & Dresses",
 		banglaName: "ওয়েস্টার্ন টপস",
 		tagline: "Chic Minimalist Silhouettes",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/tbTcMmvYdEuw1swVk7xaK1lPhcojOKt2BdHp7PAy.webp",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/tbTcMmvYdEuw1swVk7xaK1lPhcojOKt2BdHp7PAy.webp",
 		href: "/shop?category=western",
 		itemCount: "80+ Pieces",
 	},
@@ -55,7 +61,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Junior & Newborn",
 		banglaName: "জুনিয়র কালেকশন",
 		tagline: "Boys, Girls & Baby Essentials",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/wAt3lYVaod6KaRkzZ4cyx4nw6FaE9OTF0hjO32uJ.jpg",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/wAt3lYVaod6KaRkzZ4cyx4nw6FaE9OTF0hjO32uJ.jpg",
 		href: "/shop?category=junior",
 		itemCount: "160+ Pieces",
 	},
@@ -63,7 +70,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Accessories & Leather",
 		banglaName: "এক্সেসরিজ ও জুতো",
 		tagline: "Watches, Wallets & Belts",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/xbURkauHTx3Ots6NaHwn0GFaAWrl9apYj0eYaXzi.png",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/xbURkauHTx3Ots6NaHwn0GFaAWrl9apYj0eYaXzi.png",
 		href: "/shop?category=accessories",
 		itemCount: "110+ Pieces",
 	},
@@ -71,7 +79,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Beauty & Fragrances",
 		banglaName: "বিউটি ও পারফিউম",
 		tagline: "Artisan Attar & Skincare",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/S1WUIwQhPBSPnvfIolggIoQR3G4pDU4VuTN3f3Gx.jpg",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/S1WUIwQhPBSPnvfIolggIoQR3G4pDU4VuTN3f3Gx.jpg",
 		href: "/shop?category=beauty",
 		itemCount: "65+ Pieces",
 	},
@@ -79,7 +88,8 @@ const CATEGORIES_3X3: CategoryItem[] = [
 		name: "Atelier Pro & Athleisure",
 		banglaName: "অ্যাথলেইজার ও স্পোর্টস",
 		tagline: "Performance Fabrics",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/FCJbFYZoazIOBQJZIe2PhsRE7f8SbQJhZS2hH8Ws.jpg",
+		imageUrl:
+			"https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/FCJbFYZoazIOBQJZIe2PhsRE7f8SbQJhZS2hH8Ws.jpg",
 		href: "/shop?category=activewear",
 		itemCount: "75+ Pieces",
 	},
@@ -87,36 +97,45 @@ const CATEGORIES_3X3: CategoryItem[] = [
 
 export function ShopByCategoryGrid({
 	categories = CATEGORIES_3X3,
+	badge = "Curated Catalog Matrix",
+	title = "SHOP BY CATEGORY",
+	subtitle = "Explore distinct wardrobe departments handcrafted for contemporary sophistication.",
 }: {
 	categories?: CategoryItem[];
+	badge?: string;
+	title?: string;
+	subtitle?: string;
 }) {
+	const titleRef = useScrollReveal<HTMLDivElement>();
+	const gridRef = useStaggeredReveal<HTMLDivElement>();
+
 	return (
 		<section className="py-20 md:py-28 bg-background border-b border-border/40">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
+				<div ref={titleRef} className="scroll-reveal text-center max-w-2xl mx-auto mb-14 space-y-2">
 					<span className="text-[10px] font-mono font-semibold uppercase tracking-[0.3em] text-primary/80">
-						Curated Catalog Matrix
+						{badge}
 					</span>
-					<h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-foreground">
-						SHOP BY CATEGORY
+					<h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-foreground section-title-accent">
+						{title}
 					</h2>
 					<p className="text-xs md:text-sm text-muted-foreground font-sans">
-						Explore distinct wardrobe departments handcrafted for contemporary sophistication.
+						{subtitle}
 					</p>
 				</div>
 
-				{/* 3x3 Full-Width Responsive Grid */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+				{/* 3x3 Full-Width Responsive Grid with staggered reveal */}
+				<div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
 					{categories.map((cat, idx) => (
 						<Link
 							key={`cat-${idx}`}
 							href={cat.href}
-							className="group relative h-72 sm:h-80 md:h-96 rounded-xl overflow-hidden border border-border/60 bg-neutral-900 block"
+							className="scroll-reveal-scale group relative h-72 sm:h-80 md:h-96 rounded-xl overflow-hidden border border-border/60 bg-neutral-900 block"
 						>
 							<img
 								src={cat.imageUrl}
 								alt={cat.name}
-								className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out opacity-85 group-hover:opacity-95"
+								className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-85 group-hover:opacity-95"
 								loading="lazy"
 							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10 group-hover:from-black/95 transition-colors" />

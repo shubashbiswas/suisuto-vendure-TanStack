@@ -16,7 +16,8 @@ export type HomepageSectionType =
     | 'brand-grid-3x3'
     | 'bestselling-slides'
     | 'now-trending'
-    | 'shop-the-mood';
+    | 'shop-the-mood'
+    | 'atelier-pillars';
 
 export interface HomepageSectionConfig {
     type: HomepageSectionType;

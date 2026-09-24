@@ -87,8 +87,14 @@ const BRANDS_3X3: BrandItem[] = [
 
 export function ShopByBrandGrid({
 	brands = BRANDS_3X3,
+	badge = "The Fashion House Portfolio",
+	title = "SHOP BY BRAND",
+	subtitle = "Distinctive heritage and contemporary labels curated for quality, pedigree, and longevity.",
 }: {
 	brands?: BrandItem[];
+	badge?: string;
+	title?: string;
+	subtitle?: string;
 }) {
 	return (
 		<section className="py-20 md:py-28 bg-secondary/15 border-b border-border/40">
@@ -96,13 +102,13 @@ export function ShopByBrandGrid({
 				<div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
 					<div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono uppercase tracking-[0.25em] text-primary">
 						<Sparkles className="size-3" />
-						<span>The Fashion House Portfolio</span>
+						<span>{badge}</span>
 					</div>
 					<h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-foreground">
-						SHOP BY BRAND
+						{title}
 					</h2>
 					<p className="text-xs md:text-sm text-muted-foreground font-sans">
-						Distinctive heritage and contemporary labels curated for quality, pedigree, and longevity.
+						{subtitle}
 					</p>
 				</div>
 

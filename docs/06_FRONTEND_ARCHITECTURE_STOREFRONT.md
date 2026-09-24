@@ -139,3 +139,36 @@ In [src/routes/checkout.tsx](file:///c:/laragon/www/suisuto-vendure-v2/apps/stor
   * Document Type: `Aadhaar` | `PAN` | `Passport`
   * Document Identification Number
 * The value is saved to `Order.customFields.recipientKycId` via GraphQL mutation for automated courier commercial invoice generation.
+
+---
+
+## 6. Modular Market Feature Modules (`src/markets/`)
+
+To support distinct cultural, aesthetic, and merchandising requirements across Bangladesh (`/bd`), India (`/in`), and Global Export (`/` or `/global`), the storefront uses **Strategy 1: Modular Market Feature Folders**:
+
+* **Market Modules (`src/markets/`)**:
+  * `bd/`: Bangladesh handloom heritage (Jamdani, Panjabi, Narayanganj hub, BDT ৳).
+  * `in/`: Indian royal couture & wedding bridal (Banarasi, Chanderi, Varanasi hub, INR ₹).
+  * `global/`: International runway ateliers (Haute Couture, dual-origin linen, USD $).
+* **Registry & Interface Contract**:
+  * `src/markets/types.ts`: `MarketExperience` TypeScript interface defining navigation, hero typography, editorial storytelling, and boutique footer configurations.
+  * `src/markets/registry.ts`: `getMarketExperience(regionCode)` with safe resolution and fallback to Global.
+* **Zero Hardcoded Branching**:
+  * Header navigation ([`navbar.tsx`](file:///c:/laragon/www/vendure/apps/storefront/src/site/navigation/navbar.tsx)) and footer ([`footer.tsx`](file:///c:/laragon/www/vendure/apps/storefront/src/site/footer.tsx)) dynamically render the active market's navigation trees and contact concierges without nested `if/else` checks.
+
+For deep architectural patterns and adding new country markets, see **[10. Modular Multi-Market & Animation Architecture](./10_MODULAR_MARKET_AND_ANIMATION_ARCHITECTURE.md)**.
+
+---
+
+## 7. Dynamic Section Engine & Luxury Animations
+
+* **Dynamic Section Dispatcher**:
+  * [`HomepageSectionRenderer`](file:///c:/laragon/www/vendure/apps/storefront/src/site/home/homepage-section-renderer.tsx) supports 8 modular sections (`hero`, `video-banner`, `shop-by-category`, `seasonal-collection`, `now-trending`, `shop-by-brand`, `bestselling-slides`, `full-width-slide`).
+* **High-Fashion Animation Suite**:
+  * **Composited Performance (CLS = 0)**: Transforms, opacities, and filters only.
+  * **CSS Scroll-Driven Parallax**: Native `@supports ((animation-timeline: view()) and (animation-range: entry))` for 120 FPS banner parallax without runtime JS overhead.
+  * **Dual-Shot Hover**: Instant crossfade from studio mannequin shot to secondary drape/editorial look on product cards.
+  * **Masked Headline Reveals**: Grand serif headlines slide upward from overflow masks on load.
+  * **Physical Spring Cart Drawer**: `cubic-bezier(0.16, 1, 0.3, 1)` easing with deep frosted glass backdrop blur.
+  * **Accessibility**: Automatic fallback and reduction via `@media (prefers-reduced-motion: reduce)`.
+

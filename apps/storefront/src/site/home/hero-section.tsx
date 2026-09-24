@@ -31,14 +31,14 @@ export function HeroSection({
 
 	return (
 		<section className="relative min-h-[85vh] flex flex-col justify-between bg-black text-white overflow-hidden">
-			{/* High-fashion campaign hero backdrop with dramatic lighting */}
-			<div className="absolute inset-0 z-0">
+			{/* High-fashion campaign hero backdrop with cinematic zoom-reveal */}
+			<div className="absolute inset-0 z-0 animate-hero-zoom-reveal">
 				<img
 					src={getOptimizedAssetUrl(imageUrl, { width: 1920, format: "webp" })}
 					srcSet={getAssetSrcSet(imageUrl) || undefined}
 					sizes="100vw"
 					alt={heroHeadline || "Suisuto Haute Couture Campaign"}
-					className="w-full h-full object-cover object-top opacity-75 sm:opacity-85 scale-105 transition-transform duration-1000 ease-out hover:scale-100"
+					className="w-full h-full object-cover object-top opacity-75 sm:opacity-85"
 					loading="eager"
 					fetchPriority="high"
 				/>
@@ -53,34 +53,36 @@ export function HeroSection({
 			{/* Floating Editorial Headline & CTAs */}
 			<div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-16">
 				<div className="max-w-3xl space-y-6">
-					{/* Capsule Tag */}
-					<div className="inline-flex items-center gap-2 px-3.5 py-1 border border-white/20 bg-black/40 backdrop-blur-md text-[10px] font-mono tracking-[0.3em] uppercase text-white/90">
+					{/* Capsule Tag — slides down */}
+					<div className="animate-slide-down stagger-1 inline-flex items-center gap-2 px-3.5 py-1 border border-white/20 bg-black/40 backdrop-blur-md text-[10px] font-mono tracking-[0.3em] uppercase text-white/90">
 						<span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
 						<span>{tag}</span>
 						<Sparkles className="size-3 text-amber-400 ml-1" />
 					</div>
 
-					{/* Grand Serif Editorial Headline */}
-					<h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight text-white leading-[1.05]">
-						{heroHeadline ? (
-							heroHeadline
-						) : (
-							<>
-								Where Ancient Threads Meet{" "}
-								<span className="block font-serif italic font-normal text-white/80">
-									Modern Architecture.
-								</span>
-							</>
-						)}
-					</h1>
+					{/* Grand Serif Editorial Headline — masked reveal */}
+					<div className="overflow-hidden">
+						<h1 className="animate-mask-slide-up stagger-3 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight text-white leading-[1.05]">
+							{heroHeadline ? (
+								heroHeadline
+							) : (
+								<>
+									Where Ancient Threads Meet{" "}
+									<span className="block font-serif italic font-normal text-white/80">
+										Modern Architecture.
+									</span>
+								</>
+							)}
+						</h1>
+					</div>
 
-					{/* Sub-narrative */}
-					<p className="text-sm sm:text-base md:text-lg text-white/75 max-w-xl font-sans leading-relaxed tracking-wide">
+					{/* Sub-narrative — floats up */}
+					<p className="animate-reveal-up stagger-5 text-sm sm:text-base md:text-lg text-white/75 max-w-xl font-sans leading-relaxed tracking-wide">
 						{subHeadline}
 					</p>
 
-					{/* Action Buttons */}
-					<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
+					{/* Action Buttons — floats up with delay */}
+					<div className="animate-reveal-up stagger-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
 						<Button
 							render={<Link href={ctaHref} />}
 							nativeButton={false}

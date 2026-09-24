@@ -88,12 +88,21 @@ Defined in [`apps/storefront/src/site/navigation/`](file:///c:/laragon/www/suisu
 - **Market Detection** ([`features/market/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/market/)): Edge country detection from reverse proxy headers and non-intrusive soft suggestion banner (`geo-suggestion-banner.tsx`).
 - **Product Cards & Detail** ([`features/products/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/products/)): Single-variant instant Add-to-Bag, multi-variant option selection, and custom fields (`originHub`, `fabricCareGuide`, `modelSpecs`).
 
-### 4.6 i18n & Localization
+### 4.6 Modular Market Architecture (`src/markets/`)
+- Each geographic market maintains an isolated feature folder:
+  - Bangladesh (`src/markets/bd/`): Jamdani, Panjabi, Narayanganj hub, BDT ৳.
+  - India (`src/markets/in/`): Banarasi, Bridal couture, Varanasi hub, INR ₹.
+  - Global (`src/markets/global/`): Runway ateliers, USD $, cross-border logistics.
+- All markets adhere to the `MarketExperience` contract in `src/markets/types.ts`.
+- Dispatching is resolved via `getMarketExperience(regionCode)` in `src/markets/registry.ts`.
+- Components (`navbar.tsx`, `footer.tsx`) must never contain hardcoded `if (region === 'in')` branches; instead, consume the dynamic `MarketExperience` configuration.
+
+### 4.7 i18n & Localization
 - Managed with Paraglide JS (`@/paraglide/messages.js`).
 - Supported languages: English (EN), Bengali (BN `বাংলা`), Hindi (HI `हिन्दी`).
 - Compile translation dictionaries with `pnpm --filter storefront generate:i18n`.
 
-### 4.7 Cache Revalidation Webhook
+### 4.8 Cache Revalidation Webhook
 - Endpoint: `/api/revalidate`
 - Pattern: `/^campaigns?(-.+)?$/`
 - Allows Vendure Admin API or webhook triggers to purge edge and in-memory caches instantly when campaign data changes.

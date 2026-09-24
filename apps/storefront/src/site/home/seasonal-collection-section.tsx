@@ -65,14 +65,14 @@ export function SeasonalCollectionSection({
 							</div>
 						</div>
 
-						{/* Visual Banner Column */}
-						<div className="lg:col-span-6 relative min-h-[300px] lg:min-h-full overflow-hidden">
+						{/* Visual Banner Column — parallax scroll */}
+						<div className="lg:col-span-6 relative min-h-[300px] lg:min-h-full overflow-hidden parallax-scroll-container">
 							<img
 								src={bannerUrl}
 								alt="Seasonal Collection"
-								className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700"
+								className="w-full h-[115%] top-[-7.5%] relative object-cover object-center parallax-media"
 							/>
-							<div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent lg:hidden" />
+							<div className="absolute inset-0 bg-linear-to-t from-neutral-950 via-transparent to-transparent lg:hidden" />
 						</div>
 					</div>
 				</div>

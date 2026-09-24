@@ -8,9 +8,6 @@
       "@suisuto/vendure-multi-hub-plugin": [
         "../packages/multi-hub/multi-hub.plugin.ts"
       ],
-      "@suisuto/vendure-multi-campaign-plugin": [
-        "../packages/multi-campaign/multi-campaign.plugin.ts"
-      ],
       "@suisuto/vendure-multi-market-plugin": [
         "../packages/multi-market/multi-market.plugin.ts"
       ],

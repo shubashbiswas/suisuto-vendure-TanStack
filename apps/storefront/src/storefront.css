@@ -117,6 +117,9 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -196,5 +199,297 @@
 .dark ::selection {
   background: oklch(0.96 0.005 85 / 20%);
   color: inherit;
+}
+
+/* ============================================================
+   LUXURY ANIMATION DESIGN SYSTEM
+   Performance: compositor-only (transform, opacity, filter)
+   Accessibility: prefers-reduced-motion compliant
+   ============================================================ */
+
+/* --- Phase 1: Core Keyframes --- */
+
+/* Hero cinematic image unmask: slow zoom-out reveal */
+@keyframes hero-zoom-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hero text mask slide-up reveal (for overflow-hidden wrappers) */
+@keyframes mask-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Soft float-up entrance for staggered elements */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide down entrance (for badges/tags) */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Parallax scroll displacement for banners */
+@keyframes banner-parallax {
+  from {
+    transform: translateY(-6%) scale(1.06);
+  }
+  to {
+    transform: translateY(6%) scale(1);
+  }
+}
+
+/* Scale-in entrance for grid items */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Horizontal accent line expansion */
+@keyframes line-expand {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Shimmer skeleton loading */
+@keyframes shimmer-pulse {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Cart drawer stagger entrance for items */
+@keyframes drawer-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --- Phase 1: Utility Classes --- */
+
+/* Editorial Hero Reveal (On Load) */
+.animate-hero-zoom-reveal {
+  animation: hero-zoom-reveal 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.animate-mask-slide-up {
+  animation: mask-slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-reveal-up {
+  animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-line-expand {
+  animation: line-expand 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: left;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, oklch(0.5 0 0 / 8%) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer-pulse 1.8s ease-in-out infinite;
+}
+
+.animate-drawer-item-in {
+  animation: drawer-item-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delay utilities */
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
+.stagger-4 { animation-delay: 400ms; }
+.stagger-5 { animation-delay: 500ms; }
+.stagger-6 { animation-delay: 600ms; }
+.stagger-7 { animation-delay: 700ms; }
+.stagger-8 { animation-delay: 800ms; }
+
+/* --- Phase 2: CSS Scroll-Driven Parallax --- */
+
+@supports (animation-timeline: view()) {
+  .parallax-scroll-container {
+    overflow: clip;
+  }
+
+  .parallax-media {
+    animation: banner-parallax linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+/* --- Phase 3: Scroll Reveal via IntersectionObserver fallback targets --- */
+
+/* Elements start hidden, JS adds .is-visible to trigger */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scale variant for grid cards */
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-scale.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- Phase 4: Product Card Dual-Shot & Zoom --- */
+
+.product-card-image-primary {
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.product-card-image-secondary {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.group:hover .product-card-image-primary {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.group:hover .product-card-image-secondary {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* --- Phase 5: Luxury Navigation Underlines --- */
+
+.nav-link-luxury {
+  position: relative;
+}
+
+.nav-link-luxury::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link-luxury:hover::after {
+  transform: scaleX(1);
+}
+
+/* --- Phase 6: Section Title Accent Line --- */
+
+.section-title-accent {
+  position: relative;
+  display: inline-block;
+}
+
+.section-title-accent::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 1.5px;
+  background: currentColor;
+  margin: 12px auto 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section-title-accent.is-visible::after {
+  transform: scaleX(1);
+}
+
+/* --- Accessibility: Reduced Motion --- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .parallax-media {
+    animation: none !important;
+  }
+
+  .scroll-reveal,
+  .scroll-reveal-scale {
+    opacity: 1;
+    transform: none;
+  }
 }
 
