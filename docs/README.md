@@ -16,6 +16,7 @@ Welcome to the complete architectural and operational documentation suite for th
 | **[08. Standard Operating Procedures](./08_STANDARD_OPERATING_PROCEDURES_SOPS.md)** | Operational runbooks for teams | Merchandising product creation, daily agent dispatch, restocking protocol |
 | **[09. Multi-Market Campaign Architecture](./09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Campaign-aware merchandising & regional architecture | Vendure `MultiCampaignPlugin`, dynamic section engine, countdown timers, sub-slug landing pages, SOPs |
 | **[10. Modular Multi-Market & Animation Architecture](./10_MODULAR_MARKET_AND_ANIMATION_ARCHITECTURE.md)** | Strategy 1 modular market modules & luxury animations | Modular market folders (`src/markets/`), `MarketExperience` registry, CSS scroll-driven parallax, dual-shot hovers, hero unmasking |
+| **[11. Refactoring Log & Architecture Updates](./11_REFACTORING_LOG_AND_ARCHITECTURE_UPDATES.md)** | Codebase modernization & architectural upgrades | Rule 4.1 paired routes, universal localized navigation, checkout UI/UX elevation, plugin cleanup |
 | **[Multi-Hub Architecture](./MULTI_HUB_ARCHITECTURE.md)** | Dual-hub fulfillment & split shipping | `@suisuto/vendure-multi-hub-plugin`, stock locations, per-origin split-shipping calculator, multi-fulfillment |
 
 ---
