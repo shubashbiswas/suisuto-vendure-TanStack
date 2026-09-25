@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+*.log
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.cert
+*.crt

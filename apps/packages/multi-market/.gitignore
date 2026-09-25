@@ -1,0 +1,36 @@
+# Dependencies & Package Stores
+node_modules/
+.pnpm-store/
+
+# Build Outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Test Coverage & Artifacts
+coverage/
+.nyc_output/
+.turbo/
+.cache/
+
+# Environment & Secrets
+.env
+.env.*
+*.env
+*.local
+*.pem
+*.key
+*.cert
+*.crt
+
+# Logs & Temporary Files
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Agent & Workspace Customizations
+.agents/
+.gemini/
