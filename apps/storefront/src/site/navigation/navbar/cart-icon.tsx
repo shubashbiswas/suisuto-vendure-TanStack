@@ -16,7 +16,7 @@ export function CartIcon({ cartItemCount }: CartIconProps) {
 			onClick={openCartDrawer}
 			variant="ghost"
 			size="sm"
-			className="relative h-9 px-2.5 gap-1.5 text-xs font-mono uppercase tracking-widest text-foreground hover:bg-secondary/50 rounded-none border border-transparent hover:border-border/60 transition-all group"
+			className="relative size-11 md:size-9 h-9 px-2.5 gap-1.5 text-xs font-mono uppercase tracking-widest text-foreground hover:bg-secondary/50 rounded-none border border-transparent hover:border-border/60 transition-all group"
 			aria-label={t("shoppingCart")}
 		>
 			<ShoppingBag className="size-4 stroke-[1.5] group-hover:scale-105 transition-transform" />

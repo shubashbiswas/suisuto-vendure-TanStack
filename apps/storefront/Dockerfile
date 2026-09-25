@@ -1,21 +1,18 @@
 # =============================================================
 # Stage 1: Build the Nitro + TanStack Start bundle
 # =============================================================
-FROM node:20-alpine AS builder
+FROM node:24-trixie-slim AS builder
 
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy root monorepo files for workspace resolution
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml* ./
-COPY apps/storefront/package.json ./apps/storefront/
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy storefront source code
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml* .npmrc* ./
 COPY apps/storefront ./apps/storefront
+
+# Install dependencies for storefront
+RUN pnpm install --filter storefront... --frozen-lockfile
 
 # Build arguments with sensible defaults (VITE_SITE_URL is required for production builds)
 ARG VITE_SITE_URL=http://localhost:3001
@@ -30,7 +27,7 @@ RUN pnpm --filter storefront build
 # =============================================================
 # Stage 2: Ultra-lightweight Production Runtime (~100-120MB)
 # =============================================================
-FROM node:20-alpine AS runner
+FROM node:24-trixie-slim AS runner
 
 WORKDIR /app
 

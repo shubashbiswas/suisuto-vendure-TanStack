@@ -4,7 +4,6 @@ import { queryOnServer } from "@/platform/vendure/api.server";
 import type { ResultOf } from "@/platform/vendure/graphql";
 import { SitemapEntriesQuery } from "./graphql";
 import { getDynamicRegions } from "@/platform/region/region.server";
-import { fetchActiveCampaigns } from "@/features/campaigns/campaign.server";
 
 const PAGE_SIZE = 100;
 
@@ -59,7 +58,11 @@ async function loadLocaleEntries(locale: Locale) {
 	return { collections, products };
 }
 
-export async function createSitemapResponse() {
+export interface CreateSitemapOptions {
+	fetchCampaigns?: (regionCode: string) => Promise<Array<{ slug: string; landingPages?: Array<{ subSlug: string }> }>>;
+}
+
+export async function createSitemapResponse(options?: CreateSitemapOptions) {
 	const entries = new Map<string, Map<Locale, SitemapEntry>>();
 
 	for (const locale of locales) {
@@ -104,7 +107,7 @@ export async function createSitemapResponse() {
 			entries.set(`page:shop:${reg.code}`, regShop);
 		}
 
-		const campaigns = await fetchActiveCampaigns(reg.code).catch(() => []);
+		const campaigns = options?.fetchCampaigns ? await options.fetchCampaigns(reg.code).catch(() => []) : [];
 		for (const camp of campaigns) {
 			const prefix = reg.code === "global" ? "" : `/${reg.code}`;
 			const campEntry =

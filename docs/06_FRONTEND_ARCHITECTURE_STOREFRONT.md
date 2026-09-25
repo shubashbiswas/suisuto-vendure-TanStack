@@ -27,7 +27,7 @@ The storefront operates on a unified domain with multi-market routing and channe
 
 ## 3. Server Entry & Channel Token Resolution
 
-In TanStack Start, the server entry point is [src/server.ts](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/server.ts), evaluated inside Nitro's SSR environment.
+In TanStack Start, the server entry point is [src/server.ts](file:///c:/laragon/www/vendure/apps/storefront/src/server.ts), evaluated inside Nitro's SSR environment.
 
 ### 3.1 Middleware Pipeline in `src/server.ts`
 
@@ -54,7 +54,7 @@ export default {
 
 ### 3.2 Dynamic Channel Token Resolution in `api.server.ts`
 
-All communication with the Vendure backend passes through [src/platform/vendure/api.server.ts](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/platform/vendure/api.server.ts). The active channel token is resolved dynamically:
+All communication with the Vendure backend passes through [src/platform/vendure/api.server.ts](file:///c:/laragon/www/vendure/apps/storefront/src/platform/vendure/api.server.ts). The active channel token is resolved dynamically:
 
 ```typescript
 // apps/storefront/src/platform/vendure/api.server.ts
@@ -133,7 +133,7 @@ When a customer's cart contains items originating from multiple hubs:
 
 ### 5.3 Conditional Indian Customs KYC at Checkout
 
-In [src/routes/checkout.tsx](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/routes/checkout.tsx):
+In [src/routes/checkout.tsx](file:///c:/laragon/www/vendure/apps/storefront/src/routes/checkout.tsx):
 * If `shippingAddress.countryCode === 'IN'` **AND** any line item has `originHub === 'BD_HUB'`:
 * The checkout form conditionally requires Indian Customs identification:
   * Document Type: `Aadhaar` | `PAN` | `Passport`

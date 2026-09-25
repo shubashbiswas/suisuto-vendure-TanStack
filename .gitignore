@@ -1,8 +1,8 @@
-# Dependencies
+# Dependencies & Package Stores
 node_modules/
 .pnpm-store/
 
-# Production & Build Outputs (Vite, Nitro, TanStack)
+# Production & Build Outputs (Vite, Nitro, TanStack, Next.js)
 dist/
 dist-ssr/
 build/
@@ -10,6 +10,7 @@ out/
 .output/
 .nitro/
 .tanstack/
+.next/
 .wrangler/
 .vinxi/
 __unconfig*
@@ -17,13 +18,14 @@ dev-dist/
 vite.config.ts.timestamp-*
 vite.config.js.timestamp-*
 
-# App Specific Build Artifacts
+# App & Package Specific Build Artifacts
 apps/server/dist/
 apps/storefront/.output/
 apps/storefront/.nitro/
 apps/storefront/.tanstack/
 apps/storefront/dist/
 apps/storefront/src/paraglide/
+apps/packages/*/dist/
 
 # Vendure Generated & Local Runtime Data
 apps/server/static/assets/*
@@ -37,22 +39,32 @@ apps/storefront/.vendure/
 # Environment Variables & Secrets
 .env
 .env.*
+*.env
 *.local
+*.pem
+*.key
+*.cert
+*.crt
 !.env.example
 !.env.*.example
 !.env.production.example
 !apps/server/.env.example
 !apps/storefront/.env.example
 
-# Local Docker Overrides
+# Local Docker Overrides & Runtime Data
 docker-compose.override.yml
 docker-compose.*.override.yml
+.docker/
+pgdata/
+docker-data/
 
-# Testing & Quality Tools
+# Testing, Quality & Coverage Tools
 .playwright/
 playwright-report/
 test-results/
 blob-report/
+coverage/
+.nyc_output/
 todos.json
 
 # Caches & Diagnostics
@@ -61,7 +73,7 @@ todos.json
 .swc/
 *.tsbuildinfo
 
-# Logs
+# Logs & Debugging
 logs/
 *.log
 npm-debug.log*
@@ -78,3 +90,7 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Agent & Workspace Customizations
+.agents/
+.gemini/

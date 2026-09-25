@@ -10,7 +10,7 @@ import {addToCart} from '@/features/products/add-to-cart.functions';
 import {getLowestVariantPrice, getSelectedOptionNames} from '@/features/products/product-options';
 import {triggerCartDrawer} from '@/features/cart/context/cart-drawer-context';
 import {toast} from 'sonner';
-import {WishlistButton} from '@/features/wishlist/components/wishlist-button';
+import {WishlistButton} from '@/features/wishlist';
 import {Price} from '@/features/pricing/price';
 import {useTranslations} from '@/platform/i18n/paraglide';
 import {useServerFn} from '@tanstack/react-start';
@@ -278,29 +278,31 @@ export function ProductInfo({product, searchParams, currencyCode}: ProductInfoPr
             )}
 
             {/* Add to Cart Button & Wishlist. Hidden below lg, where the mobile purchase bar takes over. */}
-            <div className="hidden lg:flex items-center gap-3 pt-2">
-                <Button
-                    size="lg"
-                    className="flex-1 h-13 text-xs font-sans tracking-[0.2em] uppercase font-semibold rounded-none shadow-sm"
-                    disabled={!canAddToCart || isPending}
-                    onClick={handleAddToCart}
-                >
-                    {purchaseIcon}
-                    {purchaseLabel}
-                </Button>
-                <WishlistButton
-                    item={{
-                        id: product.id,
-                        name: product.name,
-                        slug: product.slug ?? "",
-                        price: selectedVariant?.priceWithTax ?? lowestVariantPrice ?? 0,
-                        currencyCode,
-                        previewImage: product.assets?.[0]?.preview || getProductFallbackImage(product.slug, product.name),
-                    }}
-                    showLabel
-                    size="lg"
-                    className="h-13 px-5 rounded-none"
-                />
+            <div className="hidden lg:block pt-2">
+                <div className="flex items-center gap-3">
+                    <Button
+                        size="lg"
+                        className="flex-1 h-13 text-xs font-sans tracking-[0.2em] uppercase font-semibold rounded-none shadow-sm"
+                        disabled={!canAddToCart || isPending}
+                        onClick={handleAddToCart}
+                    >
+                        {purchaseIcon}
+                        {purchaseLabel}
+                    </Button>
+                    <WishlistButton
+                        item={{
+                            id: product.id,
+                            name: product.name,
+                            slug: product.slug ?? "",
+                            price: selectedVariant?.priceWithTax ?? lowestVariantPrice ?? 0,
+                            currencyCode,
+                            previewImage: product.assets?.[0]?.preview || getProductFallbackImage(product.slug, product.name),
+                        }}
+                        showLabel
+                        size="lg"
+                        className="h-13 px-5 rounded-none"
+                    />
+                </div>
             </div>
 
             {/* SKU */}

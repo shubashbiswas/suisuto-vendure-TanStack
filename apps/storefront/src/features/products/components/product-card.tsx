@@ -11,7 +11,7 @@ import {
 import { useTranslations } from "@/platform/i18n/paraglide";
 import { Link, useRouter } from "@/platform/tanstack/navigation";
 import { type FragmentOf, readFragment } from "@/platform/vendure/graphql";
-import { WishlistButton } from "@/features/wishlist/components/wishlist-button";
+import { WishlistButton } from "@/features/wishlist";
 import { addToCart } from "@/features/products/add-to-cart.functions";
 import { triggerCartDrawer } from "@/features/cart/context/cart-drawer-context";
 import { toast } from "sonner";

@@ -13,17 +13,28 @@ build/
 .vinxi/
 dev-dist/
 *.tsbuildinfo
+.turbo/
+.cache/
 
 # Compiled i18n Output
 src/paraglide/
 
-# Testing Reports
+# Testing Reports & Coverage
+coverage/
+.nyc_output/
 playwright-report/
 test-results/
 .playwright/
 blob-report/
 
+# Secrets & Certificates
+*.pem
+*.key
+*.cert
+*.crt
+
 # Logs & Temporary Files
+logs/
 *.log
 .DS_Store
 Thumbs.db

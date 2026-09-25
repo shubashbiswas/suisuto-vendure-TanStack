@@ -75,23 +75,24 @@ function classNameChain(node) {
 const isHiddenByDefault = (className) => /(^|\s)hidden(\s|$)/.test(className);
 
 test('the mobile header hides language, currency, theme and account controls', async () => {
-    const navbar = await parse(path.join(navigationRoot, 'navbar.tsx'));
+    const globalHeader = await parse(path.join(root, 'src', 'markets', 'global', 'global-header.tsx'));
+    const topUtility = await parse(path.join(navigationRoot, 'navbar', 'luxury-top-utility.tsx'));
     for (const control of DRAWER_ONLY_CONTROLS) {
-        const [element] = findElements(navbar, control);
-        assert.ok(element, `navbar.tsx must render ${control}.`);
+        const [element] = findElements(globalHeader, control).concat(findElements(topUtility, control));
+        assert.ok(element, `Header/Utility must render ${control}.`);
         const chain = classNameChain(element);
         assert.ok(
-            chain.some(className => isHiddenByDefault(className) && /\bmd:(flex|block|inline-flex)\b/.test(className)),
+            chain.some(className => isHiddenByDefault(className) && /\b(md|sm):(flex|block|inline-flex)\b/.test(className)),
             `${control} must sit inside a "hidden md:*" wrapper so it costs no width below md. Wrappers found: ${JSON.stringify(chain)}`,
         );
     }
 });
 
 test('the mobile header keeps the menu and the cart directly visible', async () => {
-    const navbar = await parse(path.join(navigationRoot, 'navbar.tsx'));
+    const globalHeader = await parse(path.join(root, 'src', 'markets', 'global', 'global-header.tsx'));
     for (const control of ALWAYS_VISIBLE_CONTROLS) {
-        const [element] = findElements(navbar, control);
-        assert.ok(element, `navbar.tsx must render ${control}.`);
+        const [element] = findElements(globalHeader, control);
+        assert.ok(element, `Header must render ${control}.`);
         assert.deepEqual(
             classNameChain(element).filter(isHiddenByDefault),
             [],

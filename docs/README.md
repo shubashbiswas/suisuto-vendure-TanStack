@@ -14,9 +14,9 @@ Welcome to the complete architectural and operational documentation suite for th
 | **[06. Frontend Architecture (TanStack Start)](./06_FRONTEND_ARCHITECTURE_STOREFRONT.md)** | Storefront implementation in `apps/storefront` | Dynamic channel token injection, GeoIP switcher, origin badges, mixed-cart drawer |
 | **[07. Payments & Shipping](./07_PAYMENTS_AND_SHIPPING_INTEGRATIONS.md)** | Gateway & logistics topology | SSLCOMMERZ, Razorpay, Stripe, Pathao, Delhivery, DHL Express, rate formulas |
 | **[08. Standard Operating Procedures](./08_STANDARD_OPERATING_PROCEDURES_SOPS.md)** | Operational runbooks for teams | Merchandising product creation, daily agent dispatch, restocking protocol |
-| **[09. Multi-Market Campaign Architecture](./09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Campaign-aware merchandising & regional architecture | Vendure `MultiCampaignPlugin`, dynamic section engine, countdown timers, sub-slug landing pages, SOPs |
+| **[09. Multi-Market Merchandising & Campaign Strategy](./09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Multi-market merchandising & dynamic section engine | Modular market strategies (`src/markets/`), `HomepageSectionRenderer`, countdown timers, paired sub-routes |
 | **[10. Modular Multi-Market & Animation Architecture](./10_MODULAR_MARKET_AND_ANIMATION_ARCHITECTURE.md)** | Strategy 1 modular market modules & luxury animations | Modular market folders (`src/markets/`), `MarketExperience` registry, CSS scroll-driven parallax, dual-shot hovers, hero unmasking |
-| **[11. Refactoring Log & Architecture Updates](./11_REFACTORING_LOG_AND_ARCHITECTURE_UPDATES.md)** | Codebase modernization & architectural upgrades | Rule 4.1 paired routes, universal localized navigation, checkout UI/UX elevation, plugin cleanup |
+| **[11. Refactoring Log & Architecture Updates](./11_REFACTORING_LOG_AND_ARCHITECTURE_UPDATES.md)** | Codebase modernization, fault tolerance, containerization & migrations | Rule 4.1 paired routes, universal navigation, React 19 safety, Docker packaging, migration consolidation |
 | **[Multi-Hub Architecture](./MULTI_HUB_ARCHITECTURE.md)** | Dual-hub fulfillment & split shipping | `@suisuto/vendure-multi-hub-plugin`, stock locations, per-origin split-shipping calculator, multi-fulfillment |
 
 ---
@@ -25,12 +25,10 @@ Welcome to the complete architectural and operational documentation suite for th
 
 - **`@suisuto/vendure-multi-market-plugin`** (`apps/packages/multi-market`): Regional market routing, edge Geo-IP detection, channel isolation, currency management.
 - **`@suisuto/vendure-multi-hub-plugin`** (`apps/packages/multi-hub`): Dual-hub stock allocation, split-shipping calculation, and multi-fulfillment generation.
-- **`@suisuto/vendure-multi-campaign-plugin`** (`apps/packages/multi-campaign`): Dynamic seasonal drops, priority scheduling, and automated cache revalidation.
-
 
 ## Quick Architecture Diagram
 
-```
+```text
                               [ Product Catalog ]
                                        │
             ┌──────────────────────────┼──────────────────────────┐

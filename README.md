@@ -5,8 +5,7 @@
 ---
 
 ## 1. Architectural Highlights- **Dual-Hub Merchandising & Routing**: Symmetrically routes domestic orders within Bangladesh (`BDT ৳`) and India (`INR ₹`) while dispatching cross-border orders globally (`USD $`) from origin artisan clusters (Narayanganj muslins, Varanasi silks) via `@suisuto/vendure-multi-hub-plugin`.
-- **Multi-Market Dynamic Campaigns**: Data-driven campaigns managed in Vendure via `MultiCampaignPlugin` (`@suisuto/vendure-multi-campaign-plugin`). Each market (`/`, `/in/`, `/bd/`) renders market-isolated hero banners, countdown timers, custom section sequences, promotional codes, and sub-slug landing pages without cross-market interference.
-- **Dynamic Section Composition Engine**: Storefront homepages are dynamically constructed via `HomepageSectionRenderer` based on campaign configurations or market defaults—eliminating hardcoded market conditional logic in UI components.
+- **Dynamic Section Composition Engine**: Storefront homepages are dynamically constructed via `HomepageSectionRenderer` based on market defaults—eliminating hardcoded market conditional logic in UI components.
 - **SSR & Edge Performance**: Full-stack server-side rendering with TanStack Start, Nitro, client-side hydration-safe countdown timers, Vendure asset optimization (`format=webp`, `srcset`), and an automated on-demand cache revalidation webhook (`/api/revalidate`) triggered via Vendure `EventBus`.
 - **Edge Geo-Detection**: Non-intrusive soft suggestion banner detects visitor country via proxy headers (`CF-IPCountry`, `X-Vercel-IP-Country`, `CloudFront-Viewer-Country`) and guides visitors to their domestic atelier without intrusive redirects.
 - **Tri-Lingual Localization**: Built with Paraglide JS supporting English (EN), Bengali (BN `বাংলা`), Hindi (HI `हिन्दी`).
@@ -53,20 +52,20 @@
 ## 3. Workspace Layout
 
 ```
-suisuto-vendure-v2/
+vendure/
 ├── apps/
 │   ├── packages/             # Modular Vendure domain plugins
 │   │   ├── multi-market/     # Market routing, GeoIP & regional channels (@suisuto/vendure-multi-market-plugin)
-│   │   ├── multi-hub/        # Dual-hub inventory allocation & split-shipping (@suisuto/vendure-multi-hub-plugin)
-│   │   └── multi-campaign/   # Dynamic campaigns & editorial merchandising (@suisuto/vendure-multi-campaign-plugin)
+│   │   └── multi-hub/        # Dual-hub inventory allocation & split-shipping (@suisuto/vendure-multi-hub-plugin)
 │   ├── server/               # Vendure backend (NestJS, TypeORM, PostgreSQL, GraphQL APIs)
 │   │   ├── src/
-│   │   │   ├── migrations/   # TypeORM database migrations
-│   │   │   └── vendure-config.ts # Core runtime configuration & custom fields
+│   │   │   ├── migrations/   # Consolidated TypeORM database migration (1790150000000-suisuto_init.ts)
+│   │   │   └── vendure-config.ts # Core runtime configuration, DB_SYNCHRONIZE & custom fields
 │   │   └── static/           # Email templates and assets
 │   ├── storefront/           # TanStack Start storefront (React 19, Vite, Nitro on :3001)
 │   │   └── src/
 │   │       ├── features/     # Feature modules (campaigns, wishlist, market, products)
+│   │       ├── markets/      # Modular market architectures (/bd, /in, /global) conforming to MarketExperience
 │   │       ├── platform/     # Platform adapters (Vendure client, asset optimizer, revalidation)
 │   │       ├── routes/       # File-system routes (root + $region paired routes)
 │   │       └── site/         # Reusable layouts, navigation, and section renderers
@@ -84,9 +83,10 @@ suisuto-vendure-v2/
 
 - **Node.js**: v22.x or v24.x
 - **pnpm**: v10.x or later
+- **Docker**: (Optional, for containerized local testing and production)
 - **PostgreSQL**: Running locally (default port `6543`, database `vendure`)
 
-### Quick Start
+### Local Native Workflow
 
 1. **Install dependencies**:
 
@@ -95,7 +95,7 @@ suisuto-vendure-v2/
    ```
 
 2. **Configure environment**:
-   Verify `apps/server/.env` contains your PostgreSQL credentials and cookie secrets.
+   Verify `apps/server/.env` contains your PostgreSQL credentials and secrets. Set `DB_SYNCHRONIZE=true` for fresh database initialization if needed.
 
 3. **Run database migrations**:
 
@@ -117,6 +117,22 @@ suisuto-vendure-v2/
    pnpm run dev:server      # Vendure server only (:3000)
    pnpm run dev:storefront  # TanStack Start storefront only (:3001)
    pnpm run dev:nextjs      # Next.js 16 storefront only (:3002)
+   ```
+
+### Docker Workflows
+
+1. **Local Multi-Container Stack (Testing)**:
+   Builds local source trees on `node:24-trixie-slim` alongside PostgreSQL 16 and Redis 7:
+
+   ```bash
+   docker compose -f docker-compose.local.yml up --build
+   ```
+
+2. **Production Deployment (GHCR Images)**:
+   Pulls official images published to GitHub Container Registry on git release tags (`v*`):
+
+   ```bash
+   docker compose -f docker-compose.prod.yml up -d
    ```
 
 ---
@@ -142,18 +158,20 @@ suisuto-vendure-v2/
 
 The complete architectural specifications, integration details, and SOPs are maintained in [`docs/`](./docs/README.md):
 
-| Document                                                                                      | Topic                                                                         |
-| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **[01. Business Logic & Strategy](./docs/01_BUSINESS_LOGIC_AND_STRATEGY.md)**                 | Dual-hub operational model and cross-border policies.                         |
-| **[02. Catalog & Channels](./docs/02_CATALOG_AND_CHANNELS.md)**                               | Merchandising, channel assignment, and custom fields.                         |
-| **[03. Inventory & Warehousing](./docs/03_INVENTORY_AND_WAREHOUSING.md)**                     | Stock locations (`India Hub`, `BD Hub`) and allocation.                       |
-| **[04. Order Routing & Fulfillment](./docs/04_ORDER_ROUTING_AND_FULFILLMENT.md)**             | Order split shipments, customs KYC, and HS codes.                             |
-| **[05. Backend Architecture](./docs/05_BACKEND_ARCHITECTURE_VENDURE.md)**                     | Vendure server config, custom fields, and RBAC.                               |
-| **[06. Frontend Architecture](./docs/06_FRONTEND_ARCHITECTURE_STOREFRONT.md)**                | TanStack Start, channel tokens, and origin badges.                            |
-| **[07. Payments & Shipping](./docs/07_PAYMENTS_AND_SHIPPING_INTEGRATIONS.md)**                | SSLCOMMERZ, Razorpay, Stripe, Pathao, Delhivery, DHL Express.                 |
-| **[08. Standard Operating Procedures](./docs/08_STANDARD_OPERATING_PROCEDURES_SOPS.md)**      | Operational runbooks for merchandisers and warehouse dispatch.                |
-| **[09. Multi-Market Campaign Architecture](./docs/09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)** | Dynamic merchandising, `MultiCampaignPlugin`, countdown timers, and landing pages. |
-| **[Multi-Hub Architecture](./docs/MULTI_HUB_ARCHITECTURE.md)**                                | Dual-hub fulfillment, physical stock locations, split-shipping engine.        |
+| Document                                                                                                | Topic                                                                                  |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **[01. Business Logic & Strategy](./docs/01_BUSINESS_LOGIC_AND_STRATEGY.md)**                           | Dual-hub operational model and cross-border policies.                                  |
+| **[02. Catalog & Channels](./docs/02_CATALOG_AND_CHANNELS.md)**                                         | Merchandising, channel assignment, and custom fields.                                  |
+| **[03. Inventory & Warehousing](./docs/03_INVENTORY_AND_WAREHOUSING.md)**                               | Stock locations (`India Hub`, `BD Hub`) and allocation.                                |
+| **[04. Order Routing & Fulfillment](./docs/04_ORDER_ROUTING_AND_FULFILLMENT.md)**                       | Order split shipments, customs KYC, and HS codes.                                      |
+| **[05. Backend Architecture](./docs/05_BACKEND_ARCHITECTURE_VENDURE.md)**                               | Vendure server config, custom fields, consolidated migrations, and Docker.             |
+| **[06. Frontend Architecture](./docs/06_FRONTEND_ARCHITECTURE_STOREFRONT.md)**                          | TanStack Start, channel tokens, and origin badges.                                     |
+| **[07. Payments & Shipping](./docs/07_PAYMENTS_AND_SHIPPING_INTEGRATIONS.md)**                          | SSLCOMMERZ, Razorpay, Stripe, Pathao, Delhivery, DHL Express.                          |
+| **[08. Standard Operating Procedures](./docs/08_STANDARD_OPERATING_PROCEDURES_SOPS.md)**                | Operational runbooks for merchandisers and warehouse dispatch.                         |
+| **[09. Multi-Market Campaign Architecture](./docs/09_MULTI_MARKET_CAMPAIGN_ARCHITECTURE.md)**           | Dynamic merchandising, modular market campaigns, countdown timers, and landing pages.  |
+| **[10. Modular Multi-Market & Animations](./docs/10_MODULAR_MARKET_AND_ANIMATION_ARCHITECTURE.md)**     | Strategy 1 modular market modules (`src/markets/`), registry, and luxury animations.    |
+| **[11. Refactoring Log & Architecture Updates](./docs/11_REFACTORING_LOG_AND_ARCHITECTURE_UPDATES.md)** | Paired routes, universal navigation, Docker packaging, and migration consolidation.   |
+| **[Multi-Hub Architecture](./docs/MULTI_HUB_ARCHITECTURE.md)**                                          | Dual-hub fulfillment, physical stock locations, split-shipping engine.                 |
 
 ---
 
@@ -161,9 +179,8 @@ The complete architectural specifications, integration details, and SOPs are mai
 
 ```bash
 # Domain plugin unit tests
-pnpm run test:multi-market     # Multi-market routing & Geo-IP tests (30 tests)
+pnpm run test:multi-market     # Multi-market routing & Geo-IP tests (36 tests)
 pnpm run test:multi-hub        # Multi-hub allocation & split-shipping tests (17 tests)
-pnpm run test:multi-campaign   # Dynamic campaign & cache invalidation tests (6 tests)
 
 # Type check storefront
 pnpm --filter storefront check-types

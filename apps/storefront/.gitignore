@@ -1,4 +1,4 @@
-# Dependencies
+# Dependencies & Package Stores
 node_modules/
 .pnpm-store/
 
@@ -22,14 +22,24 @@ src/paraglide/
 # Environment & Secrets
 .env
 .env.*
+*.env
 *.local
+*.pem
+*.key
+*.cert
+*.crt
 !.env.example
+!.env.*.example
+!.env.production.example
 
-# Testing & E2E
+# Testing, E2E & Coverage
+tests/
 .playwright/
 playwright-report/
 test-results/
 blob-report/
+coverage/
+.nyc_output/
 todos.json
 
 # Caches & Diagnostics
@@ -38,9 +48,14 @@ todos.json
 *.tsbuildinfo
 
 # Logs & Temporary Files
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 .DS_Store
 Thumbs.db
+
+# Agent & Workspace Customizations
+.agents/
+.gemini/

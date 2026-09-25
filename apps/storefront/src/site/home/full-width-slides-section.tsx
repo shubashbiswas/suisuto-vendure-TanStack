@@ -47,24 +47,26 @@ export function FullWidthSlidesSection({
 }: {
 	slides?: SlideItem[];
 }) {
+	const validSlides = Array.isArray(slides) && slides.length > 0 ? slides : DEFAULT_SLIDES;
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPaused, setIsPaused] = useState(false);
 
 	const nextSlide = useCallback(() => {
-		setCurrentIndex((prev) => (prev + 1) % slides.length);
-	}, [slides.length]);
+		setCurrentIndex((prev) => (prev + 1) % validSlides.length);
+	}, [validSlides.length]);
 
 	const prevSlide = useCallback(() => {
-		setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-	}, [slides.length]);
+		setCurrentIndex((prev) => (prev - 1 + validSlides.length) % validSlides.length);
+	}, [validSlides.length]);
 
 	useEffect(() => {
-		if (isPaused || slides.length <= 1) return;
+		if (isPaused || validSlides.length <= 1) return;
 		const interval = setInterval(nextSlide, 6000);
 		return () => clearInterval(interval);
-	}, [isPaused, nextSlide, slides.length]);
+	}, [isPaused, nextSlide, validSlides.length]);
 
-	const currentSlide = slides[currentIndex];
+	const currentSlide = validSlides[currentIndex] || validSlides[0];
+	if (!currentSlide) return null;
 
 	return (
 		<section
@@ -75,7 +77,7 @@ export function FullWidthSlidesSection({
 		>
 			<div className="relative w-full min-h-[460px] sm:min-h-[540px] md:min-h-[620px] flex items-center">
 				{/* Background Images */}
-				{slides.map((slide, index) => (
+				{validSlides.map((slide, index) => (
 					<div
 						key={slide.id}
 						className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -96,7 +98,7 @@ export function FullWidthSlidesSection({
 
 				{/* Foreground content for current active slide */}
 				<div className="relative z-20 container mx-auto px-6 sm:px-12 py-16 sm:py-24">
-					<div className="max-w-xl space-y-4 animate-in fade-in slide-in-from-left-4 duration-500 key={currentIndex}">
+					<div key={currentIndex} className="max-w-xl space-y-4 animate-in fade-in slide-in-from-left-4 duration-500">
 						<div className="inline-block px-3 py-1 rounded-none bg-primary/80 backdrop-blur-md border border-primary/30 text-[9.5px] font-mono uppercase tracking-[0.3em] text-white">
 							{currentSlide.tag}
 						</div>

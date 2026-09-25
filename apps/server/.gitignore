@@ -1,4 +1,4 @@
-# Dependencies
+# Dependencies & Package Stores
 node_modules/
 .pnpm-store/
 
@@ -19,13 +19,28 @@ static/email/test-emails/*
 # Environment & Secrets
 .env
 .env.*
+*.env
 *.local
+*.pem
+*.key
+*.cert
+*.crt
 !.env.example
+!.env.*.example
+!.env.production.example
 
 # Database & Migrations
 *.sqlite
 *.sqlite3
 *.db
+pgdata/
+docker-data/
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+.turbo/
+.cache/
 
 # Logs & Temporary Files
 logs/
@@ -35,3 +50,7 @@ yarn-debug.log*
 pnpm-debug.log*
 .DS_Store
 Thumbs.db
+
+# Agent & Workspace Customizations
+.agents/
+.gemini/

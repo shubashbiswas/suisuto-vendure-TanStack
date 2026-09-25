@@ -30,7 +30,17 @@ export const Route = createRootRoute({
 			cartItemCount: 0,
 			customerFirstName: null,
 		}));
-		const pub = await getPublicShellData();
+		const pub = await getPublicShellData().catch((err) => {
+			console.error("[Root] Failed to load public shell data:", err);
+			return {
+				collections: [],
+				availableCurrencyCodes: ["USD", "BDT", "INR"],
+				availableLanguageCodes: ["en", "bn", "hi"],
+				activeCurrencyCode: "USD",
+				activeRegion: "global",
+				availableRegions: [],
+			};
+		});
 		return { ...pub, personalized };
 	},
 	// Shell data would otherwise reload on every navigation.

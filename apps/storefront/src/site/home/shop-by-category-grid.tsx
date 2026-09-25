@@ -106,6 +106,7 @@ export function ShopByCategoryGrid({
 	title?: string;
 	subtitle?: string;
 }) {
+	const validCategories = Array.isArray(categories) && categories.length > 0 ? categories : CATEGORIES_3X3;
 	const titleRef = useScrollReveal<HTMLDivElement>();
 	const gridRef = useStaggeredReveal<HTMLDivElement>();
 
@@ -126,7 +127,7 @@ export function ShopByCategoryGrid({
 
 				{/* 3x3 Full-Width Responsive Grid with staggered reveal */}
 				<div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-					{categories.map((cat, idx) => (
+					{validCategories.map((cat, idx) => (
 						<Link
 							key={`cat-${idx}`}
 							href={cat.href}

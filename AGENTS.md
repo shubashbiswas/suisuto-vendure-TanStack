@@ -6,19 +6,19 @@ This document is the primary operational and architectural guide for developers 
 
 ## 1. Workspace Layout & Package Boundaries
 
-- **Vendure Backend**: [`apps/server`](file:///c:/laragon/www/suisuto-vendure-v2/apps/server) (NestJS, TypeORM, PostgreSQL, GraphQL APIs).
-- **Domain Plugin Packages**: [`apps/packages/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages)
-  - [`multi-market`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-market) (`@suisuto/vendure-multi-market-plugin`): Regional market routing, detection, geo-IP, merchandising.
-  - [`multi-hub`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub) (`@suisuto/vendure-multi-hub-plugin`): Dual-hub inventory allocation, physical stock locations, split-hub shipping.
-  - [`multi-campaign`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-campaign) (`@suisuto/vendure-multi-campaign-plugin`): Dynamic seasonal/regional campaigns and editorial landing pages.
-- **TanStack Start Storefront**: [`apps/storefront`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront) (React 19, TanStack Router, Vite, Nitro on `:3001`).
-- **Documentation Suite**: [`docs/`](file:///c:/laragon/www/suisuto-vendure-v2/docs) (Complete architecture specifications, SOPs, and runbooks).
+- **Vendure Backend**: [`apps/server`](file:///c:/laragon/www/vendure/apps/server) (NestJS, TypeORM, PostgreSQL, GraphQL APIs).
+- **Domain Plugin Packages**: [`apps/packages/`](file:///c:/laragon/www/vendure/apps/packages)
+  - [`multi-market`](file:///c:/laragon/www/vendure/apps/packages/multi-market) (`@suisuto/vendure-multi-market-plugin`): Regional market routing, detection, geo-IP, merchandising.
+  - [`multi-hub`](file:///c:/laragon/www/vendure/apps/packages/multi-hub) (`@suisuto/vendure-multi-hub-plugin`): Dual-hub inventory allocation, physical stock locations, split-hub shipping.
+- **TanStack Start Storefront**: [`apps/storefront`](file:///c:/laragon/www/vendure/apps/storefront) (React 19, TanStack Router, Vite, Nitro on `:3001`).
+- **Documentation Suite**: [`docs/`](file:///c:/laragon/www/vendure/docs) (Complete architecture specifications, SOPs, and runbooks).
 - **Start server & TanStack storefront**: `pnpm run dev` (runs server on `:3000`, storefront on `:3001`).
 - **Start only server**: `pnpm run dev:server`.
 - **Start only TanStack storefront**: `pnpm run dev:storefront`.
+- **Run with Docker (Local Testing)**: `docker compose -f docker-compose.local.yml up --build`
+- **Run with Docker (Production)**: `docker compose -f docker-compose.prod.yml up -d`
 - **Test multi-market plugin**: `pnpm run test:multi-market` (or `pnpm --filter @suisuto/vendure-multi-market-plugin test`).
 - **Test multi-hub plugin**: `pnpm run test:multi-hub` (or `pnpm --filter @suisuto/vendure-multi-hub-plugin test`).
-- **Test multi-campaign plugin**: `pnpm run test:multi-campaign` (or `pnpm --filter @suisuto/vendure-multi-campaign-plugin test`).
 
 ---
 
@@ -32,7 +32,7 @@ This document is the primary operational and architectural guide for developers 
 2. **Strict Multi-Market Channel & Campaign Isolation**:
    - Each market (`/`, `/in/`, `/bd/`) has independent catalog channels, pricing, and marketing campaigns.
    - **Market-Switching Cart Retention**: Because Vendure channels isolate active orders by channel and currency, bags created in one market (e.g. INR in `/in`) do not bleed into other markets (e.g. BDT in `/bd`). When a customer switches markets with items in their bag, the storefront displays a luxury confirmation dialog informing them that their bag remains safely preserved in their current market.
-   - **Zero Hardcoding**: Never write hardcoded market branching in UI components (e.g. `if (region === 'in') renderDiwali()`). All campaign styling, heroes, countdowns, section sequences, and promotional badges must be driven by data from the Vendure `CampaignPlugin` or fallback configs in `market-experience.config.ts`.
+   - **Zero Hardcoding**: Never write hardcoded market branching in UI components (e.g. `if (region === 'in') renderDiwali()`). All market styling, heroes, countdowns, section sequences, and promotional badges are driven by the modular market strategy (`src/markets/bd/`, `src/markets/in/`, `src/markets/global/`) conforming to the `MarketExperience` contract.
 3. **Hydration Integrity**:
    - Urgency timers and countdowns must run strictly client-side after mount to prevent SSR hydration mismatches.
    - Root layouts must preserve `suppressHydrationWarning` on `<body>` to prevent browser extension attribute collisions.
@@ -42,12 +42,12 @@ This document is the primary operational and architectural guide for developers 
 ## 3. Vendure Backend Development Guidelines
 
 - **Plugin Architecture**: Implement domain logic as modular Vendure plugin packages inside `apps/packages/`.
-- **Campaign Management**: `CampaignPlugin` manages dynamic campaigns, database schema, and both Shop and Admin APIs.
+- **Market Routing & Allocation**: Multi-Market (`@suisuto/vendure-multi-market-plugin`) and Multi-Hub (`@suisuto/vendure-multi-hub-plugin`) manage channel detection, Geo-IP, stock locations, and split fulfillment.
 - **Database Migrations**:
   - Never set `dbConnectionOptions.synchronize: true` in production environments.
   - Generate and run TypeORM migrations using `npx vendure migrate -r`.
 - **Permissions & Security**:
-  - Admin mutations (e.g. `createCampaign`, `updateCampaign`, `deleteCampaign`) must be decorated with `@Allow(Permission.SuperAdmin, Permission.Authenticated)`.
+  - Admin mutations must be decorated with `@Allow(Permission.SuperAdmin, Permission.Authenticated)`.
   - Always pass `RequestContext` (`ctx`) to Vendure services and `TransactionalConnection` calls.
   - Never commit `.env` files, API tokens, or runtime data.
 
@@ -64,7 +64,7 @@ This document is the primary operational and architectural guide for developers 
   - Regional campaign: `apps/storefront/src/routes/$region.campaign.$slug.tsx` and `$region.campaign.$slug.$.tsx`
 
 ### 4.2 Dynamic Section Composition
-- Storefront homepages and landing pages use [`HomepageSectionRenderer`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/site/home/homepage-section-renderer.tsx) to dispatch section configs:
+- Storefront homepages and landing pages use [`HomepageSectionRenderer`](file:///c:/laragon/www/vendure/apps/storefront/src/site/home/homepage-section-renderer.tsx) to dispatch section configs:
   - `hero`: Dynamic hero with Vendure Asset optimization.
   - `countdown`: Urgency countdown timer.
   - `campaign-banner`: Editorial banner showcasing sub-collections.
@@ -73,20 +73,20 @@ This document is the primary operational and architectural guide for developers 
   - `newsletter`: VIP email capture.
 
 ### 4.3 Asset Optimization
-- Use [`getOptimizedAssetUrl`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/platform/vendure/asset.ts) and `getAssetSrcSet` for responsive WebP images.
+- Use [`getOptimizedAssetUrl`](file:///c:/laragon/www/vendure/apps/storefront/src/platform/vendure/asset.ts) and `getAssetSrcSet` for responsive WebP images.
 - Set `fetchPriority="high"` and `loading="eager"` on campaign and homepage hero images.
 
 ### 4.4 Multi-Tier Header Navigation
-Defined in [`apps/storefront/src/site/navigation/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/site/navigation/):
+Defined in [`apps/storefront/src/site/navigation/`](file:///c:/laragon/www/vendure/apps/storefront/src/site/navigation/):
 1. **Tier 1 (`luxury-top-utility.tsx`)**: Region, currency, language, dark mode.
 2. **Tier 2 (`announcement-marquee.tsx`)**: Moving campaign privileges and promo codes.
 3. **Tier 3 (`navbar.tsx`)**: Logo (center), mega-menu (left), search/user/wishlist/cart (right).
 
 ### 4.5 Feature Modules
-- **Campaigns** ([`features/campaigns/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/campaigns/)): Types, GraphQL documents, 30s TTL in-memory caching (`campaign.server.ts`), and landing page loader functions.
-- **Wishlist** ([`features/wishlist/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/wishlist/)): React Context + `localStorage`, cross-tab synchronization.
-- **Market Detection** ([`features/market/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/market/)): Edge country detection from reverse proxy headers and non-intrusive soft suggestion banner (`geo-suggestion-banner.tsx`).
-- **Product Cards & Detail** ([`features/products/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/storefront/src/features/products/)): Single-variant instant Add-to-Bag, multi-variant option selection, and custom fields (`originHub`, `fabricCareGuide`, `modelSpecs`).
+- **Campaigns** ([`features/campaigns/`](file:///c:/laragon/www/vendure/apps/storefront/src/features/campaigns/)): Types, GraphQL documents, 30s TTL in-memory caching (`campaign.server.ts`), and landing page loader functions.
+- **Wishlist** ([`features/wishlist/`](file:///c:/laragon/www/vendure/apps/storefront/src/features/wishlist/)): React Context + `localStorage`, cross-tab synchronization.
+- **Market Detection** ([`features/market/`](file:///c:/laragon/www/vendure/apps/storefront/src/features/market/)): Edge country detection from reverse proxy headers and non-intrusive soft suggestion banner (`geo-suggestion-banner.tsx`).
+- **Product Cards & Detail** ([`features/products/`](file:///c:/laragon/www/vendure/apps/storefront/src/features/products/)): Single-variant instant Add-to-Bag, multi-variant option selection, and custom fields (`originHub`, `fabricCareGuide`, `modelSpecs`).
 
 ### 4.6 Modular Market Architecture (`src/markets/`)
 - Each geographic market maintains an isolated feature folder:

@@ -43,8 +43,8 @@ export function LuxuryTopUtility({
 						<span className="truncate">Haute Couture Handloom & Atelier</span>
 					</div>
 
-					{/* Right: Region, Currency, Language, Theme & Concierge */}
-					<div className="flex items-center gap-2 sm:gap-3 shrink-0">
+					{/* Right: Region, Currency, Language, Theme & Concierge (hidden on mobile, managed in drawer) */}
+					<div className="hidden md:flex items-center gap-2 sm:gap-3 shrink-0">
 						<Link
 							href="/#artisan-heritage"
 							className="hidden md:inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors px-2 py-1"

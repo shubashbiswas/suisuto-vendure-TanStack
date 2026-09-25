@@ -1,13 +1,15 @@
-# Dependencies
+# Dependencies & Local Package Store
 node_modules/
 .pnpm-store/
 
-# Git & IDE
+# Git, CI/CD & IDEs
 .git/
 .github/
 .gitignore
 .dockerignore
 .antigravityignore
+.agents/
+.gemini/
 .vscode/
 .idea/
 
@@ -26,24 +28,36 @@ dev-dist/
 .turbo/
 .cache/
 
-# Testing & E2E
+# Testing, E2E & Coverage Artifacts
 tests/
 .playwright/
 playwright-report/
 test-results/
 blob-report/
+coverage/
+.nyc_output/
 todos.json
 
-# Environment Files
+# Environment Files & Secrets
 .env
 .env.*
+*.env
 *.local
+*.pem
+*.key
+*.cert
+*.crt
 !.env.example
+!.env.*.example
+!.env.production.example
 
 # Documentation & Logs
 README.md
 docs/
 *.md
+logs/
 *.log
+npm-debug.log*
+pnpm-debug.log*
 .DS_Store
 Thumbs.db

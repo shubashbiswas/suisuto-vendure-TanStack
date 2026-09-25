@@ -96,6 +96,8 @@ export function ShopByBrandGrid({
 	title?: string;
 	subtitle?: string;
 }) {
+	const validBrands = Array.isArray(brands) && brands.length > 0 ? brands : BRANDS_3X3;
+
 	return (
 		<section className="py-20 md:py-28 bg-secondary/15 border-b border-border/40">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -114,7 +116,7 @@ export function ShopByBrandGrid({
 
 				{/* 3x3 Full Width Brands Grid */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					{brands.map((brand, idx) => (
+					{validBrands.map((brand, idx) => (
 						<Link
 							key={`brand-${idx}`}
 							href={brand.href}

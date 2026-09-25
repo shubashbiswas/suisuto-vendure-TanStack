@@ -2,12 +2,14 @@
 node_modules/
 .pnpm-store/
 
-# Git & CI/CD
+# Git, CI/CD & IDEs
 .git/
 .github/
 .gitignore
 .dockerignore
 .antigravityignore
+.agents/
+.gemini/
 .vscode/
 .idea/
 
@@ -30,15 +32,26 @@ static/email/test-emails/*
 # Environment Variables & Secrets
 .env
 .env.*
+*.env
 *.local
 *.pem
 *.key
+*.cert
+*.crt
 !.env.example
+!.env.*.example
+!.env.production.example
 
-# Database Files
+# Database Files & Volumes
 *.sqlite
 *.sqlite3
 *.db
+pgdata/
+docker-data/
+
+# Testing & Coverage Artifacts
+coverage/
+.nyc_output/
 
 # Documentation
 README.md

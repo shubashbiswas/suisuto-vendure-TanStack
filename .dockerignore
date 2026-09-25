@@ -1,16 +1,26 @@
 # Dependencies & Local Package Store
 node_modules/
+**/node_modules/
 .pnpm-store/
+**/.pnpm-store/
 
-# Git & CI/CD
+# Git, CI/CD & IDE Configurations
 .git/
 .github/
 .gitignore
 .dockerignore
 .antigravityignore
 .agents/
+.gemini/
 .vscode/
 .idea/
+
+# Docker Compose Files & Local Overrides
+docker-compose*.yml
+docker-compose.override.yml
+.docker/
+pgdata/
+docker-data/
 
 # Build Outputs, Framework Artifacts & Caches
 dist/
@@ -20,6 +30,7 @@ out/
 .output/
 .nitro/
 .tanstack/
+.next/
 .wrangler/
 .vinxi/
 __unconfig*
@@ -31,13 +42,15 @@ dev-dist/
 vite.config.ts.timestamp-*
 vite.config.js.timestamp-*
 
-# Testing & E2E Artifacts
+# Testing, E2E & Coverage Artifacts
 tests/
 **/tests/
 .playwright/
 playwright-report/
 test-results/
 blob-report/
+coverage/
+.nyc_output/
 todos.json
 
 # Vendure Runtime & Media Uploads
@@ -46,6 +59,8 @@ apps/server/static/assets/*
 apps/server/static/email/test-emails/*
 !apps/server/static/email/test-emails/.gitkeep
 .vendure/
+apps/server/.vendure/
+apps/storefront/.vendure/
 
 # Environment Variables & Secrets
 .env
@@ -54,6 +69,8 @@ apps/server/static/email/test-emails/*
 *.local
 *.pem
 *.key
+*.cert
+*.crt
 !.env.example
 !.env.*.example
 !.env.production.example
@@ -64,6 +81,7 @@ docs/
 LICENSE
 
 # Logs & OS Dumps
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*

@@ -5,15 +5,14 @@
 The backend lives in `apps/server` and is powered by Vendure 3.x with TypeScript, NestJS, and PostgreSQL. Domain logic is decoupled into modular packages inside `apps/packages/`:
 
 ```
-suisuto-vendure-v2/
+vendure/
 ├── apps/
 │   ├── packages/
 │   │   ├── multi-market/             <-- Regional routing & Geo-IP (@suisuto/vendure-multi-market-plugin)
-│   │   ├── multi-hub/                <-- Dual-hub stock allocation & split fulfillment (@suisuto/vendure-multi-hub-plugin)
-│   │   └── multi-campaign/           <-- Dynamic merchandising & cache invalidation (@suisuto/vendure-multi-campaign-plugin)
+│   │   └── multi-hub/                <-- Dual-hub stock allocation & split fulfillment (@suisuto/vendure-multi-hub-plugin)
 │   └── server/
 │       ├── src/
-│       │   ├── migrations/           <-- TypeORM database migrations
+│       │   ├── migrations/           <-- TypeORM database migrations (1790150000000-suisuto_init.ts)
 │       │   ├── vendure-config.ts     <-- Master Server Configuration & Custom Fields
 │       │   ├── index.ts              <-- Server Entry Point
 │       │   └── index-worker.ts       <-- Background Job Queue Worker
@@ -31,7 +30,7 @@ Channels are initialized via Vendure's ChannelService or during bootstrapping:
 * **`global`**: Currency `USD`, default language `en`.
 
 ### 2.2 Custom Fields Schema Definition
-Configured under `config.customFields` in [`apps/server/src/vendure-config.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/server/src/vendure-config.ts):
+Configured under `config.customFields` in [`apps/server/src/vendure-config.ts`](file:///c:/laragon/www/vendure/apps/server/src/vendure-config.ts):
 
 ```typescript
 export const config: VendureConfig = {
@@ -129,13 +128,18 @@ export const config: VendureConfig = {
 ```
 
 ### 2.3 Database Migrations
-Database schema updates are managed through TypeORM migrations located in [`apps/server/src/migrations/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/server/src/migrations):
-- `1790046009828-add_campaign_entity.ts`: Creates the `campaign` table for `@suisuto/vendure-multi-campaign-plugin`.
-- `1790046009829-campaign_indexes_and_priority.ts`: Adds `priority` column and composite indexes (`[market, slug]`, `[market, status]`).
-- `1790100000003-add_stock_location_custom_fields.ts`: Adds `customFieldsHubcode`, `customFieldsCountrycode`, `customFieldsDomesticcarrier`, `customFieldsCrossbordercarrier`, `customFieldsStandardtransitdays` to `stock_location`.
-- `1790140748431-sync_schema.ts`: Final schema sync and index identifier reconciliation.
 
-Run migrations via:
+Database schema updates are managed through TypeORM migrations located in [`apps/server/src/migrations/`](file:///c:/laragon/www/vendure/apps/server/src/migrations):
+- **`1790150000000-suisuto_init.ts`**: Consolidated authoritative migration containing all domain additions:
+  - Custom fields for `Product` (`originHub`, `fabricCareGuide`, `modelSpecs`, `hsCode`)
+  - Custom fields for `Order` (`recipientKycId`, `isMultiHubOrder`)
+  - Custom fields for `StockLocation` (`hubCode`, `countryCode`, `domesticCarrier`, `crossBorderCarrier`, `standardTransitDays`)
+  - Dynamic `Market` entity and composite indices (`urlPrefix`, `channelCode`, `code`, `enabled`, `isDefault`)
+  - Cleanup of legacy `campaign` table (`DROP TABLE IF EXISTS "campaign" CASCADE;`)
+
+#### Schema Synchronization & Migration Execution
+- In local testing or initial container bootstrap, setting `DB_SYNCHRONIZE=true` allows TypeORM to generate and seed all tables immediately without migration collisions.
+- In production, set `DB_SYNCHRONIZE=false` and run migrations:
 ```bash
 cd apps/server
 npx vendure migrate -r
@@ -145,7 +149,7 @@ npx vendure migrate -r
 
 ## 3. Stock Location Strategy
 
-A custom `MultiHubStockLocationStrategy` in [`apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts) determines which physical hub supplies each item in an order line:
+A custom `MultiHubStockLocationStrategy` in [`apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts) determines which physical hub supplies each item in an order line:
 
 1. **Exact Hub Code Matching**: Matches `StockLocation.customFields.hubCode` against `Product.customFields.originHub` (e.g. `'BD_HUB'` $\to$ Bangladesh Hub).
 2. **Name Fallback**: Matches location name (e.g. `'India Hub'`).
@@ -191,10 +195,28 @@ Vendure native roles are created to enforce regional agent scoping:
 
 ## 5. Plugin Verification & Quality Checks
 
-Run the automated test suites for all backend plugins:
+Run the automated test suites for backend domain plugins:
 
 ```bash
-pnpm run test:multi-market     # Multi-market routing & Geo-IP tests (30 passing)
+pnpm run test:multi-market     # Multi-market routing & Geo-IP tests (36 passing)
 pnpm run test:multi-hub        # Multi-hub allocation & split-shipping tests (17 passing)
-pnpm run test:multi-campaign   # Dynamic campaign & cache invalidation tests (6 passing)
 ```
+
+---
+
+## 6. Docker Containerization & Deployment
+
+The server is packaged with a multi-stage Dockerfile (`apps/server/Dockerfile`) based on `node:24-trixie-slim`:
+
+### 6.1 Local Testing Compose
+Run the entire local stack (Postgres, Redis, Vendure Server, Storefront):
+```bash
+docker compose -f docker-compose.local.yml up --build
+```
+
+### 6.2 Production Deployment (GHCR)
+Production images are built automatically on GitHub version tags (`v*`) and pushed to GitHub Container Registry (`ghcr.io`):
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+

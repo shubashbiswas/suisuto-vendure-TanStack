@@ -1,0 +1,111 @@
+# ==============================================================================
+# Suisuto Local Testing Docker Compose (Builds from Local Source)
+# ==============================================================================
+# Usage:
+#   docker compose -f docker-compose.local.yml up --build
+# ==============================================================================
+name: 'suisuto-local-test'
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. PostgreSQL Database
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vendure
+      POSTGRES_USER: vendure
+      POSTGRES_PASSWORD: local_dev_password_123
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vendure -d vendure"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - suisuto-local-network
+
+  # ----------------------------------------------------------------------------
+  # 2. Redis Cache & Job Queue
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - local_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - suisuto-local-network
+
+  # ----------------------------------------------------------------------------
+  # 3. Vendure Backend Server (Builds from local Dockerfile)
+  # ----------------------------------------------------------------------------
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      APP_ENV: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: vendure
+      DB_USERNAME: vendure
+      DB_PASSWORD: local_dev_password_123
+      COOKIE_SECRET: local_cookie_secret_testing_only_12345
+      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME:-superadmin}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-superadmin}
+      CORS_ORIGINS: http://localhost:3001
+      DB_SYNCHRONIZE: "true"
+    networks:
+      - suisuto-local-network
+
+  # ----------------------------------------------------------------------------
+  # 4. TanStack Start Storefront (Builds from local Dockerfile)
+  # ----------------------------------------------------------------------------
+  storefront:
+    build:
+      context: .
+      dockerfile: apps/storefront/Dockerfile
+      args:
+        VITE_SITE_URL: http://localhost:3001
+        VITE_SITE_NAME: "Suisuto Atelier"
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_started
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOST: 0.0.0.0
+      VENDURE_SHOP_API_URL: http://server:3000/shop-api
+      VENDURE_CHANNEL_TOKEN: __default_channel__
+      VITE_SITE_URL: http://localhost:3001
+    networks:
+      - suisuto-local-network
+
+networks:
+  suisuto-local-network:
+    driver: bridge
+
+volumes:
+  local_postgres_data:
+  local_redis_data:

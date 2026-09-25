@@ -1,0 +1,132 @@
+# ==============================================================================
+# Suisuto Production Docker Compose (GHCR Images)
+# ==============================================================================
+# Usage:
+#   1. Set environment variables in .env.production (or export in environment)
+#   2. Run: docker compose -f docker-compose.prod.yml up -d
+# ==============================================================================
+name: 'suisuto-production'
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. PostgreSQL Database
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-vendure}
+      POSTGRES_USER: ${DB_USERNAME:-vendure}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-vendure} -d ${DB_NAME:-vendure}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suisuto-network
+
+  # ----------------------------------------------------------------------------
+  # 2. Redis Cache & Job Queue
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suisuto-network
+
+  # ----------------------------------------------------------------------------
+  # 3. Vendure API Server (Shop API, Admin API, Dashboard)
+  # ----------------------------------------------------------------------------
+  server:
+    image: ghcr.io/${GHCR_OWNER:-shubashbiswas}/suisuto-server:${VERSION_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      APP_ENV: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-vendure}
+      DB_USERNAME: ${DB_USERNAME:-vendure}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+      COOKIE_SECRET: ${COOKIE_SECRET:?COOKIE_SECRET required}
+      SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME:-superadmin}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:?SUPERADMIN_PASSWORD required}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3001,https://suisuto.com}
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-false}
+    volumes:
+      - server_assets:/app/apps/server/static/assets
+    networks:
+      - suisuto-network
+
+  # ----------------------------------------------------------------------------
+  # 4. Vendure Worker (Background Tasks & Scheduled Jobs)
+  # ----------------------------------------------------------------------------
+  worker:
+    image: ghcr.io/${GHCR_OWNER:-shubashbiswas}/suisuto-server:${VERSION_TAG:-latest}
+    restart: unless-stopped
+    command: ["node", "dist/index-worker.js"]
+    depends_on:
+      server:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      APP_ENV: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-vendure}
+      DB_USERNAME: ${DB_USERNAME:-vendure}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+      COOKIE_SECRET: ${COOKIE_SECRET:?COOKIE_SECRET required}
+    volumes:
+      - server_assets:/app/apps/server/static/assets
+    networks:
+      - suisuto-network
+
+  # ----------------------------------------------------------------------------
+  # 5. TanStack Start Storefront (SSR Nitro Server)
+  # ----------------------------------------------------------------------------
+  storefront:
+    image: ghcr.io/${GHCR_OWNER:-shubashbiswas}/suisuto-storefront:${VERSION_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_started
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOST: 0.0.0.0
+      VENDURE_SHOP_API_URL: ${VENDURE_SHOP_API_URL:-http://server:3000/shop-api}
+      VENDURE_CHANNEL_TOKEN: ${VENDURE_CHANNEL_TOKEN:-__default_channel__}
+      VITE_SITE_URL: ${VITE_SITE_URL:-http://localhost:3001}
+    networks:
+      - suisuto-network
+
+networks:
+  suisuto-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  server_assets:

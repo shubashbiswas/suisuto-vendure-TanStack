@@ -280,7 +280,7 @@ Applied via TypeORM migrations in `apps/server/src/migrations/`:
 
 ### 6.3 Domain Plugin Package: `@suisuto/vendure-multi-hub-plugin`
 
-Implemented as a modular domain package located in [`apps/packages/multi-hub`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub):
+Implemented as a modular domain package located in [`apps/packages/multi-hub`](file:///c:/laragon/www/vendure/apps/packages/multi-hub):
 
 ```
 apps/packages/multi-hub/
@@ -297,12 +297,12 @@ apps/packages/multi-hub/
 └── README.md           # Documentation & SOPs
 ```
 
-* **`MultiHubStockLocationStrategy`** ([`strategies/multi-hub-stock-location.strategy.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts)): Directs line allocation to physical warehouses matching `StockLocation.customFields.hubCode`, falling back to location name matching and regional prefix parsing.
-* **`multiHubShippingEligibilityChecker`** ([`shipping/multi-hub-shipping.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/shipping/multi-hub-shipping.ts)): Validates destination country matching (`BD`, `IN`, or `ALL`).
-* **`multiHubShippingCalculator`** ([`shipping/multi-hub-shipping.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/shipping/multi-hub-shipping.ts)): Computes single domestic flat rate or per-origin-hub international surcharges when items span multiple supply hubs.
-* **`MultiHubFulfillmentService`** ([`services/multi-hub-fulfillment.service.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/services/multi-hub-fulfillment.service.ts)): Automatically splits multi-hub customer orders into separate Vendure `Fulfillment` entities grouped by `originHub`, assigning discrete carrier dispatches and tracking codes.
-* **Admin Operations Dashboard** ([`dashboard/`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/dashboard)): UI extension registered under **Settings -> Fulfillment Hubs** (`/admin/settings/multi-hub`) featuring live KPI cards, physical warehouse management, catalog `originHub` reassignment, split-shipping simulator, and split-order auditor.
-* **Automated Unit Tests** ([`tests/multi-hub.spec.ts`](file:///c:/laragon/www/suisuto-vendure-v2/apps/packages/multi-hub/tests/multi-hub.spec.ts)): Dedicated test suite (17 passing unit tests) validating stock allocation, eligibility checks, shipping rates, and fulfillment grouping (run via `pnpm run test:multi-hub`).
+* **`MultiHubStockLocationStrategy`** ([`strategies/multi-hub-stock-location.strategy.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/strategies/multi-hub-stock-location.strategy.ts)): Directs line allocation to physical warehouses matching `StockLocation.customFields.hubCode`, falling back to location name matching and regional prefix parsing.
+* **`multiHubShippingEligibilityChecker`** ([`shipping/multi-hub-shipping.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/shipping/multi-hub-shipping.ts)): Validates destination country matching (`BD`, `IN`, or `ALL`).
+* **`multiHubShippingCalculator`** ([`shipping/multi-hub-shipping.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/shipping/multi-hub-shipping.ts)): Computes single domestic flat rate or per-origin-hub international surcharges when items span multiple supply hubs.
+* **`MultiHubFulfillmentService`** ([`services/multi-hub-fulfillment.service.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/services/multi-hub-fulfillment.service.ts)): Automatically splits multi-hub customer orders into separate Vendure `Fulfillment` entities grouped by `originHub`, assigning discrete carrier dispatches and tracking codes.
+* **Admin Operations Dashboard** ([`dashboard/`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/dashboard)): UI extension registered under **Settings -> Fulfillment Hubs** (`/admin/settings/multi-hub`) featuring live KPI cards, physical warehouse management, catalog `originHub` reassignment, split-shipping simulator, and split-order auditor.
+* **Automated Unit Tests** ([`tests/multi-hub.spec.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/tests/multi-hub.spec.ts)): Dedicated test suite (17 passing unit tests) validating stock allocation, eligibility checks, shipping rates, and fulfillment grouping (run via `pnpm run test:multi-hub`).
 
 ---
 

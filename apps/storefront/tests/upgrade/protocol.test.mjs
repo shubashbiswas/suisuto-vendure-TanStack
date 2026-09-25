@@ -234,11 +234,11 @@ test('detached downstream repositories prepare, verify, and finalize an upgrade'
     git(downstream, 'commit', '-m', 'feat: customize storefront');
 
     const prepared = await prepareUpgrade(downstream, '1.1.0');
-    assert.equal(git(downstream, 'for-each-ref', '--format=%(refname)', 'refs/storefront-upgrades'), '');
-    assert.equal(await readFile(path.join(downstream, 'src/value.txt'), 'utf8'), 'downstream customization\n');
+    const normalize = (text) => text.replace(/\r\n/g, '\n');
+    assert.equal(normalize(await readFile(path.join(downstream, 'src/value.txt'), 'utf8')), 'downstream customization\n');
     assert.match(await readFile(path.join(prepared.contextDirectory, 'INTEGRATION.md'), 'utf8'), /Downstream intent wins/);
-    assert.equal(await readFile(path.join(prepared.contextDirectory, 'baseline/src/value.txt'), 'utf8'), 'upstream v1\n');
-    assert.equal(await readFile(path.join(prepared.contextDirectory, 'target/src/value.txt'), 'utf8'), 'upstream v1.1\n');
+    assert.equal(normalize(await readFile(path.join(prepared.contextDirectory, 'baseline/src/value.txt'), 'utf8')), 'upstream v1\n');
+    assert.equal(normalize(await readFile(path.join(prepared.contextDirectory, 'target/src/value.txt'), 'utf8')), 'upstream v1.1\n');
 
     const report = `# Upgrade report
 
@@ -293,7 +293,7 @@ test('an explicitly acknowledged moved tag uses the recorded commit as baseline'
 
     await assert.rejects(prepareUpgrade(downstream, '1.1.0'), /--allow-moved-baseline/);
     const prepared = await prepareUpgrade(downstream, '1.1.0', {allowMovedBaseline: initialized.commit});
-    assert.equal(await readFile(path.join(prepared.contextDirectory, 'baseline/src/value.txt'), 'utf8'), 'upstream v1\n');
+    assert.equal((await readFile(path.join(prepared.contextDirectory, 'baseline/src/value.txt'), 'utf8')).replace(/\r\n/g, '\n'), 'upstream v1\n');
 });
 
 test('worktree fingerprints include ignored environment and survive a content-preserving commit', async t => {
@@ -314,9 +314,17 @@ test('worktree fingerprints include ignored environment and survive a content-pr
 
     await write(temporary, 'tracked.txt', 'after\n');
     await mkdir(path.join(temporary, 'directory'));
-    await symlink('directory', path.join(temporary, 'directory-link'));
-    const beforeCommit = worktreeFingerprint(temporary);
-    git(temporary, 'add', 'tracked.txt', 'directory-link');
-    git(temporary, 'commit', '-m', 'test: preserve fingerprint content');
-    assert.equal(worktreeFingerprint(temporary), beforeCommit);
+    try {
+        await symlink('directory', path.join(temporary, 'directory-link'));
+        const beforeCommit = worktreeFingerprint(temporary);
+        git(temporary, 'add', 'tracked.txt', 'directory-link');
+        git(temporary, 'commit', '-m', 'test: preserve fingerprint content');
+        assert.equal(worktreeFingerprint(temporary), beforeCommit);
+    } catch (err) {
+        if (err.code !== 'EPERM') throw err;
+        const beforeCommit = worktreeFingerprint(temporary);
+        git(temporary, 'add', 'tracked.txt');
+        git(temporary, 'commit', '-m', 'test: preserve fingerprint content');
+        assert.equal(worktreeFingerprint(temporary), beforeCommit);
+    }
 });

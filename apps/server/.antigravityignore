@@ -1,4 +1,4 @@
-# Dependencies
+# Dependencies & Package Stores
 node_modules/
 .pnpm-store/
 
@@ -7,12 +7,30 @@ dist/
 build/
 admin-ui/
 *.tsbuildinfo
+.turbo/
+.cache/
 
 # Vendure Static Media & Email Dumps
 static/assets/**
 static/email/test-emails/**
 .vendure/
 .tanstack/
+
+# Database Files & Storage
+*.sqlite*
+*.db*
+pgdata/**
+docker-data/**
+
+# Testing Reports & Coverage
+coverage/**
+.nyc_output/**
+
+# Secrets & Keys
+*.pem
+*.key
+*.cert
+*.crt
 
 # Logs & Temporary Files
 logs/

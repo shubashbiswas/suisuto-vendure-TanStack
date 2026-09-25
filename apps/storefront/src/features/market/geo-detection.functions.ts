@@ -15,7 +15,25 @@ export const detectVisitorMarket = createServerFn({ method: "GET" })
                 return { countryCode: null, suggestedMarket: null };
             }
 
+            const isDev = process.env.NODE_ENV !== "production";
+            let mockCountry: string | null = null;
+            if (isDev) {
+                mockCountry =
+                    headers.get("x-mock-country") ||
+                    headers.get("x-suisuto-mock-country") ||
+                    process.env.DEV_MOCK_COUNTRY ||
+                    null;
+
+                if (!mockCountry && req?.url) {
+                    try {
+                        const parsedUrl = new URL(req.url, "http://localhost");
+                        mockCountry = parsedUrl.searchParams.get("mockCountry");
+                    } catch {}
+                }
+            }
+
             const rawCountry =
+                mockCountry ||
                 headers.get("cf-ipcountry") ||
                 headers.get("x-vercel-ip-country") ||
                 headers.get("cloudfront-viewer-country") ||

@@ -10,6 +10,7 @@
 **/.output/**
 **/.nitro/**
 **/.tanstack/**
+**/.next/**
 **/.wrangler/**
 **/.vinxi/**
 **/dev-dist/**
@@ -17,12 +18,12 @@
 **/.cache/**
 **/*.tsbuildinfo
 
-# Large Monorepo Lockfiles (avoids polluting search results with hundreds of thousands of lines)
+# Large Monorepo Lockfiles (prevents bloating search results with hundreds of thousands of lines)
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
 
-# Vendure Static Media & Email Dumps
+# Vendure Static Media, Temp & Email Dumps
 apps/server/static/assets/**
 apps/server/static/email/test-emails/**
 **/.vendure/**
@@ -30,11 +31,19 @@ apps/server/static/email/test-emails/**
 # Compiled i18n Output
 **/src/paraglide/**
 
-# Testing Reports & Traces
+# Testing Reports, Traces & Coverage
+**/coverage/**
+**/.nyc_output/**
 **/playwright-report/**
 **/test-results/**
 **/.playwright/**
 **/blob-report/**
+
+# Local Database & Storage Volumes
+**/*.sqlite*
+**/*.db*
+**/pgdata/**
+**/docker-data/**
 
 # Minified & Source Map Files
 **/*.min.js
@@ -42,6 +51,13 @@ apps/server/static/email/test-emails/**
 **/*.map
 
 # Logs & Temporary OS Files
+logs/**
 **/*.log
 **/.DS_Store
 **/Thumbs.db
+
+# Secrets & Certificates
+**/*.pem
+**/*.key
+**/*.cert
+**/*.crt

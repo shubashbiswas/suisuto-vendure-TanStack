@@ -166,10 +166,18 @@ export function getChannelTokenForRegion(region?: MarketRegion): string {
 		return "";
 	}
 
+	if (
+		(activeRegion === "global" || activeRegion === "") &&
+		env.VENDURE_CHANNEL_TOKEN &&
+		env.VENDURE_CHANNEL_TOKEN !== "__default_channel__"
+	) {
+		return env.VENDURE_CHANNEL_TOKEN;
+	}
+
 	const match = dynamicMarketsMemoryCache.find(
 		(m) => m.code.toLowerCase() === activeRegion || m.token.toLowerCase() === activeRegion
 	);
-	if (match && match.token) {
+	if (match?.token) {
 		return match.token;
 	}
 

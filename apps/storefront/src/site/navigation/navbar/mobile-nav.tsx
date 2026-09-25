@@ -1,17 +1,18 @@
-import { useState } from "react";
-import { Await } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Link, useRouter } from "@/platform/tanstack/navigation";
 import {
 	Menu,
 	Search,
 	User,
 	Package,
+	MapPin,
 	ArrowRight,
 	Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+
+const rowClassName = 'flex items-center gap-2.5 px-2 py-2 min-h-11 text-xs text-foreground/80 hover:text-foreground';
 import {
 	Sheet,
 	SheetTrigger,
@@ -38,7 +39,7 @@ interface MobileNavProps {
 	activeCurrencyCode: string;
 	activeRegion?: MarketRegion;
 	availableRegions?: RegionConfig[];
-	personalized: Promise<Awaited<ReturnType<typeof getPersonalizedShellData>>>;
+	personalized?: Promise<Awaited<ReturnType<typeof getPersonalizedShellData>>>;
 }
 
 export function MobileNav({
@@ -52,7 +53,18 @@ export function MobileNav({
 	const t = useTranslations("Navigation");
 	const [open, setOpen] = useState(false);
 	const [searchValue, setSearchValue] = useState("");
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const router = useRouter();
+
+	useEffect(() => {
+		if (personalized) {
+			personalized.then((data) => {
+				if (data?.customerFirstName) {
+					setIsLoggedIn(true);
+				}
+			}).catch(() => {});
+		}
+	}, [personalized]);
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -72,7 +84,7 @@ export function MobileNav({
 					<Button
 						variant="ghost"
 						size="icon"
-						className="size-10 md:hidden rounded-none hover:bg-secondary/60 text-foreground"
+						className="size-11 md:hidden rounded-none hover:bg-secondary/60 text-foreground"
 					/>
 				}
 			>
@@ -258,7 +270,7 @@ export function MobileNav({
 								render={
 									<Link
 										href="/account/profile"
-										className="flex items-center gap-2.5 px-2 py-2 text-xs text-foreground/80 hover:text-foreground"
+										className={rowClassName}
 									/>
 								}
 								nativeButton={false}
@@ -271,7 +283,7 @@ export function MobileNav({
 								render={
 									<Link
 										href="/account/orders"
-										className="flex items-center gap-2.5 px-2 py-2 text-xs text-foreground/80 hover:text-foreground"
+										className={rowClassName}
 									/>
 								}
 								nativeButton={false}
@@ -280,22 +292,30 @@ export function MobileNav({
 								<Package className="size-3.5 text-muted-foreground" />
 								<span>{t("orders")}</span>
 							</SheetClose>
-
-							<Await
-								promise={personalized}
-								fallback={<Skeleton className="h-9 w-full rounded-none" />}
-							>
-								{(data) => (
-									<SheetClose
-										render={
-											<LoginButton
-												isLoggedIn={Boolean(data.customerFirstName)}
-												className="flex items-center gap-2.5 px-2 py-2 text-xs text-foreground/80 hover:text-foreground text-left w-full"
-											/>
-										}
+							<SheetClose
+								render={
+									<Link
+										href="/account/addresses"
+										className={rowClassName}
 									/>
-								)}
-							</Await>
+								}
+								nativeButton={false}
+								onClick={handleLinkClick}
+							>
+								<MapPin className="size-3.5 text-muted-foreground" />
+								<span>{t("addresses")}</span>
+							</SheetClose>
+
+							<SheetClose
+								render={
+									<LoginButton
+										isLoggedIn={isLoggedIn}
+										className={rowClassName}
+									/>
+								}
+								nativeButton={false}
+								onClick={handleLinkClick}
+							/>
 						</nav>
 					</div>
 

@@ -110,14 +110,16 @@ export default function ProductDetailPage({
 				</div>
 			</section>
 
-			<Await promise={relatedProducts} fallback={null}>
-				{({ products, currencyCode: relatedCurrencyCode }) => (
-					<RelatedProducts
-						products={products}
-						currencyCode={relatedCurrencyCode}
-					/>
-				)}
-			</Await>
+			{relatedProducts ? (
+				<Await promise={relatedProducts} fallback={null}>
+					{({ products, currencyCode: relatedCurrencyCode }) => (
+						<RelatedProducts
+							products={products}
+							currencyCode={relatedCurrencyCode}
+						/>
+					)}
+				</Await>
+			) : null}
 		</div>
 	);
 }
