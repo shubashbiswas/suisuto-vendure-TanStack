@@ -10,6 +10,7 @@ import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@ven
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
+import { GeoIpPlugin } from '@suisuto/vendure-geoip-plugin';
 import { MultiHubPlugin } from '@suisuto/vendure-multi-hub-plugin';
 import { MultiMarketPlugin } from '@suisuto/vendure-multi-market-plugin';
 import 'dotenv/config';
@@ -190,6 +191,9 @@ export const config: VendureConfig = {
             appDir: IS_DEV
                 ? path.join(__dirname, '../dist/dashboard')
                 : path.join(__dirname, 'dashboard'),
+        }),
+        GeoIpPlugin.init({
+            fallbackApiEnabled: true,
         }),
         MultiHubPlugin,
         MultiMarketPlugin.init({

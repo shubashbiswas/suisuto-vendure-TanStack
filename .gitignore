@@ -26,6 +26,7 @@ apps/storefront/.tanstack/
 apps/storefront/dist/
 apps/storefront/src/paraglide/
 apps/packages/*/dist/
+tmp/
 
 # Vendure Generated & Local Runtime Data
 apps/server/static/assets/*

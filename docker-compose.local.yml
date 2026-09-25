@@ -70,7 +70,7 @@ services:
       DB_PASSWORD: local_dev_password_123
       COOKIE_SECRET: local_cookie_secret_testing_only_12345
       SUPERADMIN_USERNAME: ${SUPERADMIN_USERNAME:-superadmin}
-      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-superadmin}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-local_dev_password_123}
       CORS_ORIGINS: http://localhost:3001
       DB_SYNCHRONIZE: "true"
     networks:

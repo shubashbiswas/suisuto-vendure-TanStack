@@ -58,11 +58,7 @@ async function loadLocaleEntries(locale: Locale) {
 	return { collections, products };
 }
 
-export interface CreateSitemapOptions {
-	fetchCampaigns?: (regionCode: string) => Promise<Array<{ slug: string; landingPages?: Array<{ subSlug: string }> }>>;
-}
-
-export async function createSitemapResponse(options?: CreateSitemapOptions) {
+export async function createSitemapResponse() {
 	const entries = new Map<string, Map<Locale, SitemapEntry>>();
 
 	for (const locale of locales) {
@@ -105,32 +101,6 @@ export async function createSitemapResponse(options?: CreateSitemapOptions) {
 			const regShop = entries.get(`page:shop:${reg.code}`) ?? new Map();
 			regShop.set(baseLocale, { path: `/${reg.code}/shop` });
 			entries.set(`page:shop:${reg.code}`, regShop);
-		}
-
-		const campaigns = options?.fetchCampaigns ? await options.fetchCampaigns(reg.code).catch(() => []) : [];
-		for (const camp of campaigns) {
-			const prefix = reg.code === "global" ? "" : `/${reg.code}`;
-			const campEntry =
-				entries.get(`campaign:${reg.code}:${camp.slug}`) ?? new Map();
-			campEntry.set(baseLocale, {
-				path: `${prefix}/campaign/${camp.slug}`,
-			});
-			entries.set(`campaign:${reg.code}:${camp.slug}`, campEntry);
-
-			if (camp.landingPages) {
-				for (const lp of camp.landingPages) {
-					const subEntry =
-						entries.get(`campaign:${reg.code}:${camp.slug}:${lp.subSlug}`) ??
-						new Map();
-					subEntry.set(baseLocale, {
-						path: `${prefix}/campaign/${camp.slug}/${lp.subSlug}`,
-					});
-					entries.set(
-						`campaign:${reg.code}:${camp.slug}:${lp.subSlug}`,
-						subEntry,
-					);
-				}
-			}
 		}
 	}
 

@@ -1,0 +1,38 @@
+# ==============================================================================
+# Suisuto Production Traefik Gateway Configuration
+# ==============================================================================
+
+api:
+  dashboard: true
+  insecure: false
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+
+# Register the local hybrid GeoIP plugin
+experimental:
+  localPlugins:
+    geoip-hybrid:
+      moduleName: "github.com/suisuto/traefik-geoip-hybrid"
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: "suisuto-network"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "admin@suisuto.com"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: web

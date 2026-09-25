@@ -19,14 +19,15 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml* .npmrc* ./
 COPY apps/packages ./apps/packages
 COPY apps/server/package.json ./apps/server/
 
-# Install all dependencies (including devDependencies for build)
-RUN pnpm install --frozen-lockfile
+# Install dependencies needed to build server and workspace packages
+RUN pnpm install --filter server... --frozen-lockfile
 
 # Copy server source code and configuration
 COPY apps/server ./apps/server
 
 # Build plugin packages, dashboard (vite), server (tsc), and worker (tsc)
-RUN pnpm --filter @suisuto/vendure-multi-hub-plugin build && \
+RUN pnpm --filter @suisuto/vendure-geoip-plugin build && \
+    pnpm --filter @suisuto/vendure-multi-hub-plugin build && \
     pnpm --filter @suisuto/vendure-multi-market-plugin build && \
     pnpm --filter server build
 
@@ -51,8 +52,9 @@ COPY apps/server/package.json ./apps/server/
 # Copy compiled plugin packages from builder
 COPY --from=builder /app/apps/packages ./apps/packages
 
-# Install only production dependencies
-RUN pnpm install --prod --frozen-lockfile
+# Install only production dependencies for server and clean pnpm cache
+RUN pnpm install --prod --filter server... --frozen-lockfile && \
+    rm -rf /root/.local/share/pnpm/store /root/.cache
 
 # Copy compiled artifacts from builder
 COPY --from=builder /app/apps/server/dist ./apps/server/dist

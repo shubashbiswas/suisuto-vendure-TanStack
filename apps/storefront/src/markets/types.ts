@@ -34,3 +34,28 @@ export interface MarketExperienceModule {
 	Footer: ComponentType<MarketFooterProps>;
 	config: MarketConfig;
 }
+
+export type HomepageSectionType =
+	| "hero"
+	| "campaign-banner"
+	| "featured-collection"
+	| "product-carousel"
+	| "editorial"
+	| "artisan-story"
+	| "newsletter"
+	| "countdown"
+	| "video-banner"
+	| "full-width-slides"
+	| "seasonal-collection"
+	| "category-grid-3x3"
+	| "brand-grid-3x3"
+	| "bestselling-slides"
+	| "now-trending"
+	| "shop-the-mood"
+	| "atelier-pillars";
+
+export interface HomepageSectionConfig {
+	type: HomepageSectionType;
+	props?: Record<string, any>;
+}
+

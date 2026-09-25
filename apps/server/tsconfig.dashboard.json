@@ -5,6 +5,9 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "paths": {
+      "@suisuto/vendure-geoip-plugin": [
+        "../packages/geoip/geoip.plugin.ts"
+      ],
       "@suisuto/vendure-multi-hub-plugin": [
         "../packages/multi-hub/multi-hub.plugin.ts"
       ],

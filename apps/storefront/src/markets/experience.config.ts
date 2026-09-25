@@ -1,4 +1,4 @@
-import type { HomepageSectionConfig } from "./campaign.types";
+import type { HomepageSectionConfig } from "./types";
 import {
 	BD_SLIDES,
 	BD_CATEGORIES,
@@ -316,3 +316,9 @@ MARKET_EXPERIENCE.ae = MARKET_EXPERIENCE.global;
 MARKET_EXPERIENCE.us = MARKET_EXPERIENCE.global;
 
 export const DEFAULT_SECTIONS: HomepageSectionConfig[] = MARKET_EXPERIENCE.global;
+
+export function getMarketHomepageSections(market?: string): HomepageSectionConfig[] {
+	const normalizedMarket = (market || "global").toLowerCase().trim();
+	return MARKET_EXPERIENCE[normalizedMarket] || DEFAULT_SECTIONS;
+}
+

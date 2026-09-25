@@ -51,10 +51,6 @@ import { SearchProductsQuery } from "@/features/search/graphql";
 import { registerShopOperations } from "@/platform/vendure/api.server";
 import { GetActiveChannelQuery } from "@/platform/vendure/channel-graphql";
 import { SitemapEntriesQuery } from "@/platform/seo/graphql";
-import {
-	GetActiveCampaignsQuery,
-	GetCampaignBySlugQuery,
-} from "@/features/campaigns/graphql";
 import { GetMarketByCodeQuery } from "@/features/market/graphql";
 
 // Every GraphQL operation the storefront may send to the Vendure Shop API.
@@ -103,7 +99,5 @@ registerShopOperations([
 	GetOrderByCodeQuery,
 	GetActiveChannelQuery,
 	SitemapEntriesQuery,
-	GetActiveCampaignsQuery,
-	GetCampaignBySlugQuery,
 	GetMarketByCodeQuery,
 ]);

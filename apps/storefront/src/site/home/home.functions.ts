@@ -3,9 +3,9 @@ import {
 	GetCollectionProductsQuery,
 	GetTopCollectionsQuery,
 } from "@/features/collections/graphql";
-import { getActiveCampaign, getMarketHomepageSections } from "@/features/campaigns/campaign.server";
+import { SearchProductsQuery } from "@/features/search/graphql";
 import { fetchMarketConfig } from "@/features/market/market.server";
-import type { HomepageSectionConfig } from "@/features/campaigns/campaign.types";
+import { getMarketHomepageSections, type HomepageSectionConfig } from "@/markets";
 import { getLocale } from "@/paraglide/runtime";
 import { cachedPublicData } from "@/platform/cache/public-cache";
 import {
@@ -26,23 +26,20 @@ export const getHomeData = createServerFn({ method: "GET" })
 			const locale = getLocale();
 			const channelToken = getChannelTokenForRegion(regionCode);
 
-			// 1. Fetch active campaign and market configuration in parallel
-			const [campaign, marketConfig] = await Promise.all([
-				getActiveCampaign(regionCode).catch(() => null),
-				fetchMarketConfig(regionCode).catch(() => null),
-			]);
+			// 1. Fetch market configuration from Multi-Market plugin
+			const marketConfig = await fetchMarketConfig(regionCode).catch(() => null);
 
 			// 2. Resolve market homepage sections adhering to hierarchy:
-			//    Priority 1: Active campaign sections (if campaign has custom sections)
+			//    Priority 1: Multi-Market plugin homepage sections configured in Vendure
 			//    Priority 2: Market experience layout defined for this market
-			//    Priority 3: Multi-Market plugin homepage sections configured in Vendure
-			const marketSections = getMarketHomepageSections(regionCode, campaign);
+			const configuredSections = marketConfig?.homepage?.sections as HomepageSectionConfig[] | undefined;
+			const marketSections = getMarketHomepageSections(regionCode);
 			const homepageSections: HomepageSectionConfig[] =
-				campaign?.homepageSections && campaign.homepageSections.length > 0
-					? campaign.homepageSections
+				configuredSections && configuredSections.length > 0
+					? configuredSections
 					: marketSections && marketSections.length > 0
 					? marketSections
-					: (marketConfig?.homepage?.sections as HomepageSectionConfig[]) || [];
+					: [];
 
 			// 3. Determine collection to showcase
 			let targetCollectionSlug = "atelier";
@@ -84,9 +81,8 @@ export const getHomeData = createServerFn({ method: "GET" })
 					let products = productsResult?.data?.search?.items ?? [];
 					if (products.length === 0) {
 						const fallback = await queryOnServer(
-							GetCollectionProductsQuery,
+							SearchProductsQuery,
 							{
-								slug: "",
 								input: {
 									take: 12,
 									skip: 0,
@@ -109,7 +105,6 @@ export const getHomeData = createServerFn({ method: "GET" })
 				products: catalogData?.products ?? [],
 				collections: catalogData?.collections ?? [],
 				homepageSections,
-				campaign,
 				marketConfig,
 				currencyCode: currency,
 				activeRegion: regionConfig.code,
@@ -117,12 +112,11 @@ export const getHomeData = createServerFn({ method: "GET" })
 			};
 		} catch (error) {
 			console.error("[getHomeData] Unexpected error resolving home data:", error);
-			const marketSections = getMarketHomepageSections(regionCode, null);
+			const marketSections = getMarketHomepageSections(regionCode);
 			return {
 				products: [],
 				collections: [],
 				homepageSections: marketSections || [],
-				campaign: null,
 				marketConfig: null,
 				currencyCode: currency,
 				activeRegion: regionConfig.code,

@@ -25,11 +25,9 @@ export const Route = createFileRoute("/$region/")({
 		const regionName = loaderData?.marketConfig?.name || loaderData?.regionConfig?.name || "Market";
 		const title =
 			loaderData?.marketConfig?.seo?.siteTitle ||
-			loaderData?.campaign?.seoTitle ||
 			`${regionName} Atelier | Luxury Fashion House`;
 		const description =
 			loaderData?.marketConfig?.seo?.defaultMetaDescription ||
-			loaderData?.campaign?.seoDescription ||
 			`Explore the handcrafted luxury collection for ${regionName}.`;
 
 		const head = storefrontHead({
@@ -56,14 +54,13 @@ export const Route = createFileRoute("/$region/")({
 });
 
 function RegionalHomeRoute() {
-	const { products, collections, currencyCode, homepageSections, campaign } = Route.useLoaderData();
+	const { products, collections, currencyCode, homepageSections } = Route.useLoaderData();
 	return (
 		<Home
 			products={products}
 			collections={collections}
 			currencyCode={currencyCode}
 			homepageSections={homepageSections}
-			campaign={campaign}
 		/>
 	);
 }

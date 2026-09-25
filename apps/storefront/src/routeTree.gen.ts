@@ -43,13 +43,11 @@ import { Route as AccountOrdersRouteImport } from './routes/account/orders'
 import { Route as AccountProfileRouteImport } from './routes/account/profile'
 import { Route as AccountVerifyEmailRouteImport } from './routes/account/verify-email'
 import { Route as ApiRevalidateRouteImport } from './routes/api.revalidate'
-import { Route as CampaignSlugRouteImport } from './routes/campaign.$slug'
 import { Route as CollectionSlugRouteImport } from './routes/collection.$slug'
 import { Route as CollectionsSlugRouteImport } from './routes/collections.$slug'
 import { Route as OrderConfirmationCodeRouteImport } from './routes/order-confirmation.$code'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
-import { Route as RegionCampaignSlugRouteImport } from './routes/$region.campaign.$slug'
 import { Route as RegionCollectionSlugRouteImport } from './routes/$region.collection.$slug'
 import { Route as RegionCollectionsSlugRouteImport } from './routes/$region.collections.$slug'
 import { Route as RegionOrderConfirmationCodeRouteImport } from './routes/$region.order-confirmation.$code'
@@ -57,8 +55,6 @@ import { Route as RegionProductSlugRouteImport } from './routes/$region.product.
 import { Route as RegionProductsSlugRouteImport } from './routes/$region.products.$slug'
 import { Route as AccountOrdersIndexRouteImport } from './routes/account/orders.index'
 import { Route as AccountOrdersCodeRouteImport } from './routes/account/orders/$code'
-import { Route as CampaignSlugSplatRouteImport } from './routes/campaign.$slug.$'
-import { Route as RegionCampaignSlugSplatRouteImport } from './routes/$region.campaign.$slug.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -230,11 +226,6 @@ const ApiRevalidateRoute = ApiRevalidateRouteImport.update({
   path: '/api/revalidate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CampaignSlugRoute = CampaignSlugRouteImport.update({
-  id: '/campaign/$slug',
-  path: '/campaign/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CollectionSlugRoute = CollectionSlugRouteImport.update({
   id: '/collection/$slug',
   path: '/collection/$slug',
@@ -259,11 +250,6 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
   id: '/products/$slug',
   path: '/products/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
-const RegionCampaignSlugRoute = RegionCampaignSlugRouteImport.update({
-  id: '/campaign/$slug',
-  path: '/campaign/$slug',
-  getParentRoute: () => RegionRoute,
 } as any)
 const RegionCollectionSlugRoute = RegionCollectionSlugRouteImport.update({
   id: '/collection/$slug',
@@ -301,16 +287,6 @@ const AccountOrdersCodeRoute = AccountOrdersCodeRouteImport.update({
   path: '/$code',
   getParentRoute: () => AccountOrdersRoute,
 } as any)
-const CampaignSlugSplatRoute = CampaignSlugSplatRouteImport.update({
-  id: '/$',
-  path: '/$',
-  getParentRoute: () => CampaignSlugRoute,
-} as any)
-const RegionCampaignSlugSplatRoute = RegionCampaignSlugSplatRouteImport.update({
-  id: '/$',
-  path: '/$',
-  getParentRoute: () => RegionCampaignSlugRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -346,23 +322,19 @@ export interface FileRoutesByFullPath {
   '/account/profile': typeof AccountProfileRoute
   '/account/verify-email': typeof AccountVerifyEmailRoute
   '/api/revalidate': typeof ApiRevalidateRoute
-  '/campaign/$slug': typeof CampaignSlugRouteWithChildren
   '/collection/$slug': typeof CollectionSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/order-confirmation/$code': typeof OrderConfirmationCodeRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/$region/': typeof RegionIndexRoute
-  '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
   '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
-  '/campaign/$slug/$': typeof CampaignSlugSplatRoute
   '/account/orders/': typeof AccountOrdersIndexRoute
-  '/$region/campaign/$slug/$': typeof RegionCampaignSlugSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -396,23 +368,19 @@ export interface FileRoutesByTo {
   '/account/profile': typeof AccountProfileRoute
   '/account/verify-email': typeof AccountVerifyEmailRoute
   '/api/revalidate': typeof ApiRevalidateRoute
-  '/campaign/$slug': typeof CampaignSlugRouteWithChildren
   '/collection/$slug': typeof CollectionSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/order-confirmation/$code': typeof OrderConfirmationCodeRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/$region': typeof RegionIndexRoute
-  '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
   '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
-  '/campaign/$slug/$': typeof CampaignSlugSplatRoute
   '/account/orders': typeof AccountOrdersIndexRoute
-  '/$region/campaign/$slug/$': typeof RegionCampaignSlugSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -449,23 +417,19 @@ export interface FileRoutesById {
   '/account/profile': typeof AccountProfileRoute
   '/account/verify-email': typeof AccountVerifyEmailRoute
   '/api/revalidate': typeof ApiRevalidateRoute
-  '/campaign/$slug': typeof CampaignSlugRouteWithChildren
   '/collection/$slug': typeof CollectionSlugRoute
   '/collections/$slug': typeof CollectionsSlugRoute
   '/order-confirmation/$code': typeof OrderConfirmationCodeRoute
   '/product/$slug': typeof ProductSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/$region/': typeof RegionIndexRoute
-  '/$region/campaign/$slug': typeof RegionCampaignSlugRouteWithChildren
   '/$region/collection/$slug': typeof RegionCollectionSlugRoute
   '/$region/collections/$slug': typeof RegionCollectionsSlugRoute
   '/$region/order-confirmation/$code': typeof RegionOrderConfirmationCodeRoute
   '/$region/product/$slug': typeof RegionProductSlugRoute
   '/$region/products/$slug': typeof RegionProductsSlugRoute
   '/account/orders/$code': typeof AccountOrdersCodeRoute
-  '/campaign/$slug/$': typeof CampaignSlugSplatRoute
   '/account/orders/': typeof AccountOrdersIndexRoute
-  '/$region/campaign/$slug/$': typeof RegionCampaignSlugSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -503,23 +467,19 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/verify-email'
     | '/api/revalidate'
-    | '/campaign/$slug'
     | '/collection/$slug'
     | '/collections/$slug'
     | '/order-confirmation/$code'
     | '/product/$slug'
     | '/products/$slug'
     | '/$region/'
-    | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
     | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
-    | '/campaign/$slug/$'
     | '/account/orders/'
-    | '/$region/campaign/$slug/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -553,23 +513,19 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/verify-email'
     | '/api/revalidate'
-    | '/campaign/$slug'
     | '/collection/$slug'
     | '/collections/$slug'
     | '/order-confirmation/$code'
     | '/product/$slug'
     | '/products/$slug'
     | '/$region'
-    | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
     | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
-    | '/campaign/$slug/$'
     | '/account/orders'
-    | '/$region/campaign/$slug/$'
   id:
     | '__root__'
     | '/'
@@ -605,23 +561,19 @@ export interface FileRouteTypes {
     | '/account/profile'
     | '/account/verify-email'
     | '/api/revalidate'
-    | '/campaign/$slug'
     | '/collection/$slug'
     | '/collections/$slug'
     | '/order-confirmation/$code'
     | '/product/$slug'
     | '/products/$slug'
     | '/$region/'
-    | '/$region/campaign/$slug'
     | '/$region/collection/$slug'
     | '/$region/collections/$slug'
     | '/$region/order-confirmation/$code'
     | '/$region/product/$slug'
     | '/$region/products/$slug'
     | '/account/orders/$code'
-    | '/campaign/$slug/$'
     | '/account/orders/'
-    | '/$region/campaign/$slug/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -642,7 +594,6 @@ export interface RootRouteChildren {
   VerifyPendingRoute: typeof VerifyPendingRoute
   WishlistRoute: typeof WishlistRoute
   ApiRevalidateRoute: typeof ApiRevalidateRoute
-  CampaignSlugRoute: typeof CampaignSlugRouteWithChildren
   CollectionSlugRoute: typeof CollectionSlugRoute
   CollectionsSlugRoute: typeof CollectionsSlugRoute
   OrderConfirmationCodeRoute: typeof OrderConfirmationCodeRoute
@@ -890,13 +841,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRevalidateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/campaign/$slug': {
-      id: '/campaign/$slug'
-      path: '/campaign/$slug'
-      fullPath: '/campaign/$slug'
-      preLoaderRoute: typeof CampaignSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/collection/$slug': {
       id: '/collection/$slug'
       path: '/collection/$slug'
@@ -931,13 +875,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/products/$slug'
       preLoaderRoute: typeof ProductsSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/$region/campaign/$slug': {
-      id: '/$region/campaign/$slug'
-      path: '/campaign/$slug'
-      fullPath: '/$region/campaign/$slug'
-      preLoaderRoute: typeof RegionCampaignSlugRouteImport
-      parentRoute: typeof RegionRoute
     }
     '/$region/collection/$slug': {
       id: '/$region/collection/$slug'
@@ -988,33 +925,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountOrdersCodeRouteImport
       parentRoute: typeof AccountOrdersRoute
     }
-    '/campaign/$slug/$': {
-      id: '/campaign/$slug/$'
-      path: '/$'
-      fullPath: '/campaign/$slug/$'
-      preLoaderRoute: typeof CampaignSlugSplatRouteImport
-      parentRoute: typeof CampaignSlugRoute
-    }
-    '/$region/campaign/$slug/$': {
-      id: '/$region/campaign/$slug/$'
-      path: '/$'
-      fullPath: '/$region/campaign/$slug/$'
-      preLoaderRoute: typeof RegionCampaignSlugSplatRouteImport
-      parentRoute: typeof RegionCampaignSlugRoute
-    }
   }
 }
-
-interface RegionCampaignSlugRouteChildren {
-  RegionCampaignSlugSplatRoute: typeof RegionCampaignSlugSplatRoute
-}
-
-const RegionCampaignSlugRouteChildren: RegionCampaignSlugRouteChildren = {
-  RegionCampaignSlugSplatRoute: RegionCampaignSlugSplatRoute,
-}
-
-const RegionCampaignSlugRouteWithChildren =
-  RegionCampaignSlugRoute._addFileChildren(RegionCampaignSlugRouteChildren)
 
 interface RegionRouteChildren {
   RegionAccountRoute: typeof RegionAccountRoute
@@ -1030,7 +942,6 @@ interface RegionRouteChildren {
   RegionVerifyPendingRoute: typeof RegionVerifyPendingRoute
   RegionWishlistRoute: typeof RegionWishlistRoute
   RegionIndexRoute: typeof RegionIndexRoute
-  RegionCampaignSlugRoute: typeof RegionCampaignSlugRouteWithChildren
   RegionCollectionSlugRoute: typeof RegionCollectionSlugRoute
   RegionCollectionsSlugRoute: typeof RegionCollectionsSlugRoute
   RegionOrderConfirmationCodeRoute: typeof RegionOrderConfirmationCodeRoute
@@ -1052,7 +963,6 @@ const RegionRouteChildren: RegionRouteChildren = {
   RegionVerifyPendingRoute: RegionVerifyPendingRoute,
   RegionWishlistRoute: RegionWishlistRoute,
   RegionIndexRoute: RegionIndexRoute,
-  RegionCampaignSlugRoute: RegionCampaignSlugRouteWithChildren,
   RegionCollectionSlugRoute: RegionCollectionSlugRoute,
   RegionCollectionsSlugRoute: RegionCollectionsSlugRoute,
   RegionOrderConfirmationCodeRoute: RegionOrderConfirmationCodeRoute,
@@ -1094,18 +1004,6 @@ const AccountRouteChildren: AccountRouteChildren = {
 const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
-interface CampaignSlugRouteChildren {
-  CampaignSlugSplatRoute: typeof CampaignSlugSplatRoute
-}
-
-const CampaignSlugRouteChildren: CampaignSlugRouteChildren = {
-  CampaignSlugSplatRoute: CampaignSlugSplatRoute,
-}
-
-const CampaignSlugRouteWithChildren = CampaignSlugRoute._addFileChildren(
-  CampaignSlugRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RegionRoute: RegionRouteWithChildren,
@@ -1124,7 +1022,6 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyPendingRoute: VerifyPendingRoute,
   WishlistRoute: WishlistRoute,
   ApiRevalidateRoute: ApiRevalidateRoute,
-  CampaignSlugRoute: CampaignSlugRouteWithChildren,
   CollectionSlugRoute: CollectionSlugRoute,
   CollectionsSlugRoute: CollectionsSlugRoute,
   OrderConfirmationCodeRoute: OrderConfirmationCodeRoute,

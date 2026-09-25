@@ -1,0 +1,8 @@
+displayName: Traefik GeoIP Hybrid (MaxMind + IP-API Fallback)
+type: middleware
+import: github.com/suisuto/traefik-geoip-hybrid
+summary: Hybrid GeoIP middleware that resolves client IP country code via MaxMind MMDB and falls back to remote IP-API, injecting X-Country-Code header downstream.
+testData:
+  headerName: "X-Country-Code"
+  fallbackApiEnabled: true
+  cacheTtlMinutes: 1440

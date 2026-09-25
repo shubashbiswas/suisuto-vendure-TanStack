@@ -1,0 +1,56 @@
+# ==============================================================================
+# Traefik Reverse Proxy Service with Hybrid GeoIP Middleware
+# ==============================================================================
+# Usage:
+#   docker compose -f docker-compose.prod.yml -f traefik/docker-compose.traefik.yml up -d
+# ==============================================================================
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: suisuto-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./plugins-local:/plugins-local:ro
+      - ./geoip:/plugins-storage/geoip:ro
+      - ./letsencrypt:/letsencrypt
+    networks:
+      - suisuto-network
+
+  # Attach Traefik routing and GeoIP middleware to Storefront
+  storefront:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.storefront.rule=Host(`${STOREFRONT_DOMAIN:-suisuto.com}`)"
+      - "traefik.http.routers.storefront.entrypoints=websecure"
+      - "traefik.http.routers.storefront.tls=true"
+      - "traefik.http.routers.storefront.tls.certresolver=letsencrypt"
+
+      # Attach the hybrid GeoIP middleware
+      - "traefik.http.routers.storefront.middlewares=suisuto-geoip"
+
+      # Middleware configuration:
+      - "traefik.http.middlewares.suisuto-geoip.plugin.geoip-hybrid.headerName=X-Country-Code"
+      - "traefik.http.middlewares.suisuto-geoip.plugin.geoip-hybrid.dbPath=/plugins-storage/geoip/GeoLite2-Country.mmdb"
+      - "traefik.http.middlewares.suisuto-geoip.plugin.geoip-hybrid.fallbackApiEnabled=true"
+      - "traefik.http.middlewares.suisuto-geoip.plugin.geoip-hybrid.cacheTtlMinutes=1440"
+
+      # Upstream internal port
+      - "traefik.http.services.storefront.loadbalancer.server.port=3001"
+
+  # Attach Traefik routing to Vendure API server
+  server:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vendure.rule=Host(`${API_DOMAIN:-api.suisuto.com}`)"
+      - "traefik.http.routers.vendure.entrypoints=websecure"
+      - "traefik.http.routers.vendure.tls=true"
+      - "traefik.http.routers.vendure.tls.certresolver=letsencrypt"
+
+      # Attach the hybrid GeoIP middleware to backend as well
+      - "traefik.http.routers.vendure.middlewares=suisuto-geoip"
+      - "traefik.http.services.vendure.loadbalancer.server.port=3000"

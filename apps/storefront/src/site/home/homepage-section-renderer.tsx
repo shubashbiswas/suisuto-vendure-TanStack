@@ -6,8 +6,8 @@ import type { ProductCardFragment } from "@/features/products/graphql";
 import type { FragmentOf } from "@/platform/vendure/graphql";
 import { HeroSection } from "@/site/home/hero-section";
 import { ArtisanStory } from "@/site/home/artisan-story";
-import { CountdownSection } from "@/site/campaigns/countdown-section";
-import { CampaignBannerSection } from "@/site/campaigns/campaign-banner-section";
+import { CountdownSection } from "@/site/home/countdown-section";
+import { CampaignBannerSection } from "@/site/home/editorial-banner-section";
 import { VideoBannerSection } from "@/site/home/video-banner-section";
 import { FullWidthSlidesSection } from "@/site/home/full-width-slides-section";
 import { SeasonalCollectionSection } from "@/site/home/seasonal-collection-section";
@@ -17,7 +17,7 @@ import { BestsellingSlidesSection } from "@/site/home/bestselling-slides-section
 import { NowTrendingSection } from "@/site/home/now-trending-section";
 import { ShopTheMoodSection } from "@/site/home/shop-the-mood-section";
 import { ScrollRevealSection } from "@/components/scroll-reveal-section";
-import type { Campaign, HomepageSectionConfig } from "@/features/campaigns/campaign.types";
+import type { HomepageSectionConfig } from "@/markets";
 
 const luxuryPillars = [
     {
@@ -44,7 +44,6 @@ export interface SectionSharedProps {
     products?: Array<FragmentOf<typeof ProductCardFragment>>;
     collections?: Array<{ id: string; name: string; slug: string }>;
     currencyCode: string;
-    campaign?: Campaign | null;
 }
 
 export function FeaturedCollectionSection({
@@ -186,13 +185,11 @@ export function HomepageSectionRenderer({
     products = [],
     collections: _collections = [],
     currencyCode,
-    campaign,
 }: {
     section: HomepageSectionConfig;
     products?: Array<FragmentOf<typeof ProductCardFragment>>;
     collections?: Array<{ id: string; name: string; slug: string }>;
     currencyCode: string;
-    campaign?: Campaign | null;
 }) {
     const props = section.props || {};
 
@@ -200,17 +197,17 @@ export function HomepageSectionRenderer({
         case "hero": {
             return (
                 <HeroSection
-                    heroImageUrl={props.heroImageUrl || campaign?.heroImageUrl}
-                    heroHeadline={props.heroHeadline || campaign?.heroHeadline}
-                    heroSubHeadline={props.heroSubHeadline || campaign?.heroSubHeadline}
-                    heroCtaLabel={props.heroCtaLabel || campaign?.heroCtaLabel}
-                    heroCtaHref={props.heroCtaHref || campaign?.heroCtaHref}
-                    heroTag={props.heroTag || campaign?.heroTag}
+                    heroImageUrl={props.heroImageUrl}
+                    heroHeadline={props.heroHeadline}
+                    heroSubHeadline={props.heroSubHeadline}
+                    heroCtaLabel={props.heroCtaLabel}
+                    heroCtaHref={props.heroCtaHref}
+                    heroTag={props.heroTag}
                 />
             );
         }
         case "campaign-banner": {
-            const banners = props.banners || campaign?.banners || [];
+            const banners = props.banners || [];
             return <ScrollRevealSection><CampaignBannerSection banners={banners} /></ScrollRevealSection>;
         }
         case "featured-collection":
@@ -232,7 +229,7 @@ export function HomepageSectionRenderer({
             return <ScrollRevealSection><ArtisanStory /></ScrollRevealSection>;
         }
         case "countdown": {
-            const targetDate = props.targetDate || campaign?.endAt;
+            const targetDate = props.targetDate;
             return (
                 <ScrollRevealSection>
                 <CountdownSection

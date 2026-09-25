@@ -2,6 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import {
 	createRootRoute,
 	HeadContent,
+	Outlet,
 	ScriptOnce,
 	Scripts,
 	useRouter,
@@ -12,10 +13,9 @@ import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import { Button } from "@/components/ui/button";
 import { SITE_NAME } from "@/config/metadata";
-import { m } from "@/paraglide/messages.js";
 import { getLocale } from "@/paraglide/runtime";
-import { Link } from "@/platform/tanstack/navigation";
 import { LocaleLayout } from "@/site/locale-layout";
+import { StorefrontNotFound } from "@/site/storefront-not-found";
 import { themeScript } from "@/site/providers/theme-provider";
 import {
 	getPersonalizedShellData,
@@ -89,22 +89,11 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
+	component: () => <Outlet />,
 	notFoundComponent: StorefrontNotFound,
 	errorComponent: StorefrontError,
 	shellComponent: RootDocument,
 });
-
-function StorefrontNotFound() {
-	return (
-		<div className="container mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
-			<h1 className="text-4xl font-bold">{m.NotFound_title()}</h1>
-			<p className="text-muted-foreground">{m.NotFound_message()}</p>
-			<Button render={<Link href="/" />} nativeButton={false}>
-				{m.NotFound_goHome()}
-			</Button>
-		</div>
-	);
-}
 
 function StorefrontError({ error }: { error: unknown }) {
 	const router = useRouter();

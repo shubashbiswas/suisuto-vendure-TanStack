@@ -20,11 +20,9 @@ export const Route = createFileRoute("/")({
 	head: ({ loaderData }) => {
 		const title =
 			loaderData?.marketConfig?.seo?.siteTitle ||
-			loaderData?.campaign?.seoTitle ||
 			"Global Atelier | Luxury Fashion House";
 		const description =
 			loaderData?.marketConfig?.seo?.defaultMetaDescription ||
-			loaderData?.campaign?.seoDescription ||
 			"Explore handcrafted haute couture and artisanal luxury collections.";
 
 		const head = storefrontHead({
@@ -51,14 +49,13 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeRoute() {
-	const { products, collections, currencyCode, homepageSections, campaign } = Route.useLoaderData();
+	const { products, collections, currencyCode, homepageSections } = Route.useLoaderData();
 	return (
 		<Home
 			products={products}
 			collections={collections}
 			currencyCode={currencyCode}
 			homepageSections={homepageSections}
-			campaign={campaign}
 		/>
 	);
 }

@@ -1,5 +1,6 @@
 import { createFileRoute, notFound, Outlet, redirect } from "@tanstack/react-router";
 import { syncRegionParam } from "@/platform/region/switch-region.functions";
+import { StorefrontNotFound } from "@/site/storefront-not-found";
 
 export const Route = createFileRoute("/$region")({
 	loader: async ({ params }) => {
@@ -23,4 +24,5 @@ export const Route = createFileRoute("/$region")({
 		return { region: regionParam };
 	},
 	component: () => <Outlet />,
+	notFoundComponent: StorefrontNotFound,
 });
