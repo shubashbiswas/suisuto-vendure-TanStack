@@ -24,10 +24,10 @@ vendure/
 ## 2. Master Configuration (`vendure-config.ts`)
 
 ### 2.1 Channels Configuration
-Channels are initialized via Vendure's ChannelService or during bootstrapping:
-* **`bangladesh`**: Currency `BDT`, default language `en`.
-* **`india`**: Currency `INR`, default language `en`.
-* **`global`**: Currency `USD`, default language `en`.
+Vendure channels isolate catalog, currency, orders, and pricing per regional market:
+* **Manual Channel Creation**: Channels are configured cleanly by administrators via the Vendure Dashboard (`/dashboard/channels`) or ChannelService without forced seed injections.
+* **Regional Isolation**: Each channel controls its default currency (e.g. `BDT`, `INR`, `USD`) and pricing policies.
+* **Zero Premade Bias**: No hardcoded default channels or dummy fallback markets are seeded on startup.
 
 ### 2.2 Custom Fields Schema Definition
 Configured under `config.customFields` in [`apps/server/src/vendure-config.ts`](file:///c:/laragon/www/vendure/apps/server/src/vendure-config.ts):
@@ -209,14 +209,26 @@ pnpm run test:multi-hub        # Multi-hub allocation & split-shipping tests (17
 The server is packaged with a multi-stage Dockerfile (`apps/server/Dockerfile`) based on `node:24-trixie-slim`:
 
 ### 6.1 Local Testing Compose
-Run the entire local stack (Postgres, Redis, Vendure Server, Storefront):
+Runs the complete containerized stack (Postgres 17, Redis 8, Vendure Server with healthcheck, and Storefront) building from local source:
 ```bash
 docker compose -f docker-compose.local.yml up --build
 ```
+Features:
+- Native healthcheck on `GET /health` (`{"status":"ok"}`).
+- Persistent volume `local_server_assets` mapped to `/app/apps/server/static/assets`.
+- `DB_SYNCHRONIZE=true` for instant schema generation.
+- Dynamic `ASSET_URL_PREFIX=http://localhost:3000/assets/`.
 
 ### 6.2 Production Deployment (GHCR)
-Production images are built automatically on GitHub version tags (`v*`) and pushed to GitHub Container Registry (`ghcr.io`):
+Production images are built automatically by GitHub Actions on version tags (`v*`) and pushed to GitHub Container Registry (`ghcr.io`):
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+# Copy and configure environment
+cp .env.production.example .env.production
+
+# Run with Docker Compose
+docker compose --env-file .env.production -f docker-compose.prod.yml up -d
+
+# Or with Traefik (Automated SSL & Hybrid GeoIP)
+docker compose --env-file .env.production -f docker-compose.prod.yml -f traefik/docker-compose.traefik.yml up -d
 ```
 

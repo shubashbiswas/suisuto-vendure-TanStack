@@ -122,7 +122,7 @@ vendure/
 ### Docker Workflows
 
 1. **Local Multi-Container Stack (Testing)**:
-   Builds local source trees on `node:24-trixie-slim` alongside PostgreSQL 16 and Redis 7:
+   Builds local source trees on `node:24-trixie-slim` alongside PostgreSQL 17 and Redis 8 with native server healthchecks:
 
    ```bash
    docker compose -f docker-compose.local.yml up --build
@@ -132,7 +132,14 @@ vendure/
    Pulls official images published to GitHub Container Registry on git release tags (`v*`):
 
    ```bash
-   docker compose -f docker-compose.prod.yml up -d
+   # Configure environment
+   cp .env.production.example .env.production
+
+   # Launch production containers
+   docker compose --env-file .env.production -f docker-compose.prod.yml up -d
+
+   # Or with Traefik (Automated SSL & Hybrid GeoIP)
+   docker compose --env-file .env.production -f docker-compose.prod.yml -f traefik/docker-compose.traefik.yml up -d
    ```
 
 ---

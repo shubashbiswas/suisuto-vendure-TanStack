@@ -259,4 +259,35 @@ All verification commands defined in [`AGENTS.md` Section 5](file:///c:/laragon/
 - **Architectural Shift**: Regional marketing campaigns, editorial banners, urgency countdowns, and collection groupings are now completely managed by the frontend modular market architecture ([`apps/storefront/src/markets/`](file:///c:/laragon/www/vendure/apps/storefront/src/markets/): `/bd/`, `/in/`, `/global/`).
 - **Backend Cleanliness**: All server-side campaign entities, indexes, and migration queries were excised, and `1790150000000-suisuto_init.ts` automatically cleans up any legacy `campaign` table (`DROP TABLE IF EXISTS "campaign" CASCADE;`).
 
+---
+
+## 14. Production Hardening, Clean Channel Architecture & Monorepo Flattening
+
+### 14.1 Zero Premade Data & Clean Channels Model
+- **Auto-Bootstrap Decoupling**: Previously, `MultiHubService.onApplicationBootstrap()` in [`apps/packages/multi-hub/services/multi-hub.service.ts`](file:///c:/laragon/www/vendure/apps/packages/multi-hub/services/multi-hub.service.ts) automatically executed `channelService.create()` to force-inject a dedicated `global` channel on startup. This interfered with administrators creating real channels manually. The auto-creation logic was completely excised.
+- **Admin Control Page Cleanup**: Removed the "Seed Defaults" action button and mutation handler from [`apps/packages/multi-market/dashboard/market-control-page.tsx`](file:///c:/laragon/www/vendure/apps/packages/multi-market/dashboard/market-control-page.tsx). Empty state messaging was updated to guide administrators to explicitly use "Add Market" for custom regional configurations.
+- **Dynamic Storefront Resolution**: The TanStack Start storefront dynamically resolves market channels and tokens from the Vendure Shop API rather than hardcoded fallbacks.
+
+### 14.2 Vendure Dashboard Stability & Blank Screen Resolution
+- **Root Cause (Vite Flapping)**: In development, `@vendure/dashboard`'s dynamic handler checked whether Vite dev server was running on port 5173 with a 1000ms timeout on every HTTP request. Under Windows I/O load, this check periodically timed out, causing continuous mode-flapping (`built -> vite -> built`) and abruptly tearing down in-flight JS module streams.
+- **Resolution**: Configured `DashboardPlugin` with `appDir: path.join(__dirname, '../dist/dashboard')` and `viteDevServerPort: 0` in [`apps/server/src/vendure-config.ts`](file:///c:/laragon/www/vendure/apps/server/src/vendure-config.ts). The dashboard is compiled via `vendure build dashboard` and served as a high-performance, deterministic static bundle (<50ms load time).
+- **Import Error Guard**: Added error handling to dynamic locale imports in `@vendure/dashboard/src/lib/components/data-input/datetime-input.tsx` to prevent unhandled promise rejections on unbundled re-exports.
+
+### 14.3 Monorepo Packaging & Sub-Repository Flattening
+- **CI/CD Build Failure**: During initial GitHub Actions execution on release tag `v1.0.0`, the build failed with `Cannot find module '@suisuto/vendure-multi-hub-plugin'`.
+- **Root Cause**: `apps/packages/multi-hub` and `apps/packages/multi-market` originally contained isolated `.git` folders from standalone Git repositories. Consequently, the parent Git monorepo treated them as untracked sub-repositories and never committed or pushed their source files to GitHub.
+- **Resolution**: Removed the nested `.git` directories and directly tracked and committed all 49 domain plugin source files (7,728 lines) into the monorepo root. This ensures that CI/CD environments check out the complete monorepo workspace.
+
+### 14.4 Production Docker Compose & Healthcheck Topologies
+- **Dynamic Asset Routing**: Updated `AssetServerPlugin` in [`apps/server/src/vendure-config.ts`](file:///c:/laragon/www/vendure/apps/server/src/vendure-config.ts) to read `process.env.ASSET_URL_PREFIX`, avoiding hardcoded external URLs in production and local containers.
+- **Healthcheck & Startup Order**:
+  - Implemented a native Node 24 healthcheck on the Vendure server container probing `GET /health` (`{"status":"ok"}`).
+  - Configured `worker` and `storefront` in both [`docker-compose.local.yml`](file:///c:/laragon/www/vendure/docker-compose.local.yml) and [`docker-compose.prod.yml`](file:///c:/laragon/www/vendure/docker-compose.prod.yml) to use `depends_on: { server: { condition: service_healthy } }`.
+- **Persistent Media Volume**: Added `local_server_assets` / `server_assets` volume mapping to `/app/apps/server/static/assets` so customer-uploaded media and catalog imagery persist across container lifecycles.
+- **Production Template**: Created [`.env.production.example`](file:///c:/laragon/www/vendure/.env.production.example) documenting database credentials, secrets, CORS origins, and Traefik domains.
+
+### 14.5 Filesystem Cleanup
+- Permanently deleted obsolete `tmp/` test folder, freeing **652 MB** and **95,373 redundant files** from the workspace.
+- Added `tmp/` to both [`.gitignore`](file:///c:/laragon/www/vendure/.gitignore) and [`.dockerignore`](file:///c:/laragon/www/vendure/.dockerignore) to prevent temporary artifacts from inflating Docker build contexts.
+
 
