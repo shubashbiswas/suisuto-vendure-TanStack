@@ -12,6 +12,7 @@ import { noStoreMiddleware } from "@/platform/middleware";
 import { queryOnServer } from "@/platform/vendure/api.server";
 import { getActiveChannel } from "@/platform/vendure/channel";
 import { readFragment } from "@/platform/vendure/graphql";
+import { fetchMarketConfig } from "@/features/market/market.server";
 import {
 	getActiveRegionOnServer,
 	getChannelTokenForRegion,
@@ -28,7 +29,7 @@ export const getPublicShellData = createServerFn({ method: "GET" }).handler(
 		const currencyCookie = getCurrencyCookie();
 		const availableRegions = await getDynamicRegions();
 		const regionConfig = getRegionConfig(activeRegion);
-		const [channel, collections] = await Promise.all([
+		const [channel, collections, marketConfig] = await Promise.all([
 			getActiveChannel(activeRegion).catch((err) => {
 				console.warn(`[Shell] Failed to fetch active channel for ${activeRegion}:`, err);
 				return {
@@ -59,6 +60,7 @@ export const getPublicShellData = createServerFn({ method: "GET" }).handler(
 					}
 				},
 			}).catch(() => []),
+			fetchMarketConfig(activeRegion).catch(() => null),
 		]);
 
 		const availableCurrencyCodes =
@@ -81,6 +83,7 @@ export const getPublicShellData = createServerFn({ method: "GET" }).handler(
 			activeCurrencyCode,
 			activeRegion,
 			availableRegions,
+			marketConfig: marketConfig || null,
 		};
 	},
 );

@@ -2,8 +2,10 @@ import { Sparkles } from "lucide-react";
 
 export function AnnouncementMarquee({
 	campaignAnnouncement,
+	items,
 }: {
 	campaignAnnouncement?: string;
+	items?: string[];
 } = {}) {
 	const defaultItems = [
 		"Complimentary Worldwide Express Delivery on Orders Over $250",
@@ -13,9 +15,10 @@ export function AnnouncementMarquee({
 		"Lifetime Certificate of Authenticity & Heritage Provenance",
 	];
 
+	const baseItems = items && items.length > 0 ? items : defaultItems;
 	const tickerItems = campaignAnnouncement
-		? [campaignAnnouncement, ...defaultItems]
-		: defaultItems;
+		? [campaignAnnouncement, ...baseItems]
+		: baseItems;
 
 	return (
 		<aside

@@ -3,9 +3,9 @@ import { Link } from "@/platform/tanstack/navigation";
 import { Volume2, VolumeX, Sparkles, ArrowRight } from "lucide-react";
 
 export function VideoBannerSection({
-	videoUrl = "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/ial51gLkY5fNrB0YWt2Jls4l6hcaKKeQr5109ocJ.mp4",
-	title = "The Atelier Movement · Bangladesh Edition",
-	subtitle = "Celebrating timeless craftsmanship, sovereign handloom muslins, and master artisan silks across Bengal.",
+	videoUrl,
+	title = "Curated Atelier Showcase",
+	subtitle = "Celebrating timeless craftsmanship, sovereign handloom muslins, and master artisan silks.",
 	ctaHref = "/shop",
 	ctaText = "Explore Collection",
 }: {
@@ -24,6 +24,10 @@ export function VideoBannerSection({
 			setIsMuted(!isMuted);
 		}
 	};
+
+	if (!videoUrl) {
+		return null;
+	}
 
 	return (
 		<section className="relative w-full overflow-hidden bg-black text-white parallax-scroll-container">

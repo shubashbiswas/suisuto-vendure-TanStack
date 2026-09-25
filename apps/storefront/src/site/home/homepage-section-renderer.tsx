@@ -183,12 +183,17 @@ export function NewsletterSection() {
 export function HomepageSectionRenderer({
     section,
     products = [],
-    collections: _collections = [],
+    collections = [],
     currencyCode,
 }: {
     section: HomepageSectionConfig;
     products?: Array<FragmentOf<typeof ProductCardFragment>>;
-    collections?: Array<{ id: string; name: string; slug: string }>;
+    collections?: Array<{
+        id: string;
+        name: string;
+        slug: string;
+        featuredAsset?: { id?: string; preview?: string } | null;
+    }>;
     currencyCode: string;
 }) {
     const props = section.props || {};
@@ -277,6 +282,7 @@ export function HomepageSectionRenderer({
                 <ScrollRevealSection>
                 <ShopByCategoryGrid
                     categories={props.categories}
+                    collections={collections}
                     badge={props.badge}
                     title={props.title}
                     subtitle={props.subtitle}

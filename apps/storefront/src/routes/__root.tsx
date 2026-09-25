@@ -39,6 +39,7 @@ export const Route = createRootRoute({
 				activeCurrencyCode: "USD",
 				activeRegion: "global",
 				availableRegions: [],
+				marketConfig: null,
 			};
 		});
 		return { ...pub, personalized };

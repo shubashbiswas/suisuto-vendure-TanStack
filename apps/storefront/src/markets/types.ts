@@ -2,6 +2,8 @@ import type { ComponentType } from "react";
 import type { MarketRegion, RegionConfig } from "@/platform/region/region.types";
 import type { getPersonalizedShellData } from "@/site/shell.functions";
 
+import type { MarketConfigData } from "@/features/market/market.types";
+
 export interface MarketHeaderProps {
 	collections: Array<{ id: string; name: string; slug: string }>;
 	availableCurrencyCodes: string[];
@@ -10,6 +12,7 @@ export interface MarketHeaderProps {
 	availableRegions?: RegionConfig[];
 	personalized: Promise<Awaited<ReturnType<typeof getPersonalizedShellData>>>;
 	campaignAnnouncement?: string;
+	marketConfig?: MarketConfigData | null;
 }
 
 export interface MarketFooterProps {
@@ -17,6 +20,7 @@ export interface MarketFooterProps {
 	activeRegion?: MarketRegion;
 	activeCurrencyCode?: string;
 	availableRegions?: RegionConfig[];
+	marketConfig?: MarketConfigData | null;
 }
 
 export interface MarketConfig {

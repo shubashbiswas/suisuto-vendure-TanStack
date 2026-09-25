@@ -13,20 +13,6 @@ export const REGION_COOKIE = "vendure-region";
 
 let dynamicMarketsMemoryCache: RegionConfig[] = [
 	DEFAULT_GLOBAL_REGION,
-	createRegionConfig({
-		code: "bd",
-		token: "bangladesh",
-		name: "Bangladesh",
-		currencyCode: "BDT",
-		hubName: "Dhaka Hub",
-	}),
-	createRegionConfig({
-		code: "in",
-		token: "india",
-		name: "India",
-		currencyCode: "INR",
-		hubName: "Mumbai Hub",
-	}),
 ];
 
 export function setRegionCookie(region: MarketRegion) {

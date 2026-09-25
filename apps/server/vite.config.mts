@@ -35,6 +35,19 @@ export default defineConfig({
             gqlOutputPath: './src/gql',
         }),
     ],
+    server: {
+        fs: {
+            allow: [resolve(__dirname, '../..')],
+        },
+    },
+    optimizeDeps: {
+        include: [
+            'react-day-picker',
+            'react-day-picker/locale',
+            'date-fns',
+            'date-fns/locale',
+        ],
+    },
     resolve: {
         alias: {
             // This allows all plugins to reference a shared set of

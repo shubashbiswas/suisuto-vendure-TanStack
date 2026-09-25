@@ -10,6 +10,7 @@ export function BdFooter({
 	activeRegion: _activeRegion,
 	activeCurrencyCode: _activeCurrencyCode,
 	availableRegions: _availableRegions,
+	marketConfig,
 }: MarketFooterProps) {
 	return (
 		<footer className="border-t border-border/70 bg-secondary/15 text-foreground mt-auto">
@@ -84,35 +85,48 @@ export function BdFooter({
 							Your Family Shopping Destination.
 						</p>
 
-						<p className="text-xs text-muted-foreground leading-relaxed">
-							Customer Support Hours:<br />
-							<span className="font-medium text-foreground">{bdConfig.supportHours}</span>
-						</p>
+						{(() => {
+							const supportHours = marketConfig?.content?.supportHours || bdConfig.supportHours;
+							const supportEmail = marketConfig?.content?.supportEmail || bdConfig.supportEmail;
+							const supportPhone = marketConfig?.content?.supportPhone || bdConfig.supportPhone;
+							const address = marketConfig?.content?.address || bdConfig.address;
 
-						<div className="space-y-1.5 text-xs text-muted-foreground pt-1">
-							{bdConfig.supportEmail && (
-								<p className="flex items-center gap-2">
-									<Mail className="size-3.5 text-primary shrink-0" />
-									<a href={`mailto:${bdConfig.supportEmail}`} className="hover:text-foreground">
-										{bdConfig.supportEmail}
-									</a>
-								</p>
-							)}
-							{bdConfig.supportPhone && (
-								<p className="flex items-center gap-2">
-									<Phone className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-									<a href={`tel:${bdConfig.supportPhone}`} className="hover:text-foreground font-semibold text-foreground">
-										{bdConfig.supportPhone}
-									</a>
-								</p>
-							)}
-							{bdConfig.address && (
-								<p className="flex items-center gap-2">
-									<MapPin className="size-3.5 text-primary shrink-0" />
-									<span>{bdConfig.address}</span>
-								</p>
-							)}
-						</div>
+							return (
+								<>
+									{supportHours && (
+										<p className="text-xs text-muted-foreground leading-relaxed">
+											Customer Support Hours:<br />
+											<span className="font-medium text-foreground">{supportHours}</span>
+										</p>
+									)}
+
+									<div className="space-y-1.5 text-xs text-muted-foreground pt-1">
+										{supportEmail && (
+											<p className="flex items-center gap-2">
+												<Mail className="size-3.5 text-primary shrink-0" />
+												<a href={`mailto:${supportEmail}`} className="hover:text-foreground">
+													{supportEmail}
+												</a>
+											</p>
+										)}
+										{supportPhone && (
+											<p className="flex items-center gap-2">
+												<Phone className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+												<a href={`tel:${supportPhone}`} className="hover:text-foreground font-semibold text-foreground">
+													{supportPhone}
+												</a>
+											</p>
+										)}
+										{address && (
+											<p className="flex items-center gap-2">
+												<MapPin className="size-3.5 text-primary shrink-0" />
+												<span>{address}</span>
+											</p>
+										)}
+									</div>
+								</>
+							);
+						})()}
 					</div>
 
 					{/* Col 2: Shopping Detail */}

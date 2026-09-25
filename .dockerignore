@@ -23,6 +23,7 @@ pgdata/
 docker-data/
 
 # Build Outputs, Framework Artifacts & Caches
+tmp/
 dist/
 dist-ssr/
 build/

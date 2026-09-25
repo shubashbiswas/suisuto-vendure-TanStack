@@ -24,6 +24,7 @@ export function LocaleLayout({ children }: { children: ReactNode }) {
 					activeRegion={shell?.activeRegion}
 					availableRegions={shell?.availableRegions || []}
 					personalized={shell?.personalized}
+					marketConfig={shell?.marketConfig}
 				/>
 				<GeoSuggestionBanner
 					activeRegion={shell?.activeRegion}
@@ -35,6 +36,7 @@ export function LocaleLayout({ children }: { children: ReactNode }) {
 					activeRegion={shell?.activeRegion}
 					activeCurrencyCode={shell?.activeCurrencyCode || "USD"}
 					availableRegions={shell?.availableRegions || []}
+					marketConfig={shell?.marketConfig}
 				/>
 				<CartDrawer />
 				<Toaster />

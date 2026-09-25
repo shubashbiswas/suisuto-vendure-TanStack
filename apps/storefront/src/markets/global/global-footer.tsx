@@ -10,6 +10,7 @@ export function GlobalFooter({
 	activeRegion,
 	activeCurrencyCode,
 	availableRegions,
+	marketConfig,
 }: MarketFooterProps) {
 	return (
 		<footer className="border-t border-border/70 bg-secondary/15 text-foreground mt-auto">
@@ -92,8 +93,15 @@ export function GlobalFooter({
 								Regional Atelier Dispatch
 							</p>
 							<p className="text-xs text-muted-foreground mt-0.5">
-								Dhaka · Kolkata · Global Direct
+								{marketConfig?.content?.address || "Global Direct Fulfillment"}
 							</p>
+							{marketConfig?.content?.supportEmail && (
+								<p className="text-xs text-muted-foreground mt-1">
+									<a href={`mailto:${marketConfig.content.supportEmail}`} className="hover:text-foreground">
+										{marketConfig.content.supportEmail}
+									</a>
+								</p>
+							)}
 						</div>
 					</div>
 

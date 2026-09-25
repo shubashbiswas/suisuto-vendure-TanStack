@@ -2,10 +2,10 @@ import { Link } from "@/platform/tanstack/navigation";
 import { Sparkles, ArrowRight, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 
 export function SeasonalCollectionSection({
-	title = "Festive Seasonal Collection 2026",
-	subtitle = "A royal celebration of ancestral Bengali looms, Dhakai Jamdani supplementary wefts, and bespoke festive panjabis.",
-	bannerUrl = "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/R4KUiGCjERrYo2b0TZaclu4BMxqqAEBr6rh0H99V.png",
-	ctaHref = "/shop?category=seasonal",
+	title = "Seasonal Capsule Collection",
+	subtitle = "A royal celebration of ancestral looms, certified supplementary wefts, and bespoke tailoring.",
+	bannerUrl,
+	ctaHref = "/shop",
 	ctaText = "Shop Seasonal Collection",
 }: {
 	title?: string;
@@ -14,6 +14,9 @@ export function SeasonalCollectionSection({
 	ctaHref?: string;
 	ctaText?: string;
 }) {
+	if (!bannerUrl) {
+		return null;
+	}
 	return (
 		<section className="py-16 md:py-24 bg-secondary/20 border-b border-border/40">
 			<div className="container mx-auto px-4 sm:px-6 lg:px-8">

@@ -25,6 +25,7 @@ export function InHeader({
 	availableRegions,
 	personalized,
 	campaignAnnouncement,
+	marketConfig,
 }: MarketHeaderProps) {
 	const { isScrolled, isVisible } = useHeaderScroll();
 
@@ -58,7 +59,10 @@ export function InHeader({
 					isScrolled ? "max-h-0 opacity-0 pointer-events-none" : "max-h-12 opacity-100"
 				)}
 			>
-				<AnnouncementMarquee campaignAnnouncement={campaignAnnouncement} />
+				<AnnouncementMarquee
+					campaignAnnouncement={campaignAnnouncement}
+					items={marketConfig?.content?.announcementMarquee}
+				/>
 			</div>
 
 			{/* Tier 3: Main Architectural Haute Couture Header */}
@@ -180,7 +184,7 @@ export function InHeader({
 						: "max-h-16 opacity-100 overflow-visible"
 				)}
 			>
-				<InCategoryNav />
+				<InCategoryNav collections={collections} />
 			</div>
 		</header>
 	);

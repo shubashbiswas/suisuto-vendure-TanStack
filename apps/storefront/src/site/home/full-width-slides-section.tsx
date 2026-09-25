@@ -12,44 +12,18 @@ interface SlideItem {
 	ctaText: string;
 }
 
-const DEFAULT_SLIDES: SlideItem[] = [
-	{
-		id: "slide-1",
-		title: "Festive Grandeur: Royal Panjabi & Heritage Weaves",
-		subtitle: "Meticulously woven with 300-count organic cotton and intricate jacquard motifs.",
-		tag: "Eid Edition 2026",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/qaY9mGqiiyXMLzXv29tOCsPmcF3FWBAVfjByTF6n.png",
-		link: "/shop?category=panjabi",
-		ctaText: "Shop Festive Edit",
-	},
-	{
-		id: "slide-2",
-		title: "Dhakai Muslin & Jamdani Sarees",
-		subtitle: "Certified generational pit-loom craftsmanship direct from master artisan clusters.",
-		tag: "Masterpiece Archive",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/nu1GJOaSFIuujkY7YqcVnHFVRpxdz4BEhLEKrEAd.jpg",
-		link: "/shop?category=sarees",
-		ctaText: "Explore Sarees",
-	},
-	{
-		id: "slide-3",
-		title: "Modern Architectural Tailoring",
-		subtitle: "Structured silhouettes, casual luxury shirts, and tailored trousers for the contemporary wardrobe.",
-		tag: "Contemporary Atelier",
-		imageUrl: "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/tQ6PgmHxTEN4UPrO622pihs445CSrdHBCMERAta8.jpg",
-		link: "/shop?category=shirts",
-		ctaText: "Discover Tailoring",
-	},
-];
-
 export function FullWidthSlidesSection({
-	slides = DEFAULT_SLIDES,
+	slides,
 }: {
 	slides?: SlideItem[];
 }) {
-	const validSlides = Array.isArray(slides) && slides.length > 0 ? slides : DEFAULT_SLIDES;
+	const validSlides = Array.isArray(slides) && slides.length > 0 ? slides : [];
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPaused, setIsPaused] = useState(false);
+
+	if (validSlides.length === 0) {
+		return null;
+	}
 
 	const nextSlide = useCallback(() => {
 		setCurrentIndex((prev) => (prev + 1) % validSlides.length);
@@ -124,7 +98,7 @@ export function FullWidthSlidesSection({
 				</div>
 
 				{/* Navigation arrows */}
-				{slides.length > 1 && (
+				{validSlides.length > 1 && (
 					<>
 						<button
 							type="button"
@@ -147,7 +121,7 @@ export function FullWidthSlidesSection({
 
 				{/* Dots Indicator */}
 				<div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5">
-					{slides.map((slide, index) => (
+					{validSlides.map((slide, index) => (
 						<button
 							key={`dot-${slide.id}`}
 							type="button"

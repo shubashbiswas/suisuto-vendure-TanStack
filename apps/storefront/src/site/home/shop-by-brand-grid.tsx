@@ -10,83 +10,8 @@ interface BrandItem {
 	initials: string;
 }
 
-const BRANDS_3X3: BrandItem[] = [
-	{
-		name: "Suisuto Atelier",
-		tagline: "Haute Couture Handloom",
-		desc: "Bespoke architectural cuts crafted by generational master weavers.",
-		founded: "Est. 2024",
-		href: "/collections/atelier",
-		initials: "SA",
-	},
-	{
-		name: "Richman",
-		tagline: "Distinguished Menswear",
-		desc: "Executive shirts, formal trousers, tailored suits, and modern casuals.",
-		founded: "Est. 2003",
-		href: "/shop?brand=richman",
-		initials: "RM",
-	},
-	{
-		name: "Lubnan",
-		tagline: "Celebration Ethnic Wear",
-		desc: "Royal panjabis, festive sherwanis, and handcrafted ceremonial ensembles.",
-		founded: "Est. 2003",
-		href: "/shop?brand=lubnan",
-		initials: "LB",
-	},
-	{
-		name: "iNFINITY Mega Mall",
-		tagline: "Family Lifestyle Destination",
-		desc: "Complete multi-tier fashion and lifestyle collections for all generations.",
-		founded: "Est. 2004",
-		href: "/shop?brand=infinity",
-		initials: "IF",
-	},
-	{
-		name: "Tangail Muslin Guild",
-		tagline: "Heritage Loom Revival",
-		desc: "World-renowned superfine muslin weaves and heirloom cotton fabrics.",
-		founded: "Loom Heritage",
-		href: "/shop?brand=tangail",
-		initials: "TM",
-	},
-	{
-		name: "Bengal Khadi",
-		tagline: "Organic Handspun Wefts",
-		desc: "Pure breathable hand-spun cotton created through ethical cottage clusters.",
-		founded: "Artisan Co-Op",
-		href: "/shop?brand=khadi",
-		initials: "BK",
-	},
-	{
-		name: "Rajshahi Silks",
-		tagline: "Sartorial Mulberry Luster",
-		desc: "Opulent mulberry and endi silks renowned for lightweight shimmer.",
-		founded: "Silk Heritage",
-		href: "/shop?brand=rajshahi",
-		initials: "RS",
-	},
-	{
-		name: "Heritage Jamdani",
-		tagline: "UNESCO Intangible Art",
-		desc: "Serialized authentic Dhakai Jamdanis with hand-threaded gold zari.",
-		founded: "Certified Origin",
-		href: "/shop?brand=jamdani",
-		initials: "HJ",
-	},
-	{
-		name: "Suisuto Pro Urban",
-		tagline: "Technical Performance",
-		desc: "Engineered breathable athleisure and high-comfort daily commute wear.",
-		founded: "Active Line",
-		href: "/shop?brand=pro",
-		initials: "SP",
-	},
-];
-
 export function ShopByBrandGrid({
-	brands = BRANDS_3X3,
+	brands,
 	badge = "The Fashion House Portfolio",
 	title = "SHOP BY BRAND",
 	subtitle = "Distinctive heritage and contemporary labels curated for quality, pedigree, and longevity.",
@@ -96,7 +21,11 @@ export function ShopByBrandGrid({
 	title?: string;
 	subtitle?: string;
 }) {
-	const validBrands = Array.isArray(brands) && brands.length > 0 ? brands : BRANDS_3X3;
+	const validBrands = Array.isArray(brands) && brands.length > 0 ? brands : [];
+
+	if (validBrands.length === 0) {
+		return null;
+	}
 
 	return (
 		<section className="py-20 md:py-28 bg-secondary/15 border-b border-border/40">

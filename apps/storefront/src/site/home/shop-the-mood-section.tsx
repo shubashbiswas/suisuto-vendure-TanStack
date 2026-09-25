@@ -2,11 +2,11 @@ import { Link } from "@/platform/tanstack/navigation";
 import { Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export function ShopTheMoodSection({
-	moodTitle = "ROYAL FESTIVE MIDNIGHT",
-	moodSubtitle = "An ode to dusk ceremonies, opulent midnight indigos, and hand-loomed gold zari.",
-	moodCategory = "Festive Panjabi & Jamdani",
-	moodImageUrl = "https://objectstorage.ap-singapore-1.oraclecloud.com/n/aximxvolvk6d/b/infinityBucket/o/uploads/all/Zz8bqMREyksoM6KdKTJuBF76AHrKEan329vW8gAr.jpg",
-	ctaHref = "/shop?category=festive-mood",
+	moodTitle = "ATELIER EDITORIAL SPOTLIGHT",
+	moodSubtitle = "An ode to sovereign hand-loomed textiles, rich natural dyes, and tailored silhouettes.",
+	moodCategory = "Curated Atelier Lookbook",
+	moodImageUrl,
+	ctaHref = "/shop",
 }: {
 	moodTitle?: string;
 	moodSubtitle?: string;
@@ -14,6 +14,9 @@ export function ShopTheMoodSection({
 	moodImageUrl?: string;
 	ctaHref?: string;
 }) {
+	if (!moodImageUrl) {
+		return null;
+	}
 	const moodHighlights = [
 		{
 			title: "Sovereign Dhakai Jamdani Weft",

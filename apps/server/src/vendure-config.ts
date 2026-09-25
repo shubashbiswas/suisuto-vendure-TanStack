@@ -166,7 +166,7 @@ export const config: VendureConfig = {
             // For local dev, the correct value for assetUrlPrefix should
             // be guessed correctly, but for production it will usually need
             // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : 'https://www.my-shop.com/assets/',
+            assetUrlPrefix: process.env.ASSET_URL_PREFIX || (IS_DEV ? undefined : 'https://www.my-shop.com/assets/'),
         }),
         DefaultSchedulerPlugin.init(),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
@@ -188,9 +188,8 @@ export const config: VendureConfig = {
         }),
         DashboardPlugin.init({
             route: 'dashboard',
-            appDir: IS_DEV
-                ? path.join(__dirname, '../dist/dashboard')
-                : path.join(__dirname, 'dashboard'),
+            appDir: path.join(__dirname, '../dist/dashboard'),
+            viteDevServerPort: 0,
         }),
         GeoIpPlugin.init({
             fallbackApiEnabled: true,

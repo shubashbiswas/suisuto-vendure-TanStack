@@ -13,6 +13,7 @@ interface BdTopRibbonProps {
 	availableCurrencyCodes: string[];
 	activeCurrencyCode: string;
 	campaignAnnouncement?: string;
+	marketConfig?: any;
 }
 
 export function BdTopRibbon({
@@ -21,12 +22,17 @@ export function BdTopRibbon({
 	availableCurrencyCodes,
 	activeCurrencyCode,
 	campaignAnnouncement,
+	marketConfig,
 }: BdTopRibbonProps) {
+	const phone = marketConfig?.content?.phone || bdConfig.supportPhone;
+	const hours = marketConfig?.content?.supportHours || bdConfig.supportHours;
+	const dynamicAnnouncement = marketConfig?.content?.announcement;
+
 	const defaultAnnouncements = [
-		"Complimentary Nationwide Delivery Across Bangladesh on Orders Over ৳2500",
+		dynamicAnnouncement || "Complimentary Nationwide Delivery Across Bangladesh on Orders Over ৳2500",
 		"Authentic Dhakai Jamdani, Tangail Muslin & Sartorial Silks",
-		`Customer Support Hotline: ${bdConfig.supportPhone} (${bdConfig.supportHours})`,
-		"Festive & Eid Haute Couture Collection 2026 Now Live",
+		`Customer Support Hotline: ${phone} (${hours})`,
+		"Festive & Haute Couture Collections Now Live",
 	];
 
 	const tickerItems = campaignAnnouncement

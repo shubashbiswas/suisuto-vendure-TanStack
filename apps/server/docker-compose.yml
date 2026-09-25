@@ -12,7 +12,7 @@ name: "suisuto-vendure"
 
 services:
   postgres_db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     volumes:
       - postgres_db_data:/var/lib/postgresql/data
     ports:

@@ -47,13 +47,29 @@ export interface FlushGeoIpCacheResult {
     message: string;
 }
 
-const COUNTRY_MAP: Record<string, { name: string; market: string; urlPrefix: string; atelier: string; hub: string; currency: string }> = {
-    BD: { name: 'Bangladesh', market: 'bd', urlPrefix: '/bd/', atelier: 'Narayanganj Atelier', hub: 'BD_HUB', currency: 'BDT ৳' },
-    IN: { name: 'India', market: 'in', urlPrefix: '/in/', atelier: 'Varanasi Atelier', hub: 'IN_HUB', currency: 'INR ₹' },
-    AE: { name: 'United Arab Emirates', market: 'ae', urlPrefix: '/ae/', atelier: 'Gulf & Middle East Atelier', hub: 'DUAL_HUB', currency: 'AED د.إ' },
-    US: { name: 'United States', market: 'global', urlPrefix: '/', atelier: 'Global Export Atelier', hub: 'DUAL_HUB', currency: 'USD $' },
-    GB: { name: 'United Kingdom', market: 'global', urlPrefix: '/', atelier: 'Global Export Atelier', hub: 'DUAL_HUB', currency: 'USD $' },
-};
+function getDynamicCountryRouting(iso: string | null | undefined, richMetadata: CountryMetadata | null) {
+    if (!iso) {
+        return {
+            name: 'Global / Unknown',
+            market: 'global',
+            urlPrefix: '/',
+            atelier: 'Global Direct',
+            hub: 'DUAL_HUB',
+            currency: 'USD $',
+        };
+    }
+    const clean = iso.trim().toUpperCase();
+    const countryName = richMetadata?.countryName || clean;
+    const market = clean.toLowerCase();
+    return {
+        name: countryName,
+        market,
+        urlPrefix: `/${market}/`,
+        atelier: `${countryName} Hub`,
+        hub: `${clean}_HUB`,
+        currency: richMetadata ? `${richMetadata.currencyCode} ${richMetadata.currencySymbol}` : 'USD $',
+    };
+}
 
 export function isPrivateOrLocalIp(ip: string): boolean {
     if (!ip) return true;
@@ -255,18 +271,18 @@ export class GeoIpHybridService {
         if (cached && Date.now() < cached.expiresAt) {
             const latencyMs = Number((performance.now() - start).toFixed(2));
             const iso = cached.country;
-            const meta = iso ? COUNTRY_MAP[iso] : null;
             const richMetadata = this.getCountryMetadata(iso);
+            const meta = getDynamicCountryRouting(iso, richMetadata);
             return {
                 ip: clean,
                 isPrivate: false,
                 detectedCountry: iso,
-                countryName: richMetadata?.countryName || meta?.name || (iso || 'Unknown'),
-                marketCode: meta ? meta.market : 'global',
-                urlPrefix: meta ? meta.urlPrefix : '/',
-                atelier: meta ? meta.atelier : 'Global Export Atelier',
-                hubCode: meta ? meta.hub : 'DUAL_HUB',
-                currency: richMetadata ? `${richMetadata.currencyCode} ${richMetadata.currencySymbol}` : (meta?.currency || 'USD $'),
+                countryName: richMetadata?.countryName || meta.name || (iso || 'Unknown'),
+                marketCode: meta.market,
+                urlPrefix: meta.urlPrefix,
+                atelier: meta.atelier,
+                hubCode: meta.hub,
+                currency: meta.currency,
                 tierUsed: 'Cache: In-Memory LRU (24h TTL)',
                 latencyMs,
                 cached: true,
@@ -295,19 +311,19 @@ export class GeoIpHybridService {
         });
 
         const latencyMs = Number((performance.now() - start).toFixed(2));
-        const meta = iso ? COUNTRY_MAP[iso] : null;
         const richMetadata = this.getCountryMetadata(iso);
+        const meta = getDynamicCountryRouting(iso, richMetadata);
 
         return {
             ip: clean,
             isPrivate: false,
             detectedCountry: iso,
-            countryName: richMetadata?.countryName || meta?.name || (iso || 'Unknown / Unmapped'),
-            marketCode: meta ? meta.market : 'global',
-            urlPrefix: meta ? meta.urlPrefix : '/',
-            atelier: meta ? meta.atelier : 'Global Export Atelier',
-            hubCode: meta ? meta.hub : 'DUAL_HUB',
-            currency: richMetadata ? `${richMetadata.currencyCode} ${richMetadata.currencySymbol}` : (meta?.currency || 'USD $'),
+            countryName: richMetadata?.countryName || meta.name || (iso || 'Unknown / Unmapped'),
+            marketCode: meta.market,
+            urlPrefix: meta.urlPrefix,
+            atelier: meta.atelier,
+            hubCode: meta.hub,
+            currency: meta.currency,
             tierUsed,
             latencyMs,
             cached: false,

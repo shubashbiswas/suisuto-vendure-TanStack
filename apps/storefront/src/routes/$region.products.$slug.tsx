@@ -5,6 +5,7 @@ import {
 } from "@/features/products/catalog.functions";
 import Loading from "@/features/products/routes/loading";
 import Page from "@/features/products/routes/page";
+import { StorefrontNotFound } from "@/site/storefront-not-found";
 import { storefrontHead } from "@/platform/tanstack/head";
 import { productSearchSchema } from "@/platform/tanstack/search";
 
@@ -31,9 +32,12 @@ export const Route = createFileRoute("/$region/products/$slug")({
 	head: ({ loaderData }) =>
 		loaderData ? storefrontHead(loaderData.metadata) : {},
 	pendingComponent: Loading,
+	notFoundComponent: StorefrontNotFound,
 	component: RegionalProductRoute,
 });
 
 function RegionalProductRoute() {
-	return <Page {...Route.useLoaderData()} searchParams={Route.useSearch()} />;
+	const loaderData = Route.useLoaderData();
+	if (!loaderData) return <StorefrontNotFound />;
+	return <Page {...loaderData} searchParams={Route.useSearch()} />;
 }

@@ -11,6 +11,7 @@ export function InFooter({
 	activeRegion,
 	activeCurrencyCode,
 	availableRegions,
+	marketConfig,
 }: MarketFooterProps) {
 	return (
 		<footer className="border-t border-border/70 bg-secondary/15 text-foreground mt-auto">
@@ -89,30 +90,38 @@ export function InFooter({
 							Honoring the grandeur of Indian textiles and sartorial craftsmanship. Direct studio fulfillment from New Delhi and Varanasi ateliers.
 						</p>
 
-						<div className="space-y-1.5 text-xs text-muted-foreground pt-1">
-							{inConfig.supportEmail && (
-								<p className="flex items-center gap-2">
-									<Mail className="size-3.5 text-primary shrink-0" />
-									<a href={`mailto:${inConfig.supportEmail}`} className="hover:text-foreground">
-										{inConfig.supportEmail}
-									</a>
-								</p>
-							)}
-							{inConfig.supportPhone && (
-								<p className="flex items-center gap-2">
-									<Phone className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-									<a href={`tel:${inConfig.supportPhone}`} className="hover:text-foreground font-semibold text-foreground">
-										{inConfig.supportPhone}
-									</a>
-								</p>
-							)}
-							{inConfig.address && (
-								<p className="flex items-center gap-2">
-									<MapPin className="size-3.5 text-primary shrink-0" />
-									<span>{inConfig.address}</span>
-								</p>
-							)}
-						</div>
+						{(() => {
+							const supportEmail = marketConfig?.content?.supportEmail || inConfig.supportEmail;
+							const supportPhone = marketConfig?.content?.supportPhone || inConfig.supportPhone;
+							const address = marketConfig?.content?.address || inConfig.address;
+
+							return (
+								<div className="space-y-1.5 text-xs text-muted-foreground pt-1">
+									{supportEmail && (
+										<p className="flex items-center gap-2">
+											<Mail className="size-3.5 text-primary shrink-0" />
+											<a href={`mailto:${supportEmail}`} className="hover:text-foreground">
+												{supportEmail}
+											</a>
+										</p>
+									)}
+									{supportPhone && (
+										<p className="flex items-center gap-2">
+											<Phone className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+											<a href={`tel:${supportPhone}`} className="hover:text-foreground font-semibold text-foreground">
+												{supportPhone}
+											</a>
+										</p>
+									)}
+									{address && (
+										<p className="flex items-center gap-2">
+											<MapPin className="size-3.5 text-primary shrink-0" />
+											<span>{address}</span>
+										</p>
+									)}
+								</div>
+							);
+						})()}
 					</div>
 
 					{/* The Collections */}

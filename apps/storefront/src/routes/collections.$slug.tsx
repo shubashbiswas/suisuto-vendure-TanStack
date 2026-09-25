@@ -6,6 +6,7 @@ import {
 import { getCollectionPageData } from "@/features/collections/catalog.functions";
 import Loading from "@/features/collections/routes/loading";
 import Page from "@/features/collections/routes/page";
+import { StorefrontNotFound } from "@/site/storefront-not-found";
 import { storefrontHead } from "@/platform/tanstack/head";
 import { catalogSearchSchema } from "@/platform/tanstack/search";
 
@@ -31,11 +32,16 @@ export const Route = createFileRoute("/collections/$slug")({
 	head: ({ loaderData }) =>
 		loaderData ? storefrontHead(loaderData.metadata) : {},
 	pendingComponent: Loading,
+	notFoundComponent: StorefrontNotFound,
 	component: CollectionRoute,
 });
 
 function CollectionRoute() {
-	const { metadata, productData } = Route.useLoaderData();
+	const loaderData = Route.useLoaderData();
+	if (!loaderData) {
+		return <StorefrontNotFound />;
+	}
+	const { metadata, productData } = loaderData;
 	return (
 		<Page
 			searchParams={Route.useSearch()}

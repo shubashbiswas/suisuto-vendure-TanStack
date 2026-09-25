@@ -3,7 +3,9 @@ import {
 	GetCollectionProductsQuery,
 	GetTopCollectionsQuery,
 } from "@/features/collections/graphql";
+import type { ProductCardFragment } from "@/features/products/graphql";
 import { SearchProductsQuery } from "@/features/search/graphql";
+import type { FragmentOf } from "@/platform/vendure/graphql";
 import { fetchMarketConfig } from "@/features/market/market.server";
 import { getMarketHomepageSections, type HomepageSectionConfig } from "@/markets";
 import { getLocale } from "@/paraglide/runtime";
@@ -42,43 +44,56 @@ export const getHomeData = createServerFn({ method: "GET" })
 					: [];
 
 			// 3. Determine collection to showcase
-			let targetCollectionSlug = "atelier";
+			let explicitCollectionSlug: string | undefined;
 			const featuredSection = homepageSections.find(
 				(s) =>
 					(s.type === "featured-collection" || s.type === "product-carousel") &&
 					s.props?.collectionSlug
 			);
 			if (featuredSection?.props?.collectionSlug) {
-				targetCollectionSlug = String(featuredSection.props.collectionSlug);
+				explicitCollectionSlug = String(featuredSection.props.collectionSlug);
 			}
 
 			const catalogData = await cachedPublicData({
-				key: `home-catalog:${regionConfig.code}:${targetCollectionSlug}:${locale}:${currency}`,
+				key: `home-catalog:${regionConfig.code}:${explicitCollectionSlug || "all"}:${locale}:${currency}`,
 				tags: [`home-${regionConfig.code}-${locale}-${currency}`],
 				ttlMs: 30_000,
 				load: async () => {
-					const [productsResult, collectionsResult] = await Promise.all([
-						queryOnServer(
+					const collectionsResult = await queryOnServer(
+						GetTopCollectionsQuery,
+						{},
+						{ languageCode: locale, channelToken },
+					).catch(() => null);
+
+					const collections = collectionsResult?.data?.collections?.items ?? [];
+
+					// Resolve target collection:
+					// 1. Explicitly configured slug from homepage section
+					// 2. First available collection from Vendure
+					// 3. None (fall back to SearchProductsQuery)
+					let targetSlug = explicitCollectionSlug;
+					if (!targetSlug && collections.length > 0) {
+						targetSlug = collections[0].slug;
+					}
+
+					let products: Array<FragmentOf<typeof ProductCardFragment>> = [];
+					if (targetSlug) {
+						const productsResult = await queryOnServer(
 							GetCollectionProductsQuery,
 							{
-								slug: targetCollectionSlug,
+								slug: targetSlug,
 								input: {
-									collectionSlug: targetCollectionSlug,
+									collectionSlug: targetSlug,
 									take: 12,
 									skip: 0,
 									groupByProduct: true,
 								},
 							},
 							{ languageCode: locale, currencyCode: currency, channelToken },
-						).catch(() => null),
-						queryOnServer(
-							GetTopCollectionsQuery,
-							{},
-							{ languageCode: locale, channelToken },
-						).catch(() => null),
-					]);
+						).catch(() => null);
+						products = productsResult?.data?.search?.items ?? [];
+					}
 
-					let products = productsResult?.data?.search?.items ?? [];
 					if (products.length === 0) {
 						const fallback = await queryOnServer(
 							SearchProductsQuery,
@@ -96,7 +111,7 @@ export const getHomeData = createServerFn({ method: "GET" })
 
 					return {
 						products,
-						collections: collectionsResult?.data?.collections?.items ?? [],
+						collections,
 					};
 				},
 			}).catch(() => ({ products: [], collections: [] }));

@@ -12,7 +12,7 @@ services:
   # 1. PostgreSQL Database
   # ----------------------------------------------------------------------------
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME:-vendure}
@@ -72,6 +72,13 @@ services:
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:?SUPERADMIN_PASSWORD required}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3001,https://suisuto.com}
       DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-false}
+      ASSET_URL_PREFIX: ${ASSET_URL_PREFIX:-https://${API_DOMAIN:-api.suisuto.com}/assets/}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/health').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     volumes:
       - server_assets:/app/apps/server/static/assets
     networks:
@@ -86,7 +93,7 @@ services:
     command: ["node", "dist/index-worker.js"]
     depends_on:
       server:
-        condition: service_started
+        condition: service_healthy
     environment:
       NODE_ENV: production
       APP_ENV: prod
@@ -109,7 +116,7 @@ services:
     restart: unless-stopped
     depends_on:
       server:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "3001:3001"
     environment:

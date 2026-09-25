@@ -23,6 +23,7 @@ export function BdHeader({
 	availableRegions,
 	personalized,
 	campaignAnnouncement,
+	marketConfig,
 }: MarketHeaderProps) {
 	const { isScrolled, isVisible } = useHeaderScroll();
 
@@ -47,6 +48,7 @@ export function BdHeader({
 					availableCurrencyCodes={availableCurrencyCodes}
 					activeCurrencyCode={activeCurrencyCode}
 					campaignAnnouncement={campaignAnnouncement}
+					marketConfig={marketConfig}
 				/>
 			</div>
 
@@ -163,7 +165,7 @@ export function BdHeader({
 						: "max-h-16 opacity-100 overflow-visible"
 				)}
 			>
-				<BdCategoryNav />
+				<BdCategoryNav collections={collections} />
 			</div>
 		</header>
 	);

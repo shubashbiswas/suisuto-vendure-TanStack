@@ -13,47 +13,20 @@ interface CollectionsMatrixProps {
 	collections?: DynamicCollectionItem[];
 }
 
-const CURATED_LOOKS = [
-	{
-		title: "Fine Jamdani Muslin",
-		subtitle: "Featherweight geometric weaves handloomed using historic supplementary weft techniques.",
-		href: "/collections/atelier",
-		image: "/images/collection-jamdani.jpg",
-		tag: "Ancestral Weave",
-	},
-	{
-		title: "Modern Sartorial Silks",
-		subtitle: "Bespoke handloom tailored sherwanis, bandhgalas, and structural jackets in pure noir and terracotta.",
-		href: "/collections/atelier",
-		image: "/images/collection-mens.jpg",
-		tag: "Sartorial Menswear",
-	},
-	{
-		title: "The Runway Capsule",
-		subtitle: "Architectural silhouettes draped in pure organic mulberry silk and fine tussar cotton.",
-		href: "/collections/atelier",
-		image: "/images/hero-campaign.jpg",
-		tag: "Haute Couture",
-	},
-	{
-		title: "Generational Loom Masters",
-		subtitle: "Direct-from-the-loom artisanal creations supporting living wages for master weaving families.",
-		href: "/collections/atelier",
-		image: "/images/artisan-loom.jpg",
-		tag: "Living Heritage",
-	},
-];
-
 export function CollectionsMatrix({ collections }: CollectionsMatrixProps) {
 	const items = (collections && collections.length > 0)
-		? collections.slice(0, 4).map((col, idx) => ({
+		? collections.slice(0, 4).map((col) => ({
 				title: col.name,
-				subtitle: col.description || CURATED_LOOKS[idx % CURATED_LOOKS.length].subtitle,
+				subtitle: col.description || "Curated Capsule Collection",
 				href: `/collections/${col.slug}`,
-				image: col.featuredAsset?.preview || CURATED_LOOKS[idx % CURATED_LOOKS.length].image,
-				tag: CURATED_LOOKS[idx % CURATED_LOOKS.length].tag,
+				image: col.featuredAsset?.preview || "",
+				tag: "Curated Edition",
 		  }))
-		: CURATED_LOOKS;
+		: [];
+
+	if (items.length === 0) {
+		return null;
+	}
 
 	return (
 		<section className="py-20 md:py-32 bg-background border-b border-border/40">
@@ -94,11 +67,15 @@ export function CollectionsMatrix({ collections }: CollectionsMatrixProps) {
 								className={`group relative overflow-hidden rounded-none border border-border/70 bg-black min-h-[420px] md:min-h-[500px] flex flex-col justify-end p-7 md:p-10 transition-all duration-700 ${colSpan}`}
 							>
 								{/* High-Resolution Fashion Imagery */}
-								<img
-									src={tile.image}
-									alt={tile.title}
-									className="absolute inset-0 w-full h-full object-cover object-center opacity-85 transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-95"
-								/>
+								{tile.image ? (
+									<img
+										src={tile.image}
+										alt={tile.title}
+										className="absolute inset-0 w-full h-full object-cover object-center opacity-85 transition-all duration-700 ease-out group-hover:scale-105 group-hover:opacity-95"
+									/>
+								) : (
+									<div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900" />
+								)}
 
 								{/* Darkening Editorial Scrim */}
 								<div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent pointer-events-none" />
